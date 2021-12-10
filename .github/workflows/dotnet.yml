@@ -31,14 +31,20 @@ jobs:
         name: Upload
         path: /home/runner/work/WaxComponents/WaxComponents/WaxComponents/bin/Release/net6.0
         
+    - name: Get version
+      id: package_version
+      uses: KageKirin/get-csproj-version@v0
+      with:
+        file: WaxComponents/WaxComponents.csproj
+        
     - name: Create Release
       uses: actions/create-release@v1
       id: create_release
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        tag_name: WaxComponents
-        release_name: 'WaxComponents LC: ${{ github.event.head_commit.message }}'
+        tag_name: v${{ steps.test.package_version.version }}
+        release_name: WaxComponents
         draft: false
         prerelease: false
 
