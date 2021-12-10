@@ -37,8 +37,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        tag_name: WaxComponents
-        release_name: 'WaxComponents LC: ${{ github.event.head_commit.message }}'
+        tag_name: github.event.head_commit.url
+        release_name: WaxComponents
         draft: false
         prerelease: false
 
