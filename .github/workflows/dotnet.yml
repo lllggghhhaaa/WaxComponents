@@ -43,7 +43,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        tag_name: v${{ steps.test.package_version.version }}
+        tag_name: v${{ steps.package_version.version }}
         release_name: WaxComponents
         draft: false
         prerelease: false
