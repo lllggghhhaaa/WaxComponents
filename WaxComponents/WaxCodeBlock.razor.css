@@ -1,0 +1,41 @@
+.waxCodeBlockContainer {
+    margin-top: 5px;
+    padding: 10px;
+
+    display: flex;
+}
+
+.waxCodeBlock {
+    background-color: rgba(255, 182, 193, .1);
+    outline: pink solid 1px;
+    border-radius: 5px;
+
+    transition: outline-color .3s;
+}
+
+.waxCodeBlock:hover {
+    outline-color: hotpink;
+}
+
+.waxCodeBlock:focus-within {
+    outline-color: deeppink;
+}
+
+.waxLineCounter {
+    padding: 5px;
+    
+    background-color: rgba(255, 182, 193, .05);
+    border-right: 1px solid pink;
+    border-radius: 5px;
+}
+
+.waxFooter {
+    display: flex;
+    border-top: 1px solid pink;
+    width: 100%;
+}
+
+.waxTextFooter {
+    margin: 10px;
+    font-size: 10px;
+}

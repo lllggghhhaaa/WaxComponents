@@ -7,13 +7,16 @@
 Welcome to your new app.
 
 <WaxPanel>
-    <WaxButton OnClick="OnClick">
+    <WaxButton>
         <Icon><WaxIcon Size="24px">done</WaxIcon></Icon>
         <Text>Ceira</Text>
     </WaxButton>
 
     <WaxTextInput @bind-Value="_text" Placeholder="Ceira"></WaxTextInput>
 </WaxPanel>
+
+<WaxCodeBlock Code="@_code" Language="js">
+</WaxCodeBlock>
 
 <SurveyPrompt Title="How is Blazor working for you?"/>
 
@@ -25,12 +28,10 @@ body {
 </style>
 
 @code {
-
     private string _text = String.Empty;
 
-    private void OnClick(object? sender, EventArgs e)
-    {
-        Console.WriteLine(_text);
-    }
-
+    private string _code = 
+        @"function ceira(i) {
+    i++;    
+}";
 }
