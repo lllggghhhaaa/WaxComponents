@@ -37,7 +37,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        tag_name: ${{ github.event.payload.push_id }}
+        tag_name: ${{ github.event.comment.id }}
         release_name: WaxComponents
         draft: false
         prerelease: false
