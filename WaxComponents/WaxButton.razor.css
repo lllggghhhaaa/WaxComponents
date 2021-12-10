@@ -1,0 +1,21 @@
+.waxButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    background-color: white;
+    outline: 1px solid rgba(255, 20, 147, 0);
+    border: 1px solid deeppink;
+    border-radius: 5px;
+    margin-top: 5px;
+    
+    transition: outline-color .3s, background-color .15s;
+}
+
+.waxButton:active {
+    background-color: rgba(255, 20, 147, 0.2);
+}
+
+.waxButtonText {
+    margin: 5px;
+}

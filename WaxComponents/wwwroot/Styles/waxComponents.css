@@ -1,0 +1,12 @@
+.waxComponent:hover {
+    background-color: rgba(255, 20, 147, 0.05);
+}
+
+.waxComponent:focus {
+    outline: 1px solid rgba(255, 20, 147, 1);
+    background-color: rgba(255, 20, 147, 0.1);
+}
+
+.waxComponent:active {
+    background-color: rgba(255, 20, 147, 0.2);
+}

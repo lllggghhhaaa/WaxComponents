@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaxComponents", "WaxComponents\WaxComponents.csproj", "{D6ED171E-0998-444D-8F53-B7B1920FB1E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaxComponents.Tests", "WaxComponents.Tests\WaxComponents.Tests.csproj", "{6EFA0065-936B-40D3-AC0D-832CED5F7330}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6ED171E-0998-444D-8F53-B7B1920FB1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6ED171E-0998-444D-8F53-B7B1920FB1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6ED171E-0998-444D-8F53-B7B1920FB1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6ED171E-0998-444D-8F53-B7B1920FB1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EFA0065-936B-40D3-AC0D-832CED5F7330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EFA0065-936B-40D3-AC0D-832CED5F7330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EFA0065-936B-40D3-AC0D-832CED5F7330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EFA0065-936B-40D3-AC0D-832CED5F7330}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

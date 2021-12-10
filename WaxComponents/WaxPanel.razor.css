@@ -1,0 +1,16 @@
+.waxPanel {
+    margin-top: 5px;
+    padding: 10px;
+    outline: pink solid 1px;
+    border-radius: 5px;
+    
+    transition: outline-color .3s;
+}
+
+.waxPanel:hover {
+    outline-color: hotpink;
+}
+
+.waxPanel:focus-within {
+    outline-color: deeppink;
+}

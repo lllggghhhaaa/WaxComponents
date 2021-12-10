@@ -1,0 +1,36 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<WaxPanel>
+    <WaxButton OnClick="OnClick">
+        <Icon><WaxIcon Size="24px">done</WaxIcon></Icon>
+        <Text>Ceira</Text>
+    </WaxButton>
+
+    <WaxTextInput @bind-Value="_text" Placeholder="Ceira"></WaxTextInput>
+</WaxPanel>
+
+<SurveyPrompt Title="How is Blazor working for you?"/>
+
+<style>
+body {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+}
+</style>
+
+@code {
+
+    private string _text = String.Empty;
+
+    private void OnClick(object? sender, EventArgs e)
+    {
+        Console.WriteLine(_text);
+    }
+
+}

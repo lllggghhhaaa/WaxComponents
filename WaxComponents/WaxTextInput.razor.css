@@ -1,0 +1,12 @@
+.waxTextInput {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    padding: 10px;
+    background: white;
+    border: 1px solid deeppink;
+    border-radius: 5px;
+    margin-top: 5px;
+    transition: outline-color .5s, background-color .5s;
+}
