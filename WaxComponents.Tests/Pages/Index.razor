@@ -18,6 +18,8 @@ Welcome to your new app.
 <WaxCodeBlock Code="@_code" Language="js">
 </WaxCodeBlock>
 
+<WaxMenu Items="_items"></WaxMenu>
+
 <SurveyPrompt Title="How is Blazor working for you?"/>
 
 <style>
@@ -28,6 +30,26 @@ body {
 </style>
 
 @code {
+
+    private List<MenuItem> _items = new()
+    {
+        new MenuItem
+        {
+            Name = "ceira",
+            Render = @<WaxButton><Text>Ceira</Text></WaxButton>
+        },
+        new MenuItem
+        {
+            Name = "ceira2",
+            Render = @<WaxTextInput></WaxTextInput>
+        },
+        new MenuItem
+        {
+            Name = "ceira3",
+            Render = @<WaxTextInput Placeholder="ceira"></WaxTextInput>
+        },
+    };
+    
     private string _text = String.Empty;
 
     private string _code = 

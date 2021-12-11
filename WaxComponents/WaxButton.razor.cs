@@ -14,5 +14,20 @@ public partial class WaxButton
     public string FontSize { get; set; } = "20px";
 
     [Parameter]
-    public EventHandler? OnClick { get; set; }
+    public EventHandler<ClickedEventArgs>? OnClick { get; set; }
+    [Parameter]
+    public string Styles { get; set; }
+
+    [Parameter] 
+    public int Id { get; set; }
+}
+
+public class ClickedEventArgs : EventArgs
+{
+    public int Id;
+
+    public ClickedEventArgs(int id)
+    {
+        Id = id;
+    }
 }

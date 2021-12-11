@@ -1,0 +1,10 @@
+.waxMenuContent {
+    margin-left: 10px;
+}
+
+.waxMenuButtons {
+    padding-right: 10px;
+    width: 200px;
+    
+    border-right: 1px solid hotpink;
+}

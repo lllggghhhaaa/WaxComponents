@@ -1,0 +1,16 @@
+<WaxPanel>
+    <div style="display: flex">
+        <div class="waxMenuButtons">
+            @for (int i = 0; i < Items.Count; i++)
+            {
+                MenuItem item = Items[i];
+
+                <WaxButton Styles="width: 100%" Id="i" OnClick="ButtonSelected">
+                    <Icon>@item.Icon</Icon>
+                    <Text>@item.Name</Text>
+                </WaxButton>
+            }
+        </div>
+        <div class="waxMenuContent">@ContentSelected</div>
+    </div>
+</WaxPanel>
