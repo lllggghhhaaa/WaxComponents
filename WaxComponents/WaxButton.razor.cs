@@ -13,6 +13,8 @@ public partial class WaxButton
     [Parameter]
     public string FontSize { get; set; } = "20px";
 
+    [Parameter] public ButtonStyle Style { get; set; } = ButtonStyle.Outlined;
+
     [Parameter]
     public EventHandler<ClickedEventArgs>? OnClick { get; set; }
     [Parameter]
@@ -20,6 +22,12 @@ public partial class WaxButton
 
     [Parameter] 
     public int Id { get; set; }
+}
+
+public enum ButtonStyle
+{
+    None,
+    Outlined
 }
 
 public class ClickedEventArgs : EventArgs

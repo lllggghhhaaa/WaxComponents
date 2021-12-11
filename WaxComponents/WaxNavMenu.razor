@@ -1,0 +1,16 @@
+@inject NavigationManager _navManager
+
+<div class="waxNavMenu">
+    <p class="waxNavMenuTitle">@Title</p>
+    <div style="width: 100%">
+        @for (int i = 0; i < Items.Count; i++)
+        {
+            NavMenuItem item = Items[i];
+
+            <WaxButton Style="@ButtonStyle.None" Styles="width: 100%;" FontSize="16px" Id="i" OnClick="ButtonSelected">
+                <Icon>@item.Icon</Icon>
+                <Text>@item.Name</Text>
+            </WaxButton>
+        }
+    </div>
+</div>
