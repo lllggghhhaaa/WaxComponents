@@ -40,3 +40,4 @@ private void OnClick(object? sender, EventArgs e)
 
 ### Resultado
 ![sample](Assets/sample.png)
+![sample](Assets/sample.gif)
