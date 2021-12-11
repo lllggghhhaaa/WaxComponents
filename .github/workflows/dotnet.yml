@@ -31,11 +31,11 @@ jobs:
         name: Upload
         path: /home/runner/work/WaxComponents/WaxComponents/WaxComponents/bin/Release/net6.0
         
-    - name: Get version
+    - name: WaxDotnetVersionFinder
       id: package_version
-      uses: KageKirin/get-csproj-version@v0
+      uses: lllggghhhaaa/WaxDotnetVersionFinder@main
       with:
-        file: WaxComponents/WaxComponents.csproj
+        path: WaxComponents/WaxComponents.csproj
         
     - name: Create Release
       uses: actions/create-release@v1
