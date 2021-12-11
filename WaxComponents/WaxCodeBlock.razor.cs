@@ -9,9 +9,9 @@ public partial class WaxCodeBlock
     public string Code { get; set; } = String.Empty;
     
     [Parameter]
-    public string Language { get; set; }
+    public string Language { get; set; } = String.Empty;
 
-    private string _lines
+    private string Lines
     {
         get
         {

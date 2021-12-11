@@ -5,5 +5,5 @@ namespace WaxComponents;
 public partial class WaxPanel
 {
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 }

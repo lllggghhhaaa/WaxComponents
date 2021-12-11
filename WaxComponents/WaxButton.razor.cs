@@ -5,10 +5,10 @@ namespace WaxComponents;
 public partial class WaxButton
 {
     [Parameter]
-    public RenderFragment Text { get; set; }
+    public RenderFragment? Text { get; set; }
 
     [Parameter]
-    public RenderFragment Icon { get; set; }
+    public RenderFragment? Icon { get; set; }
 
     [Parameter]
     public string FontSize { get; set; } = "20px";
@@ -16,7 +16,7 @@ public partial class WaxButton
     [Parameter]
     public EventHandler<ClickedEventArgs>? OnClick { get; set; }
     [Parameter]
-    public string Styles { get; set; }
+    public string Styles { get; set; } = String.Empty;
 
     [Parameter] 
     public int Id { get; set; }
