@@ -1,0 +1,30 @@
+.waxSlider {
+    -webkit-appearance: none;
+
+    background-color: white;
+    border: 1px solid deeppink;
+    border-radius: 4px;
+
+    transition: background-color .15s;
+
+    margin-top: 5px;
+    height: 8px;
+}
+
+.waxSlider::-moz-range-progress {
+    background-color: hotpink;
+    height: 100%;
+}
+
+.waxSlider::-moz-range-thumb {
+    background-color: white;
+    border: 1px solid deeppink;
+}
+
+.waxSlider:hover {
+    background-color: rgba(255, 20, 147, 0.05);
+}
+
+.waxSlider::-moz-range-thumb:hover {
+    background-color: rgba(255, 235, 255);
+}
