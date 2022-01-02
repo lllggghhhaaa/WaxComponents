@@ -5,6 +5,12 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>0.0.3</Version>
+        <Title>WaxComponents</Title>
+        <Authors>lllggghhhaaa</Authors>
+        <Description>Simple components for blazor, free and opensource</Description>
+        <RepositoryUrl>https://github.com/lllggghhhaaa/WaxComponents</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <PackageTags>Blazor wax ceira</PackageTags>
     </PropertyGroup>
 
 

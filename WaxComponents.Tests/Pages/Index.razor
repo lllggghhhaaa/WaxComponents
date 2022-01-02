@@ -18,7 +18,7 @@ Welcome to your new app.
 <WaxCodeBlock Code="@_code" Language="js">
 </WaxCodeBlock>
 
-<WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0"></WaxSlider>
+<WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0" ValueChanged="v => Console.WriteLine(v)"></WaxSlider>
 
 <SurveyPrompt Title="How is Blazor working for you?"/>
 
