@@ -41,5 +41,5 @@ private void OnClick(object? sender, EventArgs e)
 <br/>
 
 ### Resultado
-![sample](Assets/sample.png)
-![sample](Assets/sample.gif)
+![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/sample.png)
+![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/sample.gif)
