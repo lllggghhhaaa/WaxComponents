@@ -1,5 +1,7 @@
 ### Instalando
 
+Nuget: https://www.nuget.org/packages/WaxComponents
+
 - Adicionar na head do html
 ```html
 <!-- Estilos dos componentes-->
