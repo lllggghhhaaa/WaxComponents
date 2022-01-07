@@ -3,7 +3,7 @@
 @using Blazor.Extensions.Canvas.WebGL
 @using System.Drawing
 @using System.Globalization
-<div class="waxGraph" onmousemove="@MouseMove" onmouseout="@(() => _viewPoint = null)">
+<div class="waxGraph" onmousemove="@MouseMove" onmouseout="@((MouseEventArgs args) => _viewPoint = null)">
     <BECanvas Width="Width" Height="Height" @ref="_canvas"></BECanvas>
 </div>
 
@@ -96,11 +96,13 @@
 
         if (_viewPoint is not null)
         {
+            PointInfo pi = _viewPoint.Value;
+            
             await _context.BeginPathAsync();
-            await _context.MoveToAsync(_viewPoint.Value.X + 50, Height - _viewPoint.Value.Y - 50);
-            await _context.ArcAsync(_viewPoint.Value.X + 50, Height - _viewPoint.Value.Y - 50, 3,  0, 360 * Math.PI / 180);
+            await _context.MoveToAsync(pi.X + 50, Height - pi.Y - 50);
+            await _context.ArcAsync(pi.X + 50, Height - pi.Y - 50, 3,  0, 360 * Math.PI / 180);
             await _context.FillAsync();
-            await _context.FillTextAsync(_viewPoint.Value.Y.ToString(CultureInfo.InvariantCulture), _viewPoint.Value.X + 50,  Height -_viewPoint.Value.Y - 60);
+            await _context.FillTextAsync(pi.Y.ToString(CultureInfo.InvariantCulture), pi.X + 50,  Height - pi.Y - 60);
         }
     }
 
