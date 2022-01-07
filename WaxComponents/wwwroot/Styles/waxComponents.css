@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+}
+
 .waxComponent:hover {
     background-color: rgba(255, 20, 147, 0.05);
 }

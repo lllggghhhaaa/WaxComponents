@@ -20,14 +20,9 @@ Welcome to your new app.
 
 <WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0" ValueChanged="v => Console.WriteLine(v)"></WaxSlider>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<WaxGraph Items="_items" Height="500"></WaxGraph>
 
-<style>
-body {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 16px;
-}
-</style>
+<SurveyPrompt Title="How is Blazor working for you?"/>
 
 @code {
     
@@ -37,4 +32,31 @@ body {
         @"function ceira(i) {
     i++;    
 }";
+
+    private List<IGraphItem> _items = new()
+    {
+        new CeiraItem(100, "Ceira 1"),
+        new CeiraItem(50, "Ceira 2"),
+        new CeiraItem(300, "Ceira 3"),
+        new CeiraItem(400, "Ceira 4"),
+        new CeiraItem(200, "Ceira 5"),
+        new CeiraItem(90, "Ceira 6")
+    };
+
+    class CeiraItem : IGraphItem
+    {
+        private int _value;
+        private string _label;
+
+        public CeiraItem(int value, string label)
+        {
+            _value = value;
+            _label = label;
+        }
+
+        public float Value => _value;
+
+        public string Label => _label;
+    }
+
 }

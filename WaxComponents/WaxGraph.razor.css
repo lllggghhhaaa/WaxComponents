@@ -1,0 +1,16 @@
+.waxGraph {
+    width: fit-content;
+    margin-top: 5px;
+    outline: pink solid 1px;
+    border-radius: 5px;
+
+    transition: outline-color .3s;
+}
+
+.waxGraph:hover {
+    outline-color: hotpink;
+}
+
+.waxGraph:focus-within {
+    outline-color: deeppink;
+}
