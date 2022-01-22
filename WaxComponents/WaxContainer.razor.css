@@ -1,16 +1,20 @@
-.waxPanel {
+.waxContainer {
     margin-top: 5px;
     padding: 10px;
     outline: pink solid 1px;
     border-radius: 5px;
 
+    width: fit-content;
+
     transition: outline-color .3s;
 }
 
-.waxPanel:hover {
+.waxContainer:hover {
     outline-color: hotpink;
+    background-color: rgba(255, 20, 147, .03);
 }
 
-.waxPanel:focus-within {
+.waxContainer:focus-within {
     outline-color: deeppink;
+    background-color: rgba(255, 20, 147, 0.05);
 }

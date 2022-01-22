@@ -4,11 +4,20 @@ Nuget: https://www.nuget.org/packages/WaxComponents
 
 - Adicionar na head do html
 ```html
-<!-- Estilos dos componentes-->
+<!-- Styles -->
 <link href="_content/WaxComponents/Styles/waxComponents.css" rel="stylesheet">
 
-<!--Icones-->
+<!-- fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+```
+
+- Importar a biblioteca
+```cs
+//...
+@using WaxComponents
 ```
 
 <br/>
@@ -16,7 +25,7 @@ Nuget: https://www.nuget.org/packages/WaxComponents
 ### Usando
 
 ```html
-<!--Button-->
+<!-- Button -->
 <WaxButton OnClick="OnClick">
     
     <!--Icones baseados no tema Material-->
@@ -25,7 +34,7 @@ Nuget: https://www.nuget.org/packages/WaxComponents
     <Text>Ceira</Text>
 </WaxButton>
 
-<!--Text Input-->
+<!-- Text Input -->
 <WaxTextInput @bind-Value="_text" Placeholder="Ceira"></WaxTextInput>
 ```
 

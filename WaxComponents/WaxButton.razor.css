@@ -2,7 +2,9 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    
+    margin-top: 5px;
+    min-width: 100px;
+
     transition: outline-color .3s, background-color .15s;
 }
 
@@ -11,7 +13,6 @@
     outline: 1px solid rgba(255, 20, 147, 0);
     border: 1px solid deeppink;
     border-radius: 5px;
-    margin-top: 5px;
 }
 
 .waxButtonOutlined:active {
@@ -24,13 +25,14 @@
 }
 
 .waxButtonNone:hover {
-    background-color: rgba(255, 20, 147, 0.05);
+    background-color: rgba(255, 20, 147, .05);
 }
 
 .waxButtonNone:active {
-    background-color: rgba(255, 20, 147, 0.1);
+    background-color: rgba(255, 20, 147, .1);
 }
 
 .waxButtonText {
     margin: 5px;
+    text-align: center;
 }

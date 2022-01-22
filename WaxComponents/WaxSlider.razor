@@ -1,1 +1,2 @@
-<input type="range" class="waxSlider" min="@Min" max="@Max" value="@Value" step="@Step" oninput="@OnChange"/>
+@using WaxComponents.Utils
+<input type="range" class="waxSlider" style="@Style;background: linear-gradient(to right, hotpink 0%, hotpink @Value.Percentage(Max)%, #fff @Value.Percentage(Max)%, white 100%)" min="@Min" max="@Max" step="@Step" @bind-value="@Value" @bind-value:event="oninput"/>

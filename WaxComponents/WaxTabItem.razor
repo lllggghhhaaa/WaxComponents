@@ -1,0 +1,44 @@
+<button class="waxTabItem" style="background-color: @_bgColor;@Style" onclick="@OnTabClicked">
+    <p>
+        <WaxIcon>@Icon</WaxIcon>
+    </p>
+    <p style="padding-top: 5px">@Text</p>
+</button>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? Text { get; set; }
+
+    [Parameter]
+    public RenderFragment? Icon { get; set; }
+
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+    [CascadingParameter]
+    public WaxTab? Parent { get; set; }
+
+    [Parameter]
+    public string Style { get; set; } = String.Empty;
+
+    private string _bgColor = "white";
+
+    private void OnTabClicked()
+    {
+        if (Parent is not null) Parent.SetTab(this);
+    }
+
+    protected override void OnInitialized()
+    {
+        if (Parent is not null) Parent.SetTab(this, true);
+        
+        base.OnInitialized();
+    }
+
+    public void ChangeActive(bool active)
+    {
+        _bgColor = active ? "rgba(255, 20, 147, 0.2) !important" : "white";
+    }
+
+}

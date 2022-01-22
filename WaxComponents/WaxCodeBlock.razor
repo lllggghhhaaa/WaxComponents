@@ -1,11 +1,12 @@
-<div class="waxCodeBlock">
+<div class="waxCodeBlock" style="@Style">
     <div class="waxCodeBlockContainer">
         <pre class="waxLineCounter"><code>@Lines</code></pre>
-        <pre style="margin: 2px 0 0 10px"><code lang="@Language">@Code</code></pre>
+        <pre style="margin: 4px 0 0 10px"><code lang="@Language">@Code</code></pre>
     </div>
-    
+
     <div class="waxFooter">
-        <p class="waxTextFooter" style="text-align: left">Lines: @Code.Split("\n").Length</p>
-        <p class="waxTextFooter" style="text-align: right">Language: @Language</p>
+        <p class="waxTextFooter">@FileName</p>
+        <p class="waxTextFooter" style="text-align: left">@Code.Split("\n").Length lines</p>
+        <p class="waxTextFooter" style="text-align: right">@Language</p>
     </div>
 </div>

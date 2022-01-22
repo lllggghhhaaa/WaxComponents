@@ -4,9 +4,9 @@ namespace WaxComponents;
 
 public partial class WaxIcon
 {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter]
-    public string Size { get; set; } = "24px";
+    [Parameter] public string Size { get; set; } = "24px";
+
+    [Parameter] public string Style { get; set; } = String.Empty;
 }

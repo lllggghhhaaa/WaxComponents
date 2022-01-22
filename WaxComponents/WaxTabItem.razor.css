@@ -1,0 +1,17 @@
+.waxTabItem {
+    display: flex;
+    float: left;
+    height: 35px;
+    margin-right: 1px;
+    white-space: nowrap;
+    
+    transition: background-color .15s;
+
+    border: 1px solid deeppink;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+}
+
+.waxTabItem:hover {
+    background-color: rgba(255, 20, 147, 0.05) !important;
+}

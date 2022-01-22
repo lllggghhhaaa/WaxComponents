@@ -8,6 +8,7 @@ public partial class WaxTextInput
     public string Value { get; set; } = String.Empty;
     [Parameter]
     public string Placeholder { get; set; } = String.Empty;
+    [Parameter] public string Style { get; set; } = String.Empty;
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 

@@ -8,29 +8,75 @@ Welcome to your new app.
 
 <WaxPanel>
     <WaxButton>
-        <Icon><WaxIcon Size="24px">done</WaxIcon></Icon>
+        <Icon>
+            <WaxIcon>done</WaxIcon>
+        </Icon>
         <Text>Ceira</Text>
     </WaxButton>
 
     <WaxTextInput @bind-Value="_text" Placeholder="Ceira"></WaxTextInput>
 </WaxPanel>
 
-<WaxCodeBlock Code="@_code" Language="js">
+<WaxCodeBlock FileName="Index.js" Code="@_code" Language="javascript">
 </WaxCodeBlock>
 
-<WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0" ValueChanged="v => Console.WriteLine(v)"></WaxSlider>
+<WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0"></WaxSlider>
 
 <WaxGraph Items="_items" Height="500"></WaxGraph>
+
+<WaxTab>
+    <WaxTabItem>
+        <Text>Ceira</Text>
+        <Icon>done</Icon>
+        <Content>
+            <WaxButton>
+                <Text>Ceira 1 cont</Text>
+            </WaxButton>
+        </Content>
+    </WaxTabItem>
+    <WaxTabItem>
+        <Text>Ceira 2</Text>
+        <Icon>done</Icon>
+        <Content>
+            <WaxButton>
+                <Text>Ceira 2 cont</Text>
+            </WaxButton>
+        </Content>
+    </WaxTabItem>
+    <WaxTabItem>
+        <Text>Ceira 3</Text>
+        <Icon>done</Icon>
+        <Content>
+            <WaxButton>
+                <Text>Ceira 3 cont</Text>
+            </WaxButton>
+        </Content>
+    </WaxTabItem>
+</WaxTab>
+
+<WaxContainer>
+    <WaxButton>
+        <Icon>
+            <WaxIcon Size="24px">done</WaxIcon>
+        </Icon>
+        <Text>Sinas</Text>
+    </WaxButton>
+
+    <WaxTextInput Placeholder="Ceira"></WaxTextInput>
+
+    <WaxIcon>reply all</WaxIcon>
+</WaxContainer>
 
 <SurveyPrompt Title="How is Blazor working for you?"/>
 
 @code {
-    
+
     private string _text = String.Empty;
 
-    private string _code = 
+    private string _code =
         @"function ceira(i) {
-    i++;    
+    if (i <= 10)
+        i++;    
 }";
 
     private List<IGraphItem> _items = new()
