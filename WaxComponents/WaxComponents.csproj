@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>0.0.7</Version>
@@ -13,6 +13,7 @@
         <PackageTags>Blazor wax ceira</PackageTags>
         <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
 
@@ -23,7 +24,7 @@
     <ItemGroup>
         <EmbeddedResource Include="wwwroot\**\*" />
         <PackageReference Include="Blazor.Extensions.Canvas" Version="1.1.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
     </ItemGroup>
 
 </Project>
