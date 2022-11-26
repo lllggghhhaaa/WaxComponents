@@ -1,1 +1,7 @@
-<input class="waxComponent waxTextInput" style="@Style" placeholder="@Placeholder" oninput="@OnChange" value="@Value" type="text"/>
+<input class="waxComponent waxTextInput" 
+       style="@Style" 
+       placeholder="@Placeholder" 
+       pattern="@Pattern" 
+       oninput="@OnChange"
+       value="@Value" 
+       type="@TextType.ToString().ToLower()"/>

@@ -1,0 +1,24 @@
+﻿@page "/inputtest"
+<h3>InputTest</h3>
+
+<WaxTextInput @bind-value="@_text1" Placeholder="Ceira1" TextType="@WaxTextInput.InputType.Text"></WaxTextInput>
+<WaxTextInput @bind-value="@_text2" Placeholder="Ceira2" TextType="@WaxTextInput.InputType.Email"></WaxTextInput>
+<WaxTextInput @bind-value="@_text3" Placeholder="Ceira3" TextType="@WaxTextInput.InputType.Password"></WaxTextInput>
+<WaxTextInput @bind-value="@_text4" Placeholder="Ceira4" TextType="@WaxTextInput.InputType.Number"></WaxTextInput>
+<WaxTextInput @bind-value="@_text5" Placeholder="Ceira5" TextType="@WaxTextInput.InputType.Tel"></WaxTextInput>
+<WaxTextInput @bind-value="@_text6" Placeholder="Ceira6" TextType="@WaxTextInput.InputType.Time"></WaxTextInput>
+<WaxTextInput @bind-value="@_text7" Placeholder="Ceira7" TextType="@WaxTextInput.InputType.Url"></WaxTextInput>
+
+<WaxCodeBlock Code="@Code"></WaxCodeBlock>
+
+@code {
+    private string _text1 = String.Empty;
+    private string _text2 = String.Empty;
+    private string _text3 = String.Empty;
+    private string _text4 = String.Empty;
+    private string _text5 = String.Empty;
+    private string _text6 = String.Empty;
+    private string _text7 = String.Empty;
+
+    private string Code => $"{_text1}\n{_text2}\n{_text3}\n{_text4}\n{_text5}\n{_text6}\n{_text7}";
+}
