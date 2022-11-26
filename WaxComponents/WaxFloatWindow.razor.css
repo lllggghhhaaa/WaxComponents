@@ -1,0 +1,23 @@
+﻿.overlay {
+    background-color: rgba(250, 224, 228, .25);
+    cursor: auto;
+    display: block;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: fixed;
+    z-index: 1000;
+}
+
+.waxFloatWindow {
+    background-color: #fff;
+    border: 1px solid deeppink;
+    border-radius: 5px;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+}

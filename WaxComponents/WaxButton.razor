@@ -1,4 +1,6 @@
-<button class="waxComponent waxButton @($"waxButton{ButtonStyle}")" onclick="@(() => OnClick?.Invoke(this, new ClickedEventArgs(Id)))" style="@Style">
+<button class="waxComponent waxButton @($"waxButton{ButtonStyle}")" 
+        onclick="@(() => OnClick?.Invoke(this, new ClickedEventArgs(Id)))" 
+        style="@Style">
     <p class="waxButtonText">@Icon</p>
     <p class="waxButtonText" style="padding: 2px 5px 0 0; font-size: @FontSize">@Text</p>
 </button>

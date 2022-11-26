@@ -1,0 +1,19 @@
+﻿@page "/floatwindowtest"
+<h3>FloatWindowTest</h3>
+
+<WaxButton OnClick="@((_, _) => ButtonCLick())">
+    <Text>Test</Text>
+</WaxButton>
+
+<WaxFloatWindow @ref="_fwindow" Style="width: 70%; height: 70%">
+    <WaxTextInput Placeholder="Ceira"></WaxTextInput>
+    <WaxButton>
+        <Text>Ceira</Text>
+    </WaxButton>
+</WaxFloatWindow>
+
+@code {
+    private WaxFloatWindow _fwindow = default!;
+
+    private void ButtonCLick() => _fwindow.Show();
+}
