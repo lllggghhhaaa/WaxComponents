@@ -1,9 +1,7 @@
 .waxButton {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    margin-top: 5px;
-    min-width: 100px;
+    padding: 5px 10px;
 
     transition: outline-color .3s, background-color .15s;
 }
@@ -33,6 +31,6 @@
 }
 
 .waxButtonText {
-    margin: 5px;
+    margin: auto auto auto 5px;
     text-align: center;
 }

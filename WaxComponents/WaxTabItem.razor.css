@@ -1,9 +1,9 @@
 .waxTabItem {
     display: flex;
     float: left;
-    height: 35px;
     margin-right: 1px;
     white-space: nowrap;
+    padding: 2px 10px;
     
     transition: background-color .15s;
 
@@ -14,4 +14,9 @@
 
 .waxTabItem:hover {
     background-color: rgba(255, 20, 147, 0.05) !important;
+}
+
+.waxTabItemText {
+    margin: auto auto auto 5px;
+    text-align: center;
 }

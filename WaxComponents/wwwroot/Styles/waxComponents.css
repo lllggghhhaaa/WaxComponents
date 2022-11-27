@@ -2,23 +2,27 @@
 
 code {
     font-family: "JetBrains Mono", monospace;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+button, input, optgroup, select, textarea {
+    font-size: initial;
 }
 
 .waxComponent:hover {
-    background-color: rgba(255, 20, 147, 0.05);
+    background-color: rgba(255, 20, 147, .05);
 }
 
 .waxComponent:focus {
     outline: 1px solid rgba(255, 20, 147, 1);
-    background-color: rgba(255, 20, 147, 0.1);
+    background-color: rgba(255, 20, 147, .1);
 }
 
 .waxComponent:active {
-    background-color: rgba(255, 20, 147, 0.2);
+    background-color: rgba(255, 20, 147, .2);
 }

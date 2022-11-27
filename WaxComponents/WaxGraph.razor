@@ -1,8 +1,0 @@
-@using Blazor.Extensions.Canvas.Model
-@using System.Numerics
-@using Blazor.Extensions.Canvas.WebGL
-@using System.Drawing
-@using System.Globalization
-<div class="waxGraph" style="@Style" onmousemove="@MouseMove" onmouseout="@((MouseEventArgs _) => _viewPoint = null)">
-    <BECanvas Width="_width" Height="Height" @ref="_canvas"></BECanvas>
-</div>

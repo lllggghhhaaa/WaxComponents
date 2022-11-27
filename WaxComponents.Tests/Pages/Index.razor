@@ -4,8 +4,6 @@
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
-
 <WaxPanel>
     <WaxButton>
         <Icon>
@@ -21,8 +19,6 @@ Welcome to your new app.
 </WaxCodeBlock>
 
 <WaxSlider Value="Single.TryParse(_text, out float re) ? re : 0"></WaxSlider>
-
-<WaxGraph Items="_items" Height="500"></WaxGraph>
 
 <WaxTab>
     <WaxTabItem>
@@ -67,8 +63,6 @@ Welcome to your new app.
     <WaxIcon>reply all</WaxIcon>
 </WaxContainer>
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
-
 @code {
 
     private string _text = String.Empty;
@@ -78,16 +72,6 @@ Welcome to your new app.
     if (i <= 10)
         i++;    
 }";
-
-    private List<IGraphItem> _items = new()
-    {
-        new CeiraItem(100, "Ceira 1"),
-        new CeiraItem(50, "Ceira 2"),
-        new CeiraItem(300, "Ceira 3"),
-        new CeiraItem(400, "Ceira 4"),
-        new CeiraItem(200, "Ceira 5"),
-        new CeiraItem(90, "Ceira 6")
-    };
 
     class CeiraItem : IGraphItem
     {

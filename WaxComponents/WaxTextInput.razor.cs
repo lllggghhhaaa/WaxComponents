@@ -6,6 +6,7 @@ public partial class WaxTextInput
 {
     [Parameter] public string Value { get; set; } = String.Empty;
     [Parameter] public InputType TextType { get; set; } = InputType.Text;
+    [Parameter] public string FontSize { get; set; } = "12px";
     [Parameter] public string Placeholder { get; set; } = String.Empty;
     [Parameter] public string Pattern { get; set; } = String.Empty;
     [Parameter] public string Style { get; set; } = String.Empty;

@@ -8,7 +8,7 @@
     transition: background-color .15s;
 
     margin-top: 5px;
-    height: 8px;
+    height: 7px;
 }
 
 .waxSlider:hover {
@@ -21,27 +21,27 @@
     -webkit-appearance: none;
     background-color: white;
     border: 1px solid deeppink;
-    border-radius: 8px;
-    width: 16px;
-    height: 16px;
+    border-radius: 6px;
+    width: 12px;
+    height: 12px;
 }
 
 .waxSlider::-moz-range-thumb {
     -webkit-appearance: none;
     background-color: white;
     border: 1px solid deeppink;
-    border-radius: 8px;
-    width: 16px;
-    height: 16px;
+    border-radius: 6px;
+    width: 12px;
+    height: 12px;
 }
 
 .waxSlider::-ms-thumb {
     -webkit-appearance: none;
     background-color: white;
     border: 1px solid deeppink;
-    border-radius: 8px;
-    width: 16px;
-    height: 16px;
+    border-radius: 6px;
+    width: 12px;
+    height: 12px;
 }
 
 .waxSlider::-webkit-slider-thumb:hover {

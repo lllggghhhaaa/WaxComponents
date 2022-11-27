@@ -8,27 +8,27 @@ public partial class WaxButton
 
     [Parameter] public RenderFragment? Icon { get; set; }
 
-    [Parameter] public string FontSize { get; set; } = "20px";
+    [Parameter] public string FontSize { get; set; } = "12px";
 
-    [Parameter] public ButtonStyle ButtonStyle { get; set; } = ButtonStyle.Outlined;
+    [Parameter] public WaxButtonStyle ButtonStyle { get; set; } = WaxButtonStyle.Outlined;
 
-    [Parameter] public EventHandler<ClickedEventArgs>? OnClick { get; set; }
+    [Parameter] public EventHandler<WaxClickedEventArgs>? OnClick { get; set; }
     [Parameter] public string Style { get; set; } = String.Empty;
 
     [Parameter] public int Id { get; set; }
 }
 
-public enum ButtonStyle
+public enum WaxButtonStyle
 {
     None,
     Outlined
 }
 
-public class ClickedEventArgs : EventArgs
+public class WaxClickedEventArgs : EventArgs
 {
     public int Id;
 
-    public ClickedEventArgs(int id)
+    public WaxClickedEventArgs(int id)
     {
         Id = id;
     }
