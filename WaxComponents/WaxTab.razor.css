@@ -1,6 +1,7 @@
 .waxTab {
     overflow: hidden;
     margin-top: 10px;
+    margin-left: 4px;
 }
 
 .waxTabContent {

@@ -6,26 +6,3 @@
         @_activeTab?.Content
     </div>
 </CascadingValue>
-
-@code {
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string Style { get; set; } = String.Empty;
-
-    private WaxTabItem? _activeTab;
-
-    public void SetTab(WaxTabItem tab, bool initialization = false)
-    {
-        if (initialization && _activeTab is not null) return;
-        
-        _activeTab?.ChangeActive(false);
-        tab.ChangeActive(true);
-        
-        _activeTab = tab;
-        StateHasChanged();
-    }
-
-}
