@@ -12,8 +12,6 @@
 
 .waxFloatWindow {
     background-color: #fff;
-    border: 1px solid deeppink;
-    border-radius: 5px;
     padding: 20px;
     position: fixed;
     top: 50%;

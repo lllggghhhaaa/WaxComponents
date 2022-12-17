@@ -1,4 +1,7 @@
-<button class="waxTabItem" style="border-top-right-radius:@_borderTopRight;border-top-left-radius:@_borderTopLeft;background-color: @_bgColor;@Style" onclick="@OnTabClicked">
+<button class="waxTabItem waxComponentOutline" onclick="@OnTabClicked" 
+        style="border-radius: @_borderTopLeft @_borderTopRight @_borderBottomRight @_borderBottomLeft;
+               background-color: @_bgColor;
+               @Style">
     <WaxIcon>@Icon</WaxIcon>
     <p class="waxTabItemText" style="font-size:@FontSize;@Style">@Text</p>
 </button>

@@ -16,6 +16,14 @@ public partial class WaxButton
     [Parameter] public string Style { get; set; } = String.Empty;
 
     [Parameter] public int Id { get; set; }
+    
+    public string GetClasses() =>
+        ButtonStyle switch
+        {
+            WaxButtonStyle.Outlined => "waxButtonOutlined waxComponentOutline",
+            WaxButtonStyle.None => "waxButtonNone",
+            _ => "waxButtonNone"
+        };
 }
 
 public enum WaxButtonStyle

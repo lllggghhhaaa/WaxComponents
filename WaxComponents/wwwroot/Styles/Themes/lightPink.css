@@ -1,0 +1,19 @@
+:root {
+    --bg-color: white;
+    --bg-color-secondary: rgba(255, 182, 193, .1);
+    --main-color: deeppink;
+    --border-radius: 5px;
+    --transition-time: .333s;
+    
+    --component-bg-color-hover: rgba(255, 20, 147, .05);
+    --component-bg-color-focus: rgba(255, 20, 147, .1);
+    --conponent-bg-color-active: rgba(255, 20, 147, .2);
+    
+    --component-border-color: pink;
+    --component-border-color-hover: hotpink;
+    --component-border-color-focus-within: deeppink;
+    
+    --slider-thumb-color: white;
+    --slider-thumb-color-hover: rgba(255, 235, 255);
+    --slider-fill-color: pink;
+}

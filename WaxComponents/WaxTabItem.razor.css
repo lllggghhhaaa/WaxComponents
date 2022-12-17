@@ -4,15 +4,12 @@
     margin-right: -1px;
     white-space: nowrap;
     padding: 2px 10px;
-    
-    transition: background-color .15s;
 
-    border: 1px solid deeppink;
     border-bottom: none;
 }
 
 .waxTabItem:hover {
-    background-color: rgba(255, 20, 147, 0.05) !important;
+    background-color: var(--component-bg-color-hover, rgba(255, 20, 147, .05)) !important;
 }
 
 .waxTabItemText {

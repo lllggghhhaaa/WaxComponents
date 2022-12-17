@@ -14,15 +14,37 @@ button, input, optgroup, select, textarea {
     font-size: initial;
 }
 
+.waxComponent {
+    background-color: var(--bg-color, white);
+    transition: border-color, background-color var(--transition-time, .333s);
+}
+
 .waxComponent:hover {
-    background-color: rgba(255, 20, 147, .05);
+    background-color: var(--component-bg-color-hover, rgba(255, 20, 147, .05));
 }
 
 .waxComponent:focus {
-    outline: 1px solid rgba(255, 20, 147, 1);
-    background-color: rgba(255, 20, 147, .1);
+    background-color: var(--component-bg-color-focus, rgba(255, 20, 147, .1));
 }
 
 .waxComponent:active {
-    background-color: rgba(255, 20, 147, .2);
+    background-color: var(--conponent-bg-color-active, rgba(255, 20, 147, .2));
+}
+
+.waxComponentSecondary {
+    background-color: var(--bg-color-secondary, white);
+    transition: border-color, background-color var(--transition-time, .333s);
+}
+
+.waxComponentOutline {
+    border: 1px solid var(--component-border-color, pink);
+    border-radius: 5px;
+}
+
+.waxComponentOutline:hover {
+    border-color: hotpink;
+}
+
+.waxComponentOutline:focus-within {
+    border-color: deeppink;
 }

@@ -4,10 +4,13 @@ Nuget: https://www.nuget.org/packages/WaxComponents
 
 - Adicionar na head do html
 ```html
+<!-- Theme first -->
+<link href="_content/WaxComponents/Styles/Themes/lightPink.css" rel="stylesheet">
+
 <!-- Styles -->
 <link href="_content/WaxComponents/Styles/waxComponents.css" rel="stylesheet">
 
-<!-- fonts -->
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
