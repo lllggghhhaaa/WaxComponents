@@ -53,5 +53,5 @@ private void OnClick(object? sender, EventArgs e)
 <br/>
 
 ### Resultado
-![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/sample.png)
-![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/sample.gif)
+![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample1.png)
+![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample2.png)
