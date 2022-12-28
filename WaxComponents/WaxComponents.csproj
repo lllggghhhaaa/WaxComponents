@@ -10,7 +10,7 @@
         <Description>Simple components for blazor, free and opensource</Description>
         <RepositoryUrl>https://github.com/lllggghhhaaa/WaxComponents</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
-        <PackageTags>Blazor wax ceira</PackageTags>
+        <PackageTags>Blazor wax ceira pink theme</PackageTags>
         <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <LangVersion>11</LangVersion>
