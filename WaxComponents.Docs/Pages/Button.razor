@@ -1,11 +1,41 @@
 @page "/Button"
 
+<span>Usage:</span>
+<WaxCodeBlock Code="@_usage" Language="razor" FileName="Button.razor"/>
+
+<span>Properties</span>
 <WaxPanel>
-    <WaxButton>
-        <Text>Ceira</Text>
-    </WaxButton>
-    <WaxSeparator/>
-    <WaxButton>
-        <Text>Ceira</Text>
-    </WaxButton>
+    <WaxCodeBlock Code="@_textProp" Language="cs" Minimal="true"/>
+    <WaxCodeBlock Code="@_iconProp" Language="cs" Minimal="true"/>
+    <WaxCodeBlock Code="@_fontSizeProp" Language="cs" Minimal="true"/>
+    <WaxCodeBlock Code="@_buttonStyleProp" Language="cs" Minimal="true"></WaxCodeBlock>
 </WaxPanel>
+
+@code {
+    private readonly string _usage = @"<WaxButton>
+    <Icon>
+        <WaxIcon>done</WaxIcon>
+    </Icon>
+        <Text>Ceira</Text>
+</WaxButton>";
+
+    private readonly string _textProp = @"// The button text (string)
+[Parameter] public RenderFragment? Text { get; set; }";
+
+    private readonly string _iconProp = @"// The button icon (WaxIcon?)
+[Parameter] public RenderFragment? Icon { get; set; }";
+
+    private readonly string _fontSizeProp = "// The size of the font as a html style (string)\n" +
+                                            "[Parameter] public string FontSize { get; set; } = \"12px\";";
+
+    private readonly string _buttonStyleProp = @"// The button style type (WaxButtonStyle) can be: [ None ]
+[Parameter] public WaxButtonStyle ButtonStyle { get; set; } = WaxButtonStyle.None;";
+
+    /*
+    [Parameter] public EventHandler<WaxClickedEventArgs>? OnClick { get; set; }
+    [Parameter] public string Style { get; set; } = String.Empty;
+
+    [Parameter] public int Id { get; set; }
+     */
+
+}

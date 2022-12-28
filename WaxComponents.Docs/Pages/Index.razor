@@ -2,6 +2,26 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<p>Install <a href="https://www.nuget.org/packages/WaxComponents/">WaxComponents</a> on project</p>
 
-Welcome to your new app.
+<p>Import styles on wwwroot/index.html head</p>
+<WaxCodeBlock Code="@_head" Language="html" FileName="Index.html"></WaxCodeBlock>
+
+@code {
+
+    private string _head = 
+        """"
+        <!-- Theme first -->
+        <link href="_content/WaxComponents/Styles/Themes/lightPink.css" rel="stylesheet">
+
+        <!-- Styles -->
+        <link href="_content/WaxComponents/Styles/waxComponents.css" rel="stylesheet">
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        """";
+
+}

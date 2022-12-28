@@ -20,7 +20,6 @@ public partial class WaxButton
     public string GetClasses() =>
         ButtonStyle switch
         {
-            WaxButtonStyle.Outlined => "waxComponentOutline",
             WaxButtonStyle.None => "waxButtonNone",
             _ => "waxButtonNone"
         };
@@ -29,7 +28,6 @@ public partial class WaxButton
 public enum WaxButtonStyle
 {
     None,
-    Outlined
 }
 
 public class WaxClickedEventArgs : EventArgs
