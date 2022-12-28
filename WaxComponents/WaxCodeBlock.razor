@@ -1,12 +1,18 @@
 <div class="waxComponentSecondary" style="@Style">
     <div class="waxCodeBlockContainer">
-        <pre class="waxLineCounter waxComponentSecondary"><code>@Lines</code></pre>
+        @if (!Minimal)
+        {
+            <pre class="waxLineCounter waxComponentSecondary"><code>@Lines</code></pre>
+        }
         <pre style="margin: 4px 0 0 10px"><code lang="@Language">@Code</code></pre>
     </div>
 
-    <div class="waxFooter">
-        <p class="waxTextFooter">@FileName</p>
-        <p class="waxTextFooter" style="text-align: left">@Code.Split("\n").Length lines</p>
-        <p class="waxTextFooter" style="text-align: right">@Language</p>
-    </div>
+    @if (!Minimal)
+    {
+        <div class="waxFooter">
+            <p class="waxTextFooter">@FileName</p>
+            <p class="waxTextFooter" style="text-align: left">@Code.Split("\n").Length lines</p>
+            <p class="waxTextFooter" style="text-align: right">@Language</p>
+        </div>
+    }
 </div>

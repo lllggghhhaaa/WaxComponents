@@ -9,6 +9,7 @@ public partial class WaxCodeBlock
     [Parameter] public string FileName { get; set; } = "file.txt";
     [Parameter] public string Language { get; set; } = "txt";
     [Parameter] public string Style { get; set; } = String.Empty;
+    [Parameter] public bool Minimal { get; set; }
 
     private string Lines
     {
