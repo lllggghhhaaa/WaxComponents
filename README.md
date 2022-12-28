@@ -55,3 +55,5 @@ private void OnClick(object? sender, EventArgs e)
 ### Resultado
 ![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample1.png)
 ![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample2.png)
+
+My discord server: https://discord.gg/MhCmnG6ZBA
