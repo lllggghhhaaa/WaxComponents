@@ -1,19 +1,21 @@
 :root {
-    --bg-color: white;
+    --bg-color: transparent;
     --bg-color-secondary: rgba(255, 182, 193, .1);
     --main-color: deeppink;
+    
+    --main-color-start: rgba(247, 187, 151, .1);
+    --main-color-end: rgba(221, 94, 137, .1);
+    
     --border-radius: 5px;
     --transition-time: .333s;
     
-    --component-bg-color-hover: rgba(255, 20, 147, .05);
-    --component-bg-color-focus: rgba(255, 20, 147, .1);
-    --conponent-bg-color-active: rgba(255, 20, 147, .2);
+    --component-bg: linear-gradient(to right, rgba(247, 187, 151, .1), rgba(221, 94, 137, .1));
+    --component-bg-hover: linear-gradient(to right, rgba(247, 187, 151, .15), rgba(221, 94, 137, .15));
+    --component-bg-focus: linear-gradient(to right, rgba(247, 187, 151, .2), rgba(221, 94, 137, .20));
+    --component-bg-active: linear-gradient(to right, rgba(247, 187, 151, .25), rgba(221, 94, 137, .25));
     
-    --component-border-color: pink;
-    --component-border-color-hover: hotpink;
-    --component-border-color-focus-within: deeppink;
-    
-    --slider-thumb-color: white;
-    --slider-thumb-color-hover: rgba(255, 235, 255);
-    --slider-fill-color: pink;
+    --slider-thumb-color: #ffd3da;
+    --slider-thumb-color-hover: #ffb6c1;
+    --slider-fill-start: rgba(95, 195, 228, .35);
+    --slider-fill-end: rgba(229, 93, 135, .35)
 }

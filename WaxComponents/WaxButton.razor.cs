@@ -10,7 +10,7 @@ public partial class WaxButton
 
     [Parameter] public string FontSize { get; set; } = "12px";
 
-    [Parameter] public WaxButtonStyle ButtonStyle { get; set; } = WaxButtonStyle.Outlined;
+    [Parameter] public WaxButtonStyle ButtonStyle { get; set; } = WaxButtonStyle.None;
 
     [Parameter] public EventHandler<WaxClickedEventArgs>? OnClick { get; set; }
     [Parameter] public string Style { get; set; } = String.Empty;
@@ -20,7 +20,7 @@ public partial class WaxButton
     public string GetClasses() =>
         ButtonStyle switch
         {
-            WaxButtonStyle.Outlined => "waxButtonOutlined waxComponentOutline",
+            WaxButtonStyle.Outlined => "waxComponentOutline",
             WaxButtonStyle.None => "waxButtonNone",
             _ => "waxButtonNone"
         };

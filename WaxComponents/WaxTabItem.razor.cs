@@ -22,7 +22,7 @@ public partial class WaxTabItem
     [Parameter]
     public string Style { get; set; } = String.Empty;
 
-    private string _bgColor = "white";
+    private string _bgImage = "white";
     private string _borderTopRight = "0";
     private string _borderTopLeft = "0";
     private string _borderBottomRight = "0";
@@ -35,7 +35,7 @@ public partial class WaxTabItem
         base.OnInitialized();
     }
 
-    public void ChangeActive(bool active) => _bgColor = active ? "rgba(255, 20, 147, 0.2) !important" : "white";
+    public void ChangeActive(bool active) => _bgImage = active ? "var(--component-bg-active) !important" : "var(--component-bg)";
 
     public void SetAsFirst(bool remove = false)
     {

@@ -13,6 +13,7 @@
 .waxSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     background-color: var(--slider-thumb-color, white);
+    border: none;
     border-radius: 6px;
     width: 12px;
     height: 12px;
@@ -21,6 +22,7 @@
 .waxSlider::-moz-range-thumb {
     -webkit-appearance: none;
     background-color: var(--slider-thumb-color, white);
+    border: none;
     border-radius: 6px;
     width: 12px;
     height: 12px;
@@ -29,6 +31,7 @@
 .waxSlider::-ms-thumb {
     -webkit-appearance: none;
     background-color: var(--slider-thumb-color, white);
+    border: none;
     border-radius: 6px;
     width: 12px;
     height: 12px;
