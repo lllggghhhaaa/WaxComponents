@@ -15,7 +15,7 @@ public partial class WaxCodeBlock
     {
         get
         {
-            List<string> lines = new List<string>();
+            var lines = new List<string>();
 
             foreach (int line in Enumerable.Range(1, Code.Split("\n").Length))
                 lines.Add(line.ToString()

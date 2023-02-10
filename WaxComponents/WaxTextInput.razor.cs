@@ -5,7 +5,7 @@ namespace WaxComponents;
 public partial class WaxTextInput
 {
     [Parameter] public string Value { get; set; } = String.Empty;
-    [Parameter] public InputType TextType { get; set; } = InputType.Text;
+    [Parameter] public WaxInputType TextType { get; set; } = WaxInputType.Text;
     [Parameter] public string FontSize { get; set; } = "12px";
     [Parameter] public string Placeholder { get; set; } = String.Empty;
     [Parameter] public string Pattern { get; set; } = String.Empty;
@@ -18,7 +18,7 @@ public partial class WaxTextInput
         await ValueChanged.InvokeAsync(Value);
     }
 
-    public enum InputType
+    public enum WaxInputType
     {
         Text,
         Password,

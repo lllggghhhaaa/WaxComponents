@@ -1,6 +1,6 @@
-<button class="waxComponent waxButton @GetClasses()" 
-        onclick="@(() => OnClick?.Invoke(this, new WaxClickedEventArgs(Id)))" 
-        style="@Style">
+<button class='waxComponent waxButton @GetClasses()' 
+        onclick='@(() => OnClick?.Invoke(this, new WaxClickedEventArgs(Id)))' 
+        style='@Style'>
     @Icon
-    <span class="waxButtonText" style="font-size:@FontSize">@Text</span>
+    <span class='waxButtonText' style='font-size:@FontSize'>@Text</span>
 </button>

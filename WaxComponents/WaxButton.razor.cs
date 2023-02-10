@@ -27,15 +27,12 @@ public partial class WaxButton
 
 public enum WaxButtonStyle
 {
-    None,
+    None
 }
 
 public class WaxClickedEventArgs : EventArgs
 {
     public int Id;
 
-    public WaxClickedEventArgs(int id)
-    {
-        Id = id;
-    }
+    public WaxClickedEventArgs(int id) => Id = id;
 }

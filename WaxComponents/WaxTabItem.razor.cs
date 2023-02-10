@@ -30,7 +30,7 @@ public partial class WaxTabItem
 
     protected override void OnInitialized()
     {
-        if (Parent is not null) Parent.RegisterTab(this);
+        Parent?.RegisterTab(this);
 
         base.OnInitialized();
     }
@@ -49,8 +49,5 @@ public partial class WaxTabItem
         _borderBottomRight = remove ? "0" : "5px";
     }
 
-    private void OnTabClicked()
-    {
-        if (Parent is not null) Parent.SetTab(this);
-    }
+    private void OnTabClicked() => Parent?.SetTab(this);
 }

@@ -1,12 +1,12 @@
 @using WaxComponents.Utils
-<input type="range" class="waxSlider waxComponent waxComponentOutline" 
-       style="@Style;background-image: 
+<input type='range' class='waxSlider waxComponent waxComponentOutline' 
+       style='@Style;background-image: 
        linear-gradient(to right, 
        var(--slider-fill-start, pink) 0%, 
        var(--slider-fill-end, pink) @Value.Percentage(Max)%, 
        var(--main-color-end) @Value.Percentage(Max)%, 
-       var(--main-color-start) 100%)" 
-       min="@Min" max="@Max" step="@Step" 
+       var(--main-color-start) 100%)' 
+       min='@Min' max='@Max' step='@Step' 
        
-       @bind-value="@Value" 
-       @bind-value:event="oninput"/>
+       @bind-value='@Value' 
+       @bind-value:event='oninput'/>
