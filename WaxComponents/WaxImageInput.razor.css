@@ -1,0 +1,6 @@
+.waxImageInput {
+    border: 1px solid white;
+    border-image: var(--component-bg) 1;
+    
+    object-fit: scale-down;
+}

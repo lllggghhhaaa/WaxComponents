@@ -15,6 +15,9 @@ Nuget: https://www.nuget.org/packages/WaxComponents
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- Scripts -->
+<script src="_content/WaxComponents/Scripts/waxComponents.js"></script>
 ```
 
 - Importar a biblioteca

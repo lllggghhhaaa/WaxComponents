@@ -63,6 +63,8 @@
     <WaxIcon>reply all</WaxIcon>
 </WaxContainer>
 
+<WaxImageInput OnUpload="(_, args) => Console.WriteLine(args.Url)"></WaxImageInput>
+
 @code {
 
     private string _text = String.Empty;
