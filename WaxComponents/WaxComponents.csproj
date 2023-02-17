@@ -23,7 +23,6 @@
 
     <ItemGroup>
         <EmbeddedResource Include="wwwroot\**\*" />
-        <PackageReference Include="Blazor.Extensions.Canvas" Version="1.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
     </ItemGroup>
 
