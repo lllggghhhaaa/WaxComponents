@@ -1,0 +1,12 @@
+<input type="checkbox"
+       class="waxCheckBox"
+       style="@Style"
+       @bind-value='@Value' 
+       @bind-value:event='oninput'/>
+<label>@ChildContent</label>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public string Style { get; set; } = String.Empty;
+}
