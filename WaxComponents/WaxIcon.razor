@@ -1,1 +1,30 @@
-<span class='material-icons' style='font-size:@Size;@Style'>@ChildContent</span>
+<span class="@CssClass" style="@CssStyle" @attributes="AdditionalAttributes"> 
+    @ChildContent
+</span>
+
+@code {
+    [Parameter] public WaxIconType IconType { get; set; } = WaxIconType.Rounded;
+    
+    [Parameter] public int Size { get; set; } = 24;
+    [Parameter] public int Fill { get; set; } = 0;
+    [Parameter] public int Weight { get; set; } = 400;
+    [Parameter] public int Grade { get; set; } = 0;
+    
+    [Parameter] public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter] public string Class { get; set; } = String.Empty;
+    [Parameter] public string Style { get; set; } = String.Empty;
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private int OpticalSize => Size;
+
+    private string CssClass =>
+        $"material-symbols-{IconTypeSuffix} inline-flex items-center justify-center leading-[1] align-middle {Class}".Trim();
+
+    private string CssStyle =>
+        $"font-size:{Size}px; line-height:1; letter-spacing:0; vertical-align:middle; {FontVariationStyle} {Style}".Trim();
+
+    private string FontVariationStyle =>
+        $"font-variation-settings: 'FILL' {Fill}, 'wght' {Weight}, 'GRAD' {Grade}, 'opsz' {OpticalSize};";
+}

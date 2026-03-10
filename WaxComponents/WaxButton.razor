@@ -1,6 +1,82 @@
-<button class='waxComponent waxButton @GetClasses()' 
-        onclick='@(() => OnClick?.Invoke(this, new WaxClickedEventArgs(Id)))' 
-        style='@Style'>
-    @Icon
-    <span class='waxButtonText' style='font-size:@FontSize'>@Text</span>
+<button
+    class="@ButtonClass"
+    disabled="@Disabled"
+    @onclick="OnClick">
+
+    @if (Icon != null)
+    {
+        <WaxIcon Size="@IconSize">@Icon</WaxIcon>
+    }
+
+    @if (Text != null)
+    {
+        <span class="font-medium tracking-[0.1px] text-[14px] leading-[20px]">
+            @Text
+        </span>
+    }
+
 </button>
+
+@code {
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public RenderFragment? Text { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public WaxButtonVariant Variant { get; set; } = WaxButtonVariant.Filled;
+    [Parameter] public WaxButtonSize Size { get; set; } = WaxButtonSize.Medium;
+
+    private string ButtonClass =>
+        $"inline-flex items-center justify-center rounded-full " +
+        $"select-none whitespace-nowrap " +
+        $"transition-all duration-200 ease-[var(--ease-m3-standard)] " +
+        $"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 " +
+        $"{ContainerSizeClass} {VariantClass} {DisabledClass}";
+
+    private string DisabledClass =>
+        Disabled
+            ? "opacity-[0.38] pointer-events-none"
+            : "";
+
+    private string VariantClass => Variant switch
+    {
+        WaxButtonVariant.Filled =>
+            "bg-primary text-on-primary hover:shadow-[var(--shadow-elevation-1)]",
+
+        WaxButtonVariant.FilledTonal =>
+            "bg-secondary-container text-on-secondary-container hover:shadow-[var(--shadow-elevation-1)]",
+
+        WaxButtonVariant.Outlined =>
+            "border border-outline text-primary hover:bg-primary/10",
+
+        WaxButtonVariant.Text =>
+            "text-primary hover:bg-primary/10",
+
+        WaxButtonVariant.Elevated =>
+            "bg-surface-container-low text-primary shadow-[var(--shadow-elevation-1)] hover:shadow-[var(--shadow-elevation-2)]",
+
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private string ContainerSizeClass => Size switch
+    {
+        WaxButtonSize.ExtraSmall => "h-[32px] px-[12px] gap-x-[4px]",
+        WaxButtonSize.Small => "h-[40px] px-[16px] gap-x-[8px]",
+        WaxButtonSize.Medium => "h-[56px] px-[24px] gap-x-[8px]",
+        WaxButtonSize.Large => "h-[96px] px-[48px] gap-x-[12px]",
+        WaxButtonSize.ExtraLarge => "h-[136px] px-[64px] gap-x-[16px]",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private int IconSize => Size switch
+    {
+        WaxButtonSize.ExtraSmall => 20,
+        WaxButtonSize.Small => 20,
+        WaxButtonSize.Medium => 24,
+        WaxButtonSize.Large => 32,
+        WaxButtonSize.ExtraLarge => 40,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+}

@@ -1,0 +1,152 @@
+@import "tailwindcss";
+@source "../**/*.razor";
+@source "../../**/*.razor";
+
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    /* === CORES — Light Mode (base) === */
+    --color-primary:                    rgb(143 76 56);
+    --color-surface-tint:               rgb(143 76 56);
+    --color-on-primary:                 rgb(255 255 255);
+    --color-primary-container:          rgb(255 219 209);
+    --color-on-primary-container:       rgb(114 53 35);
+
+    --color-secondary:                  rgb(119 87 78);
+    --color-on-secondary:               rgb(255 255 255);
+    --color-secondary-container:        rgb(255 219 209);
+    --color-on-secondary-container:     rgb(93 64 55);
+
+    --color-tertiary:                   rgb(108 93 47);
+    --color-on-tertiary:                rgb(255 255 255);
+    --color-tertiary-container:         rgb(245 225 167);
+    --color-on-tertiary-container:      rgb(83 70 25);
+
+    --color-error:                      rgb(186 26 26);
+    --color-on-error:                   rgb(255 255 255);
+    --color-error-container:            rgb(255 218 214);
+    --color-on-error-container:         rgb(147 0 10);
+
+    --color-background:                 rgb(255 248 246);
+    --color-on-background:              rgb(35 25 23);
+
+    --color-surface:                    rgb(255 248 246);
+    --color-on-surface:                 rgb(35 25 23);
+    --color-surface-variant:            rgb(245 222 216);
+    --color-on-surface-variant:         rgb(83 67 63);
+    --color-surface-dim:                rgb(232 214 210);
+    --color-surface-bright:             rgb(255 248 246);
+    --color-surface-container-lowest:   rgb(255 255 255);
+    --color-surface-container-low:      rgb(255 241 237);
+    --color-surface-container:          rgb(252 234 229);
+    --color-surface-container-high:     rgb(247 228 224);
+    --color-surface-container-highest:  rgb(241 223 218);
+
+    --color-outline:                    rgb(133 115 110);
+    --color-outline-variant:            rgb(216 194 188);
+
+    --color-shadow:                     rgb(0 0 0);
+    --color-scrim:                      rgb(0 0 0);
+
+    --color-inverse-surface:            rgb(57 46 43);
+    --color-inverse-on-surface:         rgb(255 237 232);
+    --color-inverse-primary:            rgb(255 181 160);
+
+    --color-primary-fixed:              rgb(255 219 209);
+    --color-on-primary-fixed:           rgb(58 11 1);
+    --color-primary-fixed-dim:          rgb(255 181 160);
+    --color-on-primary-fixed-variant:   rgb(114 53 35);
+
+    --color-secondary-fixed:            rgb(255 219 209);
+    --color-on-secondary-fixed:         rgb(44 21 15);
+    --color-secondary-fixed-dim:        rgb(231 189 178);
+    --color-on-secondary-fixed-variant: rgb(93 64 55);
+
+    --color-tertiary-fixed:             rgb(245 225 167);
+    --color-on-tertiary-fixed:          rgb(35 27 0);
+    --color-tertiary-fixed-dim:         rgb(216 197 141);
+    --color-on-tertiary-fixed-variant:  rgb(83 70 25);
+
+    /* === ELEVAÇÕES M3 === */
+    --shadow-elevation-1: 0px 1px 2px rgb(0 0 0 / 30%), 0px 1px 3px 1px rgb(0 0 0 / 15%);
+    --shadow-elevation-2: 0px 1px 2px rgb(0 0 0 / 30%), 0px 2px 6px 2px rgb(0 0 0 / 15%);
+    --shadow-elevation-3: 0px 4px 8px 3px rgb(0 0 0 / 15%), 0px 1px 3px rgb(0 0 0 / 30%);
+    --shadow-elevation-4: 0px 6px 10px 4px rgb(0 0 0 / 15%), 0px 2px 3px rgb(0 0 0 / 30%);
+    --shadow-elevation-5: 0px 8px 12px 6px rgb(0 0 0 / 15%), 0px 4px 4px rgb(0 0 0 / 30%);
+
+    /* === EASING M3 === */
+    --ease-m3-standard:   cubic-bezier(0.2, 0, 0, 1);
+    --ease-m3-emphasized: cubic-bezier(0.2, 0, 0, 1);
+    --ease-m3-decelerate: cubic-bezier(0, 0, 0, 1);
+    --ease-m3-accelerate: cubic-bezier(0.3, 0, 1, 1);
+}
+
+/* ============================================
+   DARK MODE — sobrescreve os tokens de cor
+   Ative adicionando a classe "dark" no <html>
+   ============================================ */
+@layer base {
+    .dark {
+        --color-primary:                    rgb(255 181 160);
+        --color-surface-tint:               rgb(255 181 160);
+        --color-on-primary:                 rgb(86 31 15);
+        --color-primary-container:          rgb(114 53 35);
+        --color-on-primary-container:       rgb(255 219 209);
+
+        --color-secondary:                  rgb(231 189 178);
+        --color-on-secondary:               rgb(68 42 34);
+        --color-secondary-container:        rgb(93 64 55);
+        --color-on-secondary-container:     rgb(255 219 209);
+
+        --color-tertiary:                   rgb(216 197 141);
+        --color-on-tertiary:                rgb(59 47 5);
+        --color-tertiary-container:         rgb(83 70 25);
+        --color-on-tertiary-container:      rgb(245 225 167);
+
+        --color-error:                      rgb(255 180 171);
+        --color-on-error:                   rgb(105 0 5);
+        --color-error-container:            rgb(147 0 10);
+        --color-on-error-container:         rgb(255 218 214);
+
+        --color-background:                 rgb(26 17 15);
+        --color-on-background:              rgb(241 223 218);
+
+        --color-surface:                    rgb(26 17 15);
+        --color-on-surface:                 rgb(241 223 218);
+        --color-surface-variant:            rgb(83 67 63);
+        --color-on-surface-variant:         rgb(216 194 188);
+        --color-surface-dim:                rgb(26 17 15);
+        --color-surface-bright:             rgb(66 55 52);
+        --color-surface-container-lowest:   rgb(20 12 10);
+        --color-surface-container-low:      rgb(35 25 23);
+        --color-surface-container:          rgb(39 29 27);
+        --color-surface-container-high:     rgb(50 40 37);
+        --color-surface-container-highest:  rgb(61 50 47);
+
+        --color-outline:                    rgb(160 140 135);
+        --color-outline-variant:            rgb(83 67 63);
+
+        --color-shadow:                     rgb(0 0 0);
+        --color-scrim:                      rgb(0 0 0);
+
+        --color-inverse-surface:            rgb(241 223 218);
+        --color-inverse-on-surface:         rgb(57 46 43);
+        --color-inverse-primary:            rgb(143 76 56);
+
+        --color-primary-fixed:              rgb(255 219 209);
+        --color-on-primary-fixed:           rgb(58 11 1);
+        --color-primary-fixed-dim:          rgb(255 181 160);
+        --color-on-primary-fixed-variant:   rgb(114 53 35);
+
+        --color-secondary-fixed:            rgb(255 219 209);
+        --color-on-secondary-fixed:         rgb(44 21 15);
+        --color-secondary-fixed-dim:        rgb(231 189 178);
+        --color-on-secondary-fixed-variant: rgb(93 64 55);
+
+        --color-tertiary-fixed:             rgb(245 225 167);
+        --color-on-tertiary-fixed:          rgb(35 27 0);
+        --color-tertiary-fixed-dim:         rgb(216 197 141);
+        --color-on-tertiary-fixed-variant:  rgb(83 70 25);
+    }
+}

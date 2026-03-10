@@ -2,11 +2,20 @@ using Microsoft.AspNetCore.Components;
 
 namespace WaxComponents;
 
-public partial class WaxIcon
+public partial class WaxIcon : ComponentBase
 {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private string IconTypeSuffix => IconType switch
+    {
+        WaxIconType.Outlined => "outlined",
+        WaxIconType.Rounded  => "rounded",
+        WaxIconType.Sharp    => "sharp",
+        _ => throw new ArgumentOutOfRangeException(nameof(IconType))
+    };
+}
 
-    [Parameter] public string Size { get; set; } = "12px";
-
-    [Parameter] public string Style { get; set; } = String.Empty;
+public enum WaxIconType
+{
+    Outlined,
+    Rounded,
+    Sharp
 }

@@ -1,0 +1,120 @@
+@page "/components/button"
+
+<div class="p-10 space-y-12 bg-background text-on-background">
+
+    <!-- FILLED -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Filled</h2>
+
+        <div class="flex flex-wrap gap-4">
+            @foreach (var size in Sizes)
+            {
+                <WaxButton Variant="WaxButtonVariant.Filled" Size="@size">
+                    <Icon>add</Icon>
+                    <Text>@size.ToString()</Text>
+                </WaxButton>
+            }
+        </div>
+    </section>
+
+    <!-- FILLED TONAL -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Filled Tonal</h2>
+
+        <div class="flex flex-wrap gap-4">
+            @foreach (var size in Sizes)
+            {
+                <WaxButton Variant="WaxButtonVariant.FilledTonal" Size="@size">
+                    <Icon>favorite</Icon>
+                    <Text>@size.ToString()</Text>
+                </WaxButton>
+            }
+        </div>
+    </section>
+
+    <!-- OUTLINED -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Outlined</h2>
+
+        <div class="flex flex-wrap gap-4">
+            @foreach (var size in Sizes)
+            {
+                <WaxButton Variant="WaxButtonVariant.Outlined" Size="@size">
+                    <Icon>edit</Icon>
+                    <Text>@size.ToString()</Text>
+                </WaxButton>
+            }
+        </div>
+    </section>
+
+    <!-- TEXT -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Text</h2>
+
+        <div class="flex flex-wrap gap-4">
+            @foreach (var size in Sizes)
+            {
+                <WaxButton Variant="WaxButtonVariant.Text" Size="@size">
+                    <Icon>info</Icon>
+                    <Text>@size.ToString()</Text>
+                </WaxButton>
+            }
+        </div>
+    </section>
+
+    <!-- ELEVATED -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Elevated</h2>
+
+        <div class="flex flex-wrap gap-4">
+            @foreach (var size in Sizes)
+            {
+                <WaxButton Variant="WaxButtonVariant.Elevated" Size="@size">
+                    <Icon>download</Icon>
+                    <Text>@size.ToString()</Text>
+                </WaxButton>
+            }
+        </div>
+    </section>
+
+    <!-- DISABLED STATES -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold">Disabled</h2>
+
+        <div class="flex flex-wrap gap-4">
+            <WaxButton Variant="WaxButtonVariant.Filled" Disabled="true">
+                <Text>Filled</Text>
+            </WaxButton>
+
+            <WaxButton Variant="WaxButtonVariant.FilledTonal" Disabled="true">
+                <Text>Filled Tonal</Text>
+            </WaxButton>
+
+            <WaxButton Variant="WaxButtonVariant.Outlined" Disabled="true">
+                <Text>Outlined</Text>
+            </WaxButton>
+
+            <WaxButton Variant="WaxButtonVariant.Text" Disabled="true">
+                <Text>Text</Text>
+            </WaxButton>
+
+            <WaxButton Variant="WaxButtonVariant.Elevated" Disabled="true">
+                <Text>Elevated</Text>
+            </WaxButton>
+        </div>
+    </section>
+
+</div>
+
+@code {
+
+    private WaxButtonSize[] Sizes =
+    [
+        WaxButtonSize.ExtraSmall,
+        WaxButtonSize.Small,
+        WaxButtonSize.Medium,
+        WaxButtonSize.Large,
+        WaxButtonSize.ExtraLarge
+    ];
+
+}
