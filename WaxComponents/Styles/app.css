@@ -2,6 +2,10 @@
 @source "../**/*.razor";
 @source "../../**/*.razor";
 
+button::before {
+    content: "";
+    pointer-events: none;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 
