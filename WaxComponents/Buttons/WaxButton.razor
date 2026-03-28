@@ -1,0 +1,23 @@
+@namespace WaxComponents.Buttons
+
+<button class="@RootClass"
+        disabled="@Disabled"
+        @onclick="OnClick">
+
+    <span class="@ContainerClass">
+
+        @if (ShowIcon)
+        {
+            <WaxIcon Size="@IconSize">
+                @Icon
+            </WaxIcon>
+        }
+
+        @if (ShowLabel)
+        {
+            <span class="@LabelClass">@Label</span>
+        }
+
+    </span>
+
+</button>
