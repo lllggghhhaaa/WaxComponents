@@ -68,15 +68,7 @@ public partial class WaxButton : ComponentBase
         _ => ""
     };
 
-    // ──────────────────────────────────────────────
-    //  STATE LAYER  (pseudo ::before via Tailwind)
-    // ──────────────────────────────────────────────
-
-    /// <summary>
-    /// The ::before pseudo-element acts as the M3 state layer.
-    /// Opacity transitions use an "effects" spring (high damping, no bounce).
-    /// For Elevated, the box-shadow also transitions with a spatial spring.
-    /// </summary>
+    //  STATE LAYER
     private string StateLayerClass => Disabled ? "" : Variant switch
     {
         WaxButtonVariant.Filled   => "before:bg-[var(--color-on-primary)]            " + StateLayerOpacity,

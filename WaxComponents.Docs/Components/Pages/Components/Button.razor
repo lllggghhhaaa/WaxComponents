@@ -1,120 +1,229 @@
 @page "/components/button"
 
-<div class="p-10 space-y-12 bg-background text-on-background">
+<div class="showcase-root">
 
-    <!-- FILLED -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Filled</h2>
+    <header class="showcase-header">
+        <h1 class="showcase-title">Button</h1>
+        <p class="showcase-subtitle">Variants · Sizes · Colors · States · Shapes</p>
+    </header>
 
-        <div class="flex flex-wrap gap-4">
-            @foreach (var size in Sizes)
-            {
-                <WaxButton Variant="WaxButtonVariant.Filled" Size="@size">
-                    <Icon>add</Icon>
-                    <Text>@size.ToString()</Text>
-                </WaxButton>
-            }
-        </div>
-    </section>
+    @foreach (var color in Colors)
+    {
+        <section class="color-section">
 
-    <!-- FILLED TONAL -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Filled Tonal</h2>
+            <div class="color-label">
+                <span class="color-dot"></span>
+                @color.ToString()
+            </div>
 
-        <div class="flex flex-wrap gap-4">
-            @foreach (var size in Sizes)
-            {
-                <WaxButton Variant="WaxButtonVariant.FilledTonal" Size="@size">
-                    <Icon>favorite</Icon>
-                    <Text>@size.ToString()</Text>
-                </WaxButton>
-            }
-        </div>
-    </section>
+            <div class="matrix-wrapper">
+                <table class="matrix">
+                    <thead>
+                        <tr>
+                            <th class="matrix-th variant-col"></th>
+                            @foreach (var size in Sizes)
+                            {
+                                <th class="matrix-th size-col">@size.ToString()</th>
+                            }
+                            <th class="matrix-th disabled-col">Disabled</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-    <!-- OUTLINED -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Outlined</h2>
+                        @* Variant *@
+                        @foreach (var cfg in VariantConfigs)
+                        {
+                            <tr class="matrix-row">
+                                <td class="matrix-td variant-label">@cfg.Label</td>
+                                @foreach (var size in Sizes)
+                                {
+                                    <td class="matrix-td">
+                                        <WaxButton Variant="@cfg.Variant" Size="@size" Color="@color" Label="@size.ToString()">
+                                            <Icon>@cfg.Icon</Icon>
+                                        </WaxButton>
+                                    </td>
+                                }
+                                <td class="matrix-td">
+                                    <WaxButton Variant="@cfg.Variant" Color="@color" Disabled="true" Label="@cfg.Label" />
+                                </td>
+                            </tr>
+                        }
 
-        <div class="flex flex-wrap gap-4">
-            @foreach (var size in Sizes)
-            {
-                <WaxButton Variant="WaxButtonVariant.Outlined" Size="@size">
-                    <Icon>edit</Icon>
-                    <Text>@size.ToString()</Text>
-                </WaxButton>
-            }
-        </div>
-    </section>
+                        @* Icon-only *@
+                        <tr class="matrix-row separator-row">
+                            <td class="matrix-td variant-label">Icon only</td>
+                            @foreach (var size in Sizes)
+                            {
+                                <td class="matrix-td">
+                                    <WaxButton Variant="WaxButtonVariant.Elevated" Size="@size" Color="@color">
+                                        <Icon>pinch</Icon>
+                                    </WaxButton>
+                                </td>
+                            }
+                            <td class="matrix-td">
+                                <WaxButton Variant="WaxButtonVariant.Elevated" Color="@color" Disabled="true">
+                                    <Icon>pinch</Icon>
+                                </WaxButton>
+                            </td>
+                        </tr>
 
-    <!-- TEXT -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Text</h2>
+                        @* Shape *@
+                        @foreach (var type in Types)
+                        {
+                            <tr class="matrix-row @(type == Types[0] ? "separator-row" : "")">
+                                <td class="matrix-td variant-label">@type.ToString()</td>
+                                @foreach (var size in Sizes)
+                                {
+                                    <td class="matrix-td">
+                                        <WaxButton Variant="WaxButtonVariant.Filled"
+                                                   Type="@type"
+                                                   Size="@size"
+                                                   Color="@color"
+                                                   Label="@size.ToString()">
+                                            <Icon>category</Icon>
+                                        </WaxButton>
+                                    </td>
+                                }
+                                <td class="matrix-td">
+                                    <WaxButton Variant="WaxButtonVariant.Filled"
+                                               Type="@type"
+                                               Color="@color"
+                                               Disabled="true"
+                                               Label="@type.ToString()" />
+                                </td>
+                            </tr>
+                        }
 
-        <div class="flex flex-wrap gap-4">
-            @foreach (var size in Sizes)
-            {
-                <WaxButton Variant="WaxButtonVariant.Text" Size="@size">
-                    <Icon>info</Icon>
-                    <Text>@size.ToString()</Text>
-                </WaxButton>
-            }
-        </div>
-    </section>
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- ELEVATED -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Elevated</h2>
-
-        <div class="flex flex-wrap gap-4">
-            @foreach (var size in Sizes)
-            {
-                <WaxButton Variant="WaxButtonVariant.Elevated" Size="@size">
-                    <Icon>download</Icon>
-                    <Text>@size.ToString()</Text>
-                </WaxButton>
-            }
-        </div>
-    </section>
-
-    <!-- DISABLED STATES -->
-    <section class="space-y-4">
-        <h2 class="text-lg font-semibold">Disabled</h2>
-
-        <div class="flex flex-wrap gap-4">
-            <WaxButton Variant="WaxButtonVariant.Filled" Disabled="true">
-                <Text>Filled</Text>
-            </WaxButton>
-
-            <WaxButton Variant="WaxButtonVariant.FilledTonal" Disabled="true">
-                <Text>Filled Tonal</Text>
-            </WaxButton>
-
-            <WaxButton Variant="WaxButtonVariant.Outlined" Disabled="true">
-                <Text>Outlined</Text>
-            </WaxButton>
-
-            <WaxButton Variant="WaxButtonVariant.Text" Disabled="true">
-                <Text>Text</Text>
-            </WaxButton>
-
-            <WaxButton Variant="WaxButtonVariant.Elevated" Disabled="true">
-                <Text>Elevated</Text>
-            </WaxButton>
-        </div>
-    </section>
+        </section>
+    }
 
 </div>
 
-@code {
+<style>
+    .showcase-root {
+        padding: 2.5rem 3rem;
+        background: var(--color-background);
+        color: var(--color-on-background);
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        font-family: inherit;
+    }
 
-    private WaxButtonSize[] Sizes =
+    .showcase-header {
+        border-bottom: 1px solid var(--color-outline-variant);
+        padding-bottom: 1.25rem;
+    }
+    .showcase-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 .25rem;
+    }
+    .showcase-subtitle {
+        font-size: 0.8125rem;
+        color: var(--color-on-surface-variant);
+        margin: 0;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .color-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .color-label {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .9375rem;
+        font-weight: 600;
+        color: var(--color-on-surface-variant);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+    }
+    .color-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--color-primary);
+    }
+
+    .matrix-wrapper {
+        overflow-x: auto;
+        border: 1px solid var(--color-outline-variant);
+        border-radius: 12px;
+    }
+    .matrix {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+    }
+
+    .matrix-th {
+        padding: .5rem 1rem;
+        font-size: .6875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--color-on-surface-variant);
+        background: var(--color-surface-container);
+        border-bottom: 1px solid var(--color-outline-variant);
+        white-space: nowrap;
+        text-align: center;
+    }
+    .matrix-th.variant-col { text-align: left; min-width: 7rem; }
+    .matrix-th.disabled-col { border-left: 1px solid var(--color-outline-variant); }
+
+    .matrix-row:not(:last-child) td {
+        border-bottom: 1px solid var(--color-outline-variant);
+    }
+    .matrix-row:hover td {
+        background: var(--color-surface-container-low);
+    }
+
+    /* thick top border to visually separate groups */
+    .matrix-row.separator-row td {
+        border-top: 2px solid var(--color-outline-variant);
+    }
+
+    .matrix-td {
+        padding: .75rem 1rem;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .matrix-td.variant-label {
+        text-align: left;
+        font-size: .8125rem;
+        font-weight: 500;
+        color: var(--color-on-surface-variant);
+        padding-left: 1.25rem;
+    }
+    .matrix-td:last-child {
+        border-left: 1px solid var(--color-outline-variant);
+    }
+</style>
+
+@code {
+    private record VariantConfig(WaxButtonVariant Variant, string Icon, string Label);
+
+    private static readonly VariantConfig[] VariantConfigs =
     [
-        WaxButtonSize.ExtraSmall,
-        WaxButtonSize.Small,
-        WaxButtonSize.Medium,
-        WaxButtonSize.Large,
-        WaxButtonSize.ExtraLarge
+        new(WaxButtonVariant.Filled,   "add",      "Filled"),
+        new(WaxButtonVariant.Tonal,    "favorite", "Tonal"),
+        new(WaxButtonVariant.Outlined, "edit",     "Outlined"),
+        new(WaxButtonVariant.Text,     "info",     "Text"),
+        new(WaxButtonVariant.Elevated, "download", "Elevated"),
     ];
 
+    private static readonly WaxButtonSize[]    Sizes    = Enum.GetValues<WaxButtonSize>();
+    private static readonly WaxButtonVariant[] Variants = Enum.GetValues<WaxButtonVariant>();
+    private static readonly WaxButtonColor[]   Colors   = Enum.GetValues<WaxButtonColor>();
+    private static readonly WaxButtonType[]    Types    = Enum.GetValues<WaxButtonType>();
 }
