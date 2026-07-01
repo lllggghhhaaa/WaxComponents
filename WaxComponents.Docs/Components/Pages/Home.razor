@@ -4,6 +4,7 @@
 @using WaxComponents.Accordion
 @using WaxComponents.Button
 @using WaxComponents.Card
+@using WaxComponents.Chip
 
 <PageTitle>Home</PageTitle>
 
@@ -145,6 +146,86 @@ Welcome to your new app.
     </WaxCardGrid>
 </div>
 
+<div class="space-y-8">
+
+    <!-- Filter Chips -->
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">
+            Filter Chips
+        </h3>
+
+        <p class="text-sm text-muted-foreground mb-4">
+            Toggle-select from a set of mutually inclusive options.
+        </p>
+
+        <div class="flex flex-wrap gap-2">
+            @foreach (var chip in FilterChips)
+            {
+                <WaxChip
+                    Selected="@FilterSelected.Contains(chip)"
+                    SelectedChanged="@(v => ToggleFilter(chip, v))">
+                    @chip
+                </WaxChip>
+            }
+        </div>
+    </div>
+
+    <!-- Suggestion Chips -->
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">
+            Suggestion Chips
+        </h3>
+
+        <p class="text-sm text-muted-foreground mb-4">
+            Tap to select a suggestion.
+        </p>
+
+        <div class="flex flex-wrap gap-2">
+            @foreach (var chip in Suggestions)
+            {
+                <WaxChip
+                    Variant="WaxChipVariant.Suggestion"
+                    Selected="@(Suggestion == chip)"
+                    SelectedChanged="@(v => SelectSuggestion(chip, v))">
+                    @chip
+                </WaxChip>
+            }
+        </div>
+    </div>
+
+    <!-- Input Chips -->
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">
+            Input Chips
+        </h3>
+
+        <p class="text-sm text-muted-foreground mb-4">
+            Dismissable tokens.
+        </p>
+
+        <div class="flex flex-wrap gap-2">
+            @foreach (var chip in InputChipList)
+            {
+                <WaxChip
+                    Variant="WaxChipVariant.Input"
+                    Selected="true"
+                    OnRemove="@(_ => RemoveChip(chip))">
+                    @chip
+                </WaxChip>
+            }
+
+            @if (InputChipList.Count < InputChips.Count)
+            {
+                <button class="text-xs text-primary underline underline-offset-2"
+                        @onclick="ResetInputChips">
+                    Reset
+                </button>
+            }
+        </div>
+    </div>
+
+</div>
+
 @code {
 
     private List<WaxAccordionItemData> accordionItemList =
@@ -162,4 +243,67 @@ Welcome to your new app.
             // sem ícone
         }
     ];
+    
+    
+    private List<string> FilterChips =
+    [
+        "Coffee",
+        "Tea",
+        "Juice",
+        "Milk"
+    ];
+
+    private HashSet<string> FilterSelected = [];
+
+    private void ToggleFilter(string chip, bool selected)
+    {
+        if (selected)
+            FilterSelected.Add(chip);
+        else
+            FilterSelected.Remove(chip);
+    }
+
+    // -------------------------
+
+    private List<string> Suggestions =
+    [
+        "Design",
+        "Blazor",
+        "AI",
+        "Tailwind"
+    ];
+
+    private string? Suggestion;
+
+    private void SelectSuggestion(string chip, bool selected)
+    {
+        Suggestion = selected ? chip : null;
+    }
+
+    // -------------------------
+
+    private List<string> InputChips =
+    [
+        "C#",
+        ".NET",
+        "Tailwind",
+        "Blazor"
+    ];
+
+    private List<string> InputChipList = [];
+
+    protected override void OnInitialized()
+    {
+        InputChipList = InputChips.ToList();
+    }
+
+    private void RemoveChip(string chip)
+    {
+        InputChipList.Remove(chip);
+    }
+
+    private void ResetInputChips()
+    {
+        InputChipList = InputChips.ToList();
+    }
 }

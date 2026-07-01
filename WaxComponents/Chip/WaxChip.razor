@@ -1,0 +1,78 @@
+﻿@using LucideBlazor
+
+<button @onclick="Toggle"
+        class="@CssClass">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <LucideIcon Size="14" Name="@Icon" ClassName="ml-0.5" />
+    }
+
+    @ChildContent
+
+    @if (Selected)
+    {
+        <LucideIcon Size="14" Name="check" ClassName="ml-0.5" />
+    }
+
+    @if (Variant == WaxChipVariant.Input)
+    {
+        <button type="button"
+                class="ml-1 opacity-60 hover:opacity-100"
+                @onclick:stopPropagation
+                @onclick="@(_ => OnRemove.InvokeAsync())">
+            <LucideIcon Name="x" Size="12"/>
+        </button>
+    }
+</button>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public WaxChipVariant Variant { get; set; } = WaxChipVariant.Filter;
+
+    [Parameter]
+    public bool Selected { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> SelectedChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnToggle { get; set; }
+    
+    [Parameter]
+    public EventCallback OnRemove { get; set; }
+
+    private string Base =>
+        "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[999px] text-sm font-medium transition-all duration-200 cursor-pointer";
+
+    private string SelectedClass =>
+        Selected
+            ? "bg-primary text-primary-foreground shadow-sm"
+            : "bg-muted text-foreground hover:bg-[#E8D4C0] border border-border";
+
+    private string VariantClass =>
+        Variant == WaxChipVariant.Input ? "pr-2" : "";
+
+    private string CssClass =>
+        string.Join(" ", new[]
+        {
+            Base,
+            SelectedClass,
+            VariantClass,
+            Class
+        }.Where(c => !string.IsNullOrWhiteSpace(c)));
+
+    private async Task Toggle()
+    {
+        Selected = !Selected;
+
+        await SelectedChanged.InvokeAsync(Selected);
+        await OnToggle.InvokeAsync(Selected);
+    }
+
+    private async Task Remove()
+    {
+        await OnRemove.InvokeAsync();
+    }
+}
