@@ -1,0 +1,77 @@
+﻿@using LucideBlazor
+<label class="@LabelClass">
+    <button
+        type="button"
+        role="checkbox"
+        aria-checked="@AriaChecked"
+        disabled="@Disabled"
+        @onclick="HandleClick"
+        class="@BoxClass group">
+        <span class="@MarkClass" aria-hidden="true">
+            <span class="w-2.5 h-0.5 bg-primary-foreground rounded-full"></span>
+        </span>
+        <span class="@CheckWrapperClass" aria-hidden="true">
+            <LucideIcon Size="12" Name="check" StrokeWidth="3" />
+        </span>
+    </button>
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <span class="text-sm font-medium text-foreground">@Label</span>
+    }
+</label>
+
+@code {
+    [Parameter] public bool Checked { get; set; }
+    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
+    [Parameter] public bool Indeterminate { get; set; }
+
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private async Task HandleClick(MouseEventArgs e)
+    {
+        if (Disabled) return;
+
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(e);
+
+        await SetCheckedAsync(!Checked);
+    }
+
+    public async Task SetCheckedAsync(bool value)
+    {
+        if (Checked == value) return;
+        Checked = value;
+        await CheckedChanged.InvokeAsync(Checked);
+        StateHasChanged();
+    }
+
+    public Task CheckAsync() => SetCheckedAsync(true);
+    public Task UncheckAsync() => SetCheckedAsync(false);
+    public Task ToggleAsync() => SetCheckedAsync(!Checked);
+
+
+    private string AriaChecked => Indeterminate ? "mixed" : Checked.ToString().ToLowerInvariant();
+
+    private string LabelClass => string.Join(" ",
+        "inline-flex items-center gap-3 group",
+        Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer");
+
+    private string BoxClass => string.Join(" ",
+        "relative w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center flex-shrink-0",
+        Checked || Indeterminate
+            ? "bg-primary border-primary"
+            : "border-border bg-background group-hover:border-primary/50",
+        Disabled ? "pointer-events-none" : "");
+
+    private string MarkClass => string.Join(" ",
+        "absolute inset-0 flex items-center justify-center transition-opacity duration-150",
+        Indeterminate ? "opacity-100" : "opacity-0");
+
+    private string CheckWrapperClass => string.Join(" ",
+        "absolute inset-0 flex items-center justify-center text-primary-foreground transition-opacity duration-150",
+        Checked && !Indeterminate ? "opacity-100" : "opacity-0");
+}

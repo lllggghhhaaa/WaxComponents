@@ -4,6 +4,7 @@
 @using WaxComponents.Accordion
 @using WaxComponents.Button
 @using WaxComponents.Card
+@using WaxComponents.Checkbox
 @using WaxComponents.Chip
 @using WaxComponents.Switch
 
@@ -239,10 +240,41 @@ Welcome to your new app.
         <WaxSwitch />
     </WaxCard>
     
+    <WaxCard>
+        <WaxCheckbox
+            Checked="AllChecked"
+            Indeterminate="IsPartial"
+            Label="Select all"
+            CheckedChanged="SelectAll" />
+
+        <WaxCheckbox @bind-Checked="_notifyMorning" Label="Notify on morning" />
+        <WaxCheckbox @bind-Checked="_agreed" Label="I agree" />
+
+        <WaxCheckbox @ref="_checkboxRef" @bind-Checked="_agreedRef" Label="I agree (ref)" />
+        <WaxButton OnClick="@(() => _checkboxRef.UncheckAsync())" Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Text">
+            <Text>Reset</Text>
+        </WaxButton>
+    </WaxCard>
+    
 </div>
 
 @code {
-    private bool _darkMode = false;
+    private bool _darkMode;
+
+    private bool _notifyMorning = true;
+    private bool _agreed;
+
+    private bool AllChecked => _notifyMorning && _agreed;
+    private bool IsPartial => (_notifyMorning || _agreed) && !AllChecked;
+
+    private void SelectAll(bool check)
+    {
+        _notifyMorning = check;
+        _agreed = check;
+    }
+
+    private WaxCheckbox _checkboxRef = default!;
+    private bool _agreedRef;
 
     private List<WaxAccordionItemData> _accordionItemList =
     [
