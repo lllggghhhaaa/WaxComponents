@@ -5,6 +5,7 @@
 @using WaxComponents.Button
 @using WaxComponents.Card
 @using WaxComponents.Chip
+@using WaxComponents.Switch
 
 <PageTitle>Home</PageTitle>
 
@@ -14,7 +15,7 @@ Welcome to your new app.
 <div>
     <h1>Accordion</h1>
     
-    <WaxAccordion Items="accordionItemList" />
+    <WaxAccordion Items="_accordionItemList" />
 </div>
 
 <div>
@@ -223,12 +224,27 @@ Welcome to your new app.
             }
         </div>
     </div>
+</div>
 
+<div>
+    <h1>Text Fields</h1>
+    
+</div>
+
+<div class='@(_darkMode ? "dark" : "")'>
+    <h1>Switch</h1>
+
+    <WaxCard>
+        <WaxSwitch @bind-Checked="_darkMode" Label="Dark mode" />
+        <WaxSwitch />
+    </WaxCard>
+    
 </div>
 
 @code {
+    private bool _darkMode = false;
 
-    private List<WaxAccordionItemData> accordionItemList =
+    private List<WaxAccordionItemData> _accordionItemList =
     [
         new()
         {

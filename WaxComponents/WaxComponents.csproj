@@ -24,4 +24,8 @@
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="TextField\WaxTextField.razor" />
+    </ItemGroup>
+
 </Project>
