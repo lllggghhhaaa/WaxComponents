@@ -4,31 +4,24 @@
         <TargetFramework>net11.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.2.7</Version>
-        <Title>WaxComponents</Title>
-        <Authors>lllggghhhaaa</Authors>
-        <Description>Simple components for blazor, free and opensource</Description>
-        <RepositoryUrl>https://github.com/lllggghhhaaa/WaxComponents</RepositoryUrl>
-        <RepositoryType>Git</RepositoryType>
-        <PackageTags>Blazor wax ceira pink theme</PackageTags>
-        <PackageLicenseUrl>https://licenses.nuget.org/Apache-2.0</PackageLicenseUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <LangVersion>default</LangVersion>
     </PropertyGroup>
-    
-    
+
+
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <Exec Command="npm run build:css" />
     </Target>
-    
 
     <ItemGroup>
-        <SupportedPlatform Include="browser" />
+        <SupportedPlatform Include="browser"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="wwwroot\**\*" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-preview.1.26104.118" />
+        <PackageReference Include="LucideBlazor" Version="1.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-preview.5.26302.115"/>
     </ItemGroup>
-    
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
 </Project>

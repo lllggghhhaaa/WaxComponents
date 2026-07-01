@@ -1,7 +1,32 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Accordion
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<Accordion Items="accordionItemList" />
+
+@code {
+
+    private List<AccordionItemData> accordionItemList =
+    [
+        new()
+        {
+            Title = "Title 1",
+            Body = (MarkupString)"First <strong>item</strong>",
+            Icon = @<LucideIcon Size="16" Name="leaf" />
+        },
+        new()
+        {
+            Title = "Title 2",
+            Body = (MarkupString)"Second item",
+            // sem ícone
+        }
+    ];
+
+}

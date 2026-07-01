@@ -1,0 +1,49 @@
+﻿@using LucideBlazor
+<div class="divide-y divide-border rounded-3xl overflow-hidden border border-border">
+    @if (Items is not null)
+    {
+        var index = 0;
+        foreach (var item in Items)
+        {
+            var i = index;
+            var isOpen = _openIndex == i;
+            <div class="@($"transition-colors duration-200 {(isOpen ? "bg-card" : "bg-background hover:bg-muted/40")}")">
+                <button @onclick="() => Toggle(i)"
+                        class="w-full flex items-center justify-between gap-4 px-6 py-4 text-left cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        @if (item.Icon != null)
+                        {
+                            <span class="@($"flex-shrink-0 transition-colors {(isOpen ? "text-primary" : "text-muted-foreground")}")">
+                                @item.Icon
+                            </span>
+                        }
+                        <span class="@($"font-medium transition-colors {(isOpen ? "text-primary" : "text-foreground")}")">
+                            @item.Title
+                        </span>
+                    </div>
+                    <LucideIcon Name="chevron-down" ClassName="@($"flex-shrink-0 text-muted-foreground transition-transform duration-300 {(isOpen ? "rotate-180" : "")}")" /> 
+                </button>
+                <div class="@($"overflow-hidden transition-all duration-300 ease-in-out {(isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0")}")">
+                    <p class="px-6 pb-5 text-sm text-muted-foreground leading-relaxed">
+                        @item.Body
+                    </p>
+                </div>
+            </div>
+            index++;
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public List<AccordionItemData>? Items { get; set; }
+    [Parameter] public int DefaultOpenIndex { get; set; }
+
+    private int? _openIndex;
+
+    protected override void OnInitialized()
+    {
+        _openIndex = Items?.Count > 0 ? DefaultOpenIndex : null;
+    }
+
+    private void Toggle(int index) => _openIndex = _openIndex == index ? null : index;
+}
