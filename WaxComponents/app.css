@@ -131,7 +131,21 @@
 }
 
 body {
-    font-family: 'DM Sans', system-ui, sans-serif;   
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--muted);
+    border-radius: 9999px;
 }
 
 @layer base {

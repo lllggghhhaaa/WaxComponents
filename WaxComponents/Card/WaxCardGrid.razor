@@ -1,0 +1,10 @@
+﻿<div class="grid gap-5 @Class"
+     style='grid-template-columns:repeat(@Columns, minmax(0,1fr));'>
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public int Columns { get; set; } = 3;
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

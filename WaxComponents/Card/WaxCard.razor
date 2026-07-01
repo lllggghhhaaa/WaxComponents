@@ -1,0 +1,24 @@
+﻿<div class="@CssClass" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public WaxCardVariant Variant { get; set; } = WaxCardVariant.Elevated;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] 
+    public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string Base = "rounded-3xl p-6 transition-all duration-300";
+
+    private string VariantClass => Variant switch
+    {
+        WaxCardVariant.Elevated => "bg-card shadow-md shadow-black/8 hover:shadow-xl hover:shadow-black/12 hover:-translate-y-0.5",
+        WaxCardVariant.Filled => "bg-muted",
+        WaxCardVariant.Outlined => "bg-background border-2 border-border",
+        _ => throw new ArgumentOutOfRangeException(nameof(Variant))
+    };
+
+    private string CssClass => string.Join(" ", new[] { Base, VariantClass, Class }
+        .Where(c => !string.IsNullOrEmpty(c))).Trim();
+}

@@ -3,6 +3,7 @@
 @using LucideBlazor
 @using WaxComponents.Accordion
 @using WaxComponents.Button
+@using WaxComponents.Card
 
 <PageTitle>Home</PageTitle>
 
@@ -51,6 +52,99 @@ Welcome to your new app.
         </Text>
     </WaxButton>
 </div>
+
+<div>
+    <h1>Card</h1>
+    <WaxCardGrid Columns="3">
+        <WaxCard Variant="WaxCardVariant.Elevated">
+            <div class="flex flex-col h-full">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
+                </div>
+
+                <h3 class="font-semibold text-foreground mb-1">
+                    Elevated Card
+                </h3>
+
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
+                </p>
+
+                <div class="mt-auto pt-4">
+                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                        <Icon>arrow_right</Icon>
+                        <Text>Learn more</Text>
+                    </WaxButton>
+                </div>
+            </div>
+        </WaxCard>
+        <WaxCard Variant="WaxCardVariant.Elevated">
+            <div class="flex flex-col h-full">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
+                </div>
+
+                <h3 class="font-semibold text-foreground mb-1">
+                    Elevated Card
+                </h3>
+
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
+                </p>
+
+                <div class="mt-auto pt-4">
+                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                        <Icon>arrow_right</Icon>
+                        <Text>Learn more</Text>
+                    </WaxButton>
+                </div>
+            </div>
+        </WaxCard>
+        <WaxCard Variant="WaxCardVariant.Elevated">
+            <div class="flex flex-col h-full">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
+                </div>
+
+                <h3 class="font-semibold text-foreground mb-1">
+                    Elevated Card
+                </h3>
+
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
+                </p>
+
+                <div class="mt-auto pt-4">
+                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                        <Icon>arrow_right</Icon>
+                        <Text>Learn more</Text>
+                    </WaxButton>
+                </div>
+            </div>
+        </WaxCard>
+    </WaxCardGrid>
+    <WaxCardGrid Columns="2" Class="mt-5">
+        <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
+            <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                <LucideIcon Name="leaf" Size="24" ClassName="text-secondary"/>
+            </div>
+            <div>
+                <h3 class="font-semibold text-foreground">Horizontal Card</h3>
+                <p class="text-sm text-muted-foreground">panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.</p>
+            </div>
+        </WaxCard>
+        <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
+            <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                <LucideIcon Name="leaf" Size="24" ClassName="text-secondary"/>
+            </div>
+            <div>
+                <h3 class="font-semibold text-foreground">Horizontal Card</h3>
+                <p class="text-sm text-muted-foreground">Media on the left, content on the right.</p>
+            </div>
+        </WaxCard>
+    </WaxCardGrid>
+</div>
+
 @code {
 
     private List<WaxAccordionItemData> accordionItemList =
