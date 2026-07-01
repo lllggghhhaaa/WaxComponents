@@ -2,18 +2,58 @@
 @rendermode InteractiveServer
 @using LucideBlazor
 @using WaxComponents.Accordion
+@using WaxComponents.Button
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+<div>
+    <h1>Accordion</h1>
+    
+    <WaxAccordion Items="accordionItemList" />
+</div>
 
-<Accordion Items="accordionItemList" />
+<div>
+    <h1>Buttons</h1>
 
+    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Small">
+        <Icon>
+            <LucideIcon Size="16" Name="leaf" />
+        </Icon>
+        <Text>
+            Small
+        </Text>
+    </WaxButton>
+    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium">
+        <Icon>
+            <LucideIcon Size="16" Name="leaf" />
+        </Icon>
+        <Text>
+            Medium
+        </Text>
+    </WaxButton>
+    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Large">
+        <Icon>
+            <LucideIcon Size="16" Name="leaf" />
+        </Icon>
+        <Text>
+            Large
+        </Text>
+    </WaxButton>
+    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium" Disabled="true">
+        <Icon>
+            <LucideIcon Size="16" Name="leaf" />
+        </Icon>
+        <Text>
+            Disabled
+        </Text>
+    </WaxButton>
+</div>
 @code {
 
-    private List<AccordionItemData> accordionItemList =
+    private List<WaxAccordionItemData> accordionItemList =
     [
         new()
         {
@@ -28,5 +68,4 @@ Welcome to your new app.
             // sem ícone
         }
     ];
-
 }

@@ -2,7 +2,7 @@
 
 namespace WaxComponents.Accordion;
 
-public class AccordionItemData
+public class WaxAccordionItemData
 {
     public string Title { get; set; } = string.Empty;
     public MarkupString Body { get; set; }

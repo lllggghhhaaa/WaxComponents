@@ -1,0 +1,55 @@
+﻿@using WaxComponents.Button
+
+<button class="@CssClass" disabled="@Disabled" @onclick="HandleClick">
+    @if (Icon is not null)
+    {
+        <span class="shrink-0">@Icon</span>
+    }
+    @Text
+</button>
+
+@code {
+    [Parameter] public WaxButtonVariant Variant { get; set; } = WaxButtonVariant.Filled;
+    [Parameter] public WaxButtonSize Size { get; set; } = WaxButtonSize.Medium;
+    [Parameter] public RenderFragment? Text { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private const string Base =
+        "inline-flex items-center gap-2 font-medium transition-all duration-200 cursor-pointer select-none";
+
+    private string SizeClass => Size switch
+    {
+        WaxButtonSize.Small => "px-4 py-1.5 text-sm rounded-[999px]",
+        WaxButtonSize.Medium => "px-6 py-2.5 text-base rounded-[999px]",
+        WaxButtonSize.Large => "px-8 py-3.5 text-lg rounded-[999px]",
+        _ => throw new ArgumentOutOfRangeException(nameof(Size)),
+    };
+
+    private string VariantClass => Variant switch
+    {
+        WaxButtonVariant.Filled =>
+            "bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02] active:scale-[0.98]",
+        WaxButtonVariant.Tonal =>
+            "bg-[#F5D5C8] text-primary hover:bg-[#EEC4B3] hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+        WaxButtonVariant.Outlined =>
+            "border-2 border-primary text-primary bg-transparent hover:bg-[#F5D5C820] hover:scale-[1.02] active:scale-[0.98]",
+        WaxButtonVariant.Text =>
+            "text-primary bg-transparent hover:bg-[#F5D5C840] px-4 hover:scale-[1.02] active:scale-[0.98]",
+        WaxButtonVariant.Elevated =>
+            "bg-card text-primary shadow-md shadow-black/10 hover:shadow-xl hover:shadow-black/15 hover:scale-[1.02] active:scale-[0.98]",
+        _ => throw new ArgumentOutOfRangeException(nameof(Variant)),
+    };
+
+    private string CssClass => string.Join(" ", new[]
+    {
+        Base,
+        SizeClass,
+        VariantClass,
+        Disabled ? "opacity-40 cursor-not-allowed pointer-events-none" : null,
+    }.Where(c => !string.IsNullOrEmpty(c)));
+
+    private Task HandleClick()
+        => Disabled ? Task.CompletedTask : OnClick.InvokeAsync();
+}
