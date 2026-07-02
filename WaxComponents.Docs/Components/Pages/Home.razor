@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@inject IThemeService Theme
+@page "/"
 @rendermode InteractiveServer
 @using LucideBlazor
 @using WaxComponents.Accordion
@@ -6,6 +7,7 @@
 @using WaxComponents.Card
 @using WaxComponents.Checkbox
 @using WaxComponents.Chip
+@using WaxComponents.Services.Theme
 @using WaxComponents.Switch
 
 <PageTitle>Home</PageTitle>
@@ -232,11 +234,10 @@ Welcome to your new app.
     
 </div>
 
-<div class='@(_darkMode ? "dark" : "")'>
-    <h1>Switch</h1>
+<h1>Switch</h1>
 
     <WaxCard>
-        <WaxSwitch @bind-Checked="_darkMode" Label="Dark mode" />
+        <WaxSwitch Checked="@(Theme.CurrentTheme == ThemeMode.Dark)" CheckedChanged="DarkMode" Label="Dark mode" />
         <WaxSwitch />
     </WaxCard>
     
@@ -255,12 +256,8 @@ Welcome to your new app.
             <Text>Reset</Text>
         </WaxButton>
     </WaxCard>
-    
-</div>
 
 @code {
-    private bool _darkMode;
-
     private bool _notifyMorning = true;
     private bool _agreed;
 
@@ -287,8 +284,7 @@ Welcome to your new app.
         new()
         {
             Title = "Title 2",
-            Body = (MarkupString)"Second item",
-            // sem ícone
+            Body = (MarkupString)"Second item"
         }
     ];
     
@@ -343,6 +339,17 @@ Welcome to your new app.
     protected override void OnInitialized()
     {
         InputChipList = InputChips.ToList();
+        Theme.ThemeChanged += OnThemeChanged;
+    }
+
+    private void OnThemeChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Theme.ThemeChanged -= OnThemeChanged;
     }
 
     private void RemoveChip(string chip)
@@ -354,4 +361,10 @@ Welcome to your new app.
     {
         InputChipList = InputChips.ToList();
     }
+
+    private async Task DarkMode(bool value)
+    {
+        await Theme.SetThemeAsync(value ? ThemeMode.Dark : ThemeMode.Light);
+    }
+
 }

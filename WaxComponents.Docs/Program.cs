@@ -1,3 +1,4 @@
+using WaxComponents;
 using WaxComponents.Docs.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddWaxComponents();
 
 var app = builder.Build();
 

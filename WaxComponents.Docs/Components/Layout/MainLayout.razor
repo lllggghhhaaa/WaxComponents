@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@rendermode InteractiveServer
+@inject IThemeService Theme
+@using WaxComponents.Services.Theme
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -21,3 +24,29 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Theme.ThemeChanged += OnThemeChanged;
+
+            await Theme.InitializeAsync();
+
+            StateHasChanged();
+        }
+    }
+
+    void OnThemeChanged()
+    {
+        Console.WriteLine("Theme changed");
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Theme.ThemeChanged -= OnThemeChanged;
+    }
+}

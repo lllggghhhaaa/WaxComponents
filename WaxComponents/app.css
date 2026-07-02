@@ -3,8 +3,8 @@
 
 @source "../**/*.razor";
 @source "../../**/*.razor";
-   
-@custom-variant dark (&:is(.dark *));
+
+@custom-variant dark (&:where(html.theme-dark, html.theme-dark *));
 
 :root {
     --font-size: 16px;
@@ -47,7 +47,7 @@
     --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+.theme-dark {
     --background: #1E1209;
     --foreground: #F5E8D8;
     --card: #2A1A0E;
