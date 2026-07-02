@@ -7,6 +7,7 @@
 @using WaxComponents.Card
 @using WaxComponents.Checkbox
 @using WaxComponents.Chip
+@using WaxComponents.Fab
 @using WaxComponents.Services.Theme
 @using WaxComponents.Switch
 
@@ -234,7 +235,8 @@ Welcome to your new app.
     
 </div>
 
-<h1>Switch</h1>
+<div>
+    <h1>Switch</h1>
 
     <WaxCard>
         <WaxSwitch Checked="@(Theme.CurrentTheme == ThemeMode.Dark)" CheckedChanged="DarkMode" Label="Dark mode" />
@@ -256,6 +258,21 @@ Welcome to your new app.
             <Text>Reset</Text>
         </WaxButton>
     </WaxCard>
+</div>
+
+<div>
+    <h1>FAB</h1>
+    <WaxCard>
+        <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="leaf">
+            Add
+        </WaxFab>
+        <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Large" Icon="leaf" />
+        <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Small" Icon="leaf" />
+        <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Small" Icon="leaf" />
+        <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Small" Icon="leaf" />
+    </WaxCard>
+    
+</div>
 
 @code {
     private bool _notifyMorning = true;
