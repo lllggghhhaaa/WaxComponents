@@ -10,6 +10,7 @@
 @using WaxComponents.Fab
 @using WaxComponents.Services.Theme
 @using WaxComponents.Switch
+@using WaxComponents.TextField
 
 <PageTitle>Home</PageTitle>
 
@@ -232,7 +233,16 @@ Welcome to your new app.
 
 <div>
     <h1>Text Fields</h1>
-    
+    <WaxTextField Placeholder="Placeholder" Label="Email" @bind-Value="email" Variant="WaxFieldVariant.Filled">
+        <Icon>
+            <LucideIcon Size="16" Name="mail" />
+        </Icon>
+    </WaxTextField>
+
+    <WaxTextField Label="Password"
+                  Placeholder="Placeholder"
+                  @bind-Value="password"
+                  Variant="WaxFieldVariant.Outlined" />
 </div>
 
 <div>
@@ -271,12 +281,14 @@ Welcome to your new app.
         <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Small" Icon="leaf" />
         <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Small" Icon="leaf" />
     </WaxCard>
-    
 </div>
 
 @code {
     private bool _notifyMorning = true;
     private bool _agreed;
+    
+    private string email = "";
+    private string password = "";
 
     private bool AllChecked => _notifyMorning && _agreed;
     private bool IsPartial => (_notifyMorning || _agreed) && !AllChecked;

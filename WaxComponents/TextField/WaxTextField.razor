@@ -1,0 +1,114 @@
+﻿@using WaxComponents.Utils
+
+<div class="flex flex-col gap-1 w-full">
+    <div class="relative">
+        @if (Icon is not null)
+        {
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
+                @Icon
+            </span>
+        }
+
+        <input id="@_fieldId"
+               value="@Value"
+               @oninput="OnInput"
+               @onfocus="OnFocus"
+               @onblur="OnBlur"
+               placeholder="@(_focused ? Placeholder : string.Empty)"
+               disabled="@Disabled"
+               class="@InputClass"
+               @attributes="AdditionalAttributes" />
+
+        @if (Variant == WaxFieldVariant.Filled)
+        {
+            <span class="absolute bottom-0 left-0 right-0 h-0.5 transition-colors duration-200 @BottomLineClass"></span>
+        }
+
+        <label for="@_fieldId" class="@LabelClass">
+            @Label
+        </label>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Error) || !string.IsNullOrEmpty(Helper))
+    {
+        <p class="@(HasError ? "text-destructive" : "text-muted-foreground") text-xs px-4">
+            @(Error ?? Helper)
+        </p>
+    }
+</div>
+
+@code {
+    private readonly string _fieldId = $"wax-field-{Guid.NewGuid():N}";
+    private bool _focused;
+
+    [Parameter, EditorRequired] public string Label { get; set; } = default!;
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter] public string? Helper { get; set; }
+    [Parameter] public string? Error { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public WaxFieldVariant Variant { get; set; } = WaxFieldVariant.Filled;
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool HasIcon => Icon is not null;
+    private bool HasError => !string.IsNullOrEmpty(Error);
+    private bool HasValue => !string.IsNullOrWhiteSpace(Value);
+    private bool IsActive => _focused || HasValue;
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString() ?? string.Empty;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private void OnFocus() => _focused = true;
+    private void OnBlur() => _focused = false;
+
+    private string InputClass =>
+        "w-full transition-all duration-200 outline-none font-normal text-foreground placeholder:text-muted-foreground"
+            .Merge(
+                IsActive ? "pt-6 pb-2" : "py-4",
+                HasIcon ? "pl-10 pr-4" : "px-4",
+                Variant == WaxFieldVariant.Filled
+                    ? "bg-input-background rounded-3xl border-none"
+                    : "bg-background rounded-2xl border-2"
+                        .Merge(
+                            HasError
+                                ? "border-destructive"
+                                : _focused
+                                    ? "border-primary"
+                                    : "border-border hover:border-muted-foreground/40"
+                        )
+            );
+
+    private string BottomLineClass =>
+        "rounded-full"
+            .Merge(
+                HasError
+                    ? "bg-destructive"
+                    : _focused
+                        ? "bg-primary"
+                        : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+            );
+
+    private string LabelClass =>
+        "absolute pointer-events-none transition-all duration-200 font-medium"
+            .Merge(
+                HasIcon ? "left-10" : "left-4",
+                IsActive
+                    ? "text-xs top-1.5 translate-y-0"
+                    : "text-base top-1/2 -translate-y-1/2 text-muted-foreground",
+                HasError
+                    ? "text-destructive"
+                    : _focused
+                        ? "text-primary"
+                        : IsActive
+                            ? "text-muted-foreground"
+                            : string.Empty
+            );
+}

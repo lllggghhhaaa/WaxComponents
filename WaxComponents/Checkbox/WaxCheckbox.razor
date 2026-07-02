@@ -66,7 +66,7 @@
             .Merge(Checked || Indeterminate
                     ? "bg-primary border-primary"
                     : "border-border bg-background group-hover:border-primary/50",
-                Disabled ? "pointer-events-none" : "");
+                Disabled ? "pointer-events-none" : string.Empty);
 
     private string MarkClass =>
         "absolute inset-0 flex items-center justify-center transition-opacity duration-150"

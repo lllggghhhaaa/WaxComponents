@@ -1,4 +1,5 @@
 ﻿@using LucideBlazor
+@using WaxComponents.Utils
 
 <label class="@LabelClass">
     <button
@@ -35,16 +36,20 @@
         await CheckedChanged.InvokeAsync(Checked);
     }
 
-    private string LabelClass => string.Join(" ",
-        "inline-flex items-center gap-3",
-        Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer");
+    private string LabelClass =>
+        "inline-flex items-center gap-3"
+            .Merge(
+                Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer");
 
-    private string TrackClass => string.Join(" ",
-        "relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0",
-        Checked ? "bg-primary" : "bg-switch-background",
-        Disabled ? "pointer-events-none" : "");
+    private string TrackClass =>
+        "relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0"
+            .Merge(
+                Checked ? "bg-primary" : "bg-switch-background",
+                Disabled ? "pointer-events-none" : string.Empty);
 
-    private string ThumbClass => string.Join(" ",
-        "absolute top-1 w-5 h-5 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center",
-        Checked ? "left-8 bg-primary-foreground" : "left-1 bg-background");
+    private string ThumbClass =>
+        "absolute top-1 w-5 h-5 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center"
+            .Merge(
+                Checked ? "left-8 bg-primary-foreground" : "left-1 bg-background");
+
 }

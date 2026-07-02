@@ -53,7 +53,7 @@
             : "bg-muted text-foreground hover:bg-[#E8D4C0] border border-border";
 
     private string VariantClass =>
-        Variant == WaxChipVariant.Input ? "pr-2" : "";
+        Variant == WaxChipVariant.Input ? "pr-2" : string.Empty;
 
     private string CssClass =>
         Base.Merge(
