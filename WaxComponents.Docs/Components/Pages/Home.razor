@@ -10,6 +10,7 @@
 @using WaxComponents.Chip
 @using WaxComponents.Fab
 @using WaxComponents.Progress
+@using WaxComponents.Radio
 @using WaxComponents.Services.Theme
 @using WaxComponents.Slider
 @using WaxComponents.Switch
@@ -316,7 +317,24 @@ Welcome to your new app.
     <WaxSlider Value="10" Label="Brightness" Color="WaxColor.Muted" Min="0" Max="200" Step="2" />
 </div>
 
+<WaxCard>
+    <WaxRadio @bind-Value="_option" Orientation="WaxRadioOrientation.Horizontal" Options="_options" />
+</WaxCard>
+
+<WaxCard>
+    <WaxRadio @bind-Value="_option" Orientation="WaxRadioOrientation.Vertical" Options="_options" />
+</WaxCard>
+
 @code {
+    private string _option = "standard";
+
+    private List<WaxRadio.RadioOption> _options =
+    [
+        new("Express", "express", "1–2 business days"),
+        new("Standard", "standard", "3–5 business days"),
+        new("Eco", "eco", "7–10 days, carbon offset", Disabled: true)
+    ];
+    
     private double _volume = 50;
 
     private List<WaxTab.TabItem> _tabs =

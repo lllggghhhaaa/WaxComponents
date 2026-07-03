@@ -1,0 +1,68 @@
+﻿@using WaxComponents.Utils
+<div class="@GetContainerClass()">
+    @foreach (var opt in Options)
+    {
+        <button type="button"
+                @onclick="() => Select(opt)"
+                disabled="@opt.Disabled"
+                class="@GetButtonClass(opt)">
+
+            <div class="@GetIndicatorClass(opt)">
+                @if (Value == opt.Value)
+                {
+                    <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+                }
+            </div>
+
+            <div>
+                <p class="text-sm font-medium text-foreground">@opt.Label</p>
+                @if (!string.IsNullOrEmpty(opt.Description))
+                {
+                    <p class="text-xs text-muted-foreground mt-0.5">@opt.Description</p>
+                }
+            </div>
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<RadioOption> Options { get; set; } = new();
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public WaxRadioOrientation Orientation { get; set; } = WaxRadioOrientation.Vertical;
+
+    private async Task Select(RadioOption opt)
+    {
+        if (opt.Disabled) return;
+        Value = opt.Value;
+        await ValueChanged.InvokeAsync(opt.Value);
+    }
+
+    private string GetContainerClass()
+    {
+        var orientationClass = Orientation == WaxRadioOrientation.Horizontal
+            ? "flex flex-wrap"
+            : "flex flex-col";
+        return "gap-3".Merge(orientationClass);
+    }
+
+    private string GetButtonClass(RadioOption opt) =>
+        "flex items-start gap-3 text-left transition-all duration-150 cursor-pointer group"
+            .Merge(opt.Disabled ? "opacity-40 cursor-not-allowed" : string.Empty);
+
+    private string GetIndicatorClass(RadioOption opt) =>
+        "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-200"
+            .Merge(Value == opt.Value
+                ? "border-primary"
+                : "border-border group-hover:border-primary/50"
+            );
+
+    public record RadioOption(string Label, string Value, string? Description = null, bool Disabled = false);
+}
