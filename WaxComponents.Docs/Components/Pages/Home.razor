@@ -14,6 +14,7 @@
 @using WaxComponents.Switch
 @using WaxComponents.Tabs
 @using WaxComponents.TextField
+@using WaxComponents.Theme
 
 <PageTitle>Home</PageTitle>
 
@@ -288,19 +289,19 @@ Welcome to your new app.
 
 <div>
     <h1>Badge</h1>
-    <WaxBadge Variant="WaxBadgeVariant.Primary">Primary</WaxBadge>
-    <WaxBadge Variant="WaxBadgeVariant.Secondary">Secondary</WaxBadge>
-    <WaxBadge Variant="WaxBadgeVariant.Accent">Accent</WaxBadge>
-    <WaxBadge Variant="WaxBadgeVariant.Muted">Muted</WaxBadge>
+    <WaxBadge Color="WaxColor.Primary">Primary</WaxBadge>
+    <WaxBadge Color="WaxColor.Secondary">Secondary</WaxBadge>
+    <WaxBadge Color="WaxColor.Accent">Accent</WaxBadge>
+    <WaxBadge Color="WaxColor.Muted">Muted</WaxBadge>
 </div>
 
 <div>
     <h1>Progress</h1>
     <WaxCard>
-        <WaxProgressBar Variant="WaxProgressBarVariant.Primary" Value="20" Class="my-1" />
-        <WaxProgressBar Variant="WaxProgressBarVariant.Secondary" Value="30" Class="my-1" />
-        <WaxProgressBar Variant="WaxProgressBarVariant.Accent" Value="45" Class="my-1" />
-        <WaxProgressBar Variant="WaxProgressBarVariant.Muted" Value="60" Class="my-1" />
+        <WaxProgressBar Color="WaxColor.Primary" Value="20" Class="my-1" />
+        <WaxProgressBar Color="WaxColor.Secondary" Value="30" Class="my-1" />
+        <WaxProgressBar Color="WaxColor.Accent" Value="45" Class="my-1" />
+        <WaxProgressBar Color="WaxColor.Muted" Value="60" Class="my-1" />
     </WaxCard>
 </div>
 

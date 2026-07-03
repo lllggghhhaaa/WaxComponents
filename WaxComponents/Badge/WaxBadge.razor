@@ -1,23 +1,17 @@
-﻿@using WaxComponents.Utils
+﻿@using WaxComponents.Theme
+@using WaxComponents.Utils
 <span class="@CssClass">
     @ChildContent
 </span>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public WaxBadgeVariant Variant { get; set; }
+    [Parameter] public WaxColor Color { get; set; }
     [Parameter] public string Class { get; set; } = string.Empty;
 
     private string CssClass =>
         "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
             .Merge(VariantClass, Class);
 
-    private string VariantClass => Variant switch
-    {
-        WaxBadgeVariant.Primary => "bg-primary text-primary-foreground",
-        WaxBadgeVariant.Secondary => "bg-secondary text-secondary-foreground",
-        WaxBadgeVariant.Accent => "bg-accent text-accent-foreground",
-        WaxBadgeVariant.Muted => "bg-muted text-muted-foreground",
-        _ => throw new ArgumentOutOfRangeException()
-    };
+    private string VariantClass => $"bg-{Color} text-{Color}-foreground";
 }
