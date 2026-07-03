@@ -1,0 +1,94 @@
+﻿@using WaxComponents.Utils
+
+<div class="relative inline-flex shrink-0">
+    <div class="@GetAvatarClass()">
+        @if (!string.IsNullOrEmpty(Src))
+        {
+            <img src="@Src" alt="@Name" class="w-full h-full object-cover" />
+        }
+        else
+        {
+            @Initials
+        }
+    </div>
+
+    @if (Status.HasValue)
+    {
+        <span class="@GetStatusClass()"></span>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? Src { get; set; }
+
+    [Parameter, EditorRequired]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public WaxAvatarSize Size { get; set; } = WaxAvatarSize.Medium;
+
+    [Parameter]
+    public WaxAvatarStatus? Status { get; set; }
+
+    private string SizeClass => Size switch
+    {
+        WaxAvatarSize.ExtraSmall => "w-6 h-6 text-[10px]",
+        WaxAvatarSize.Small => "w-8 h-8 text-xs",
+        WaxAvatarSize.Medium => "w-10 h-10 text-sm",
+        WaxAvatarSize.Large => "w-14 h-14 text-base",
+        WaxAvatarSize.ExtraLarge => "w-20 h-20 text-xl",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private string StatusColor => Status switch
+    {
+        WaxAvatarStatus.Online => "bg-secondary",
+        WaxAvatarStatus.Away => "bg-accent",
+        WaxAvatarStatus.Busy => "bg-destructive",
+        WaxAvatarStatus.Offline => "bg-muted-foreground",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private string StatusSize => Size switch
+    {
+        WaxAvatarSize.ExtraSmall => "w-1.5 h-1.5",
+        WaxAvatarSize.Small => "w-2 h-2",
+        WaxAvatarSize.Medium => "w-2.5 h-2.5",
+        WaxAvatarSize.Large => "w-3 h-3",
+        WaxAvatarSize.ExtraLarge => "w-4 h-4",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private static readonly string[] Colors =
+    [
+        "bg-primary/20 text-primary",
+        "bg-secondary/20 text-secondary",
+        "bg-accent/30 text-accent-foreground",
+        "bg-muted text-muted-foreground"
+    ];
+
+    private string Initials =>
+        string.Concat(
+            Name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Take(2)
+                .Select(w => w[0])
+        ).ToUpperInvariant();
+
+    private int ColorIdx => string.IsNullOrEmpty(Name) ? 0 : Name[0] % Colors.Length;
+
+    private string GetAvatarClass() =>
+        "rounded-full flex items-center justify-center font-semibold overflow-hidden"
+            .Merge(
+                SizeClass,
+                string.IsNullOrEmpty(Src) ? Colors[ColorIdx] : string.Empty
+            );
+
+    private string GetStatusClass() =>
+        "absolute bottom-0 right-0 rounded-full border-2 border-background"
+            .Merge(
+                StatusColor,
+                StatusSize
+            );
+
+}

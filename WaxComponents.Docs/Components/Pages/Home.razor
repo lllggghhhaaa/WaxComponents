@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 @using LucideBlazor
 @using WaxComponents.Accordion
+@using WaxComponents.Avatar
 @using WaxComponents.Badge
 @using WaxComponents.Button
 @using WaxComponents.Card
@@ -323,6 +324,12 @@ Welcome to your new app.
 
 <WaxCard>
     <WaxRadio @bind-Value="_option" Orientation="WaxRadioOrientation.Vertical" Options="_options" />
+</WaxCard>
+
+<WaxCard>
+    <h1>Avatar</h1>
+    <WaxAvatar Name="Yuki Tanaka" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Online"/>
+    <WaxAvatar Name="lllggghhhaaa" Src="https://cdn.discordapp.com/avatars/597926883069394996/52e26e7246749cdd7893f9090bc939a1.webp?size=80" Size="WaxAvatarSize.Medium"/>
 </WaxCard>
 
 @code {
