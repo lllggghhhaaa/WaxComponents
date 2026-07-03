@@ -12,6 +12,7 @@
 @using WaxComponents.Progress
 @using WaxComponents.Services.Theme
 @using WaxComponents.Switch
+@using WaxComponents.Tabs
 @using WaxComponents.TextField
 
 <PageTitle>Home</PageTitle>
@@ -303,7 +304,17 @@ Welcome to your new app.
     </WaxCard>
 </div>
 
+<WaxTab Variant="WaxTabVariant.Primary" Tabs="_tabs" />
+<WaxTab Variant="WaxTabVariant.Secondary" Tabs="_tabs" />
+
 @code {
+
+    private List<WaxTab.TabItem> _tabs =
+    [
+        new("Overview", Content: @<div>Conteúdo da aba 1</div>),
+        new("Settings", Content: @<div>Conteúdo da aba 2</div>, Icon: @<SettingsIcon/>)
+    ];
+    
     private bool _notifyMorning = true;
     private bool _agreed;
     

@@ -1,0 +1,71 @@
+﻿@using WaxComponents.Utils
+<div class="@Class">
+    <div class="@GetTabListClass()">
+        @for (var i = 0; i < Tabs.Count; i++)
+        {
+            var index = i;
+            var tab = Tabs[index];
+
+            <button type="button"
+                    @onclick="() => SetActive(index)"
+                    class="@GetTabButtonClass(index)">
+                @if (tab.Icon is not null)
+                {
+                    @tab.Icon
+                }
+                @tab.Label
+            </button>
+        }
+    </div>
+
+    <div class="pt-5">
+        @Tabs[Active].Content
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<TabItem> Tabs { get; set; } = []; 
+
+    [Parameter]
+    public WaxTabVariant Variant { get; set; } = WaxTabVariant.Primary;
+    
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+    [Parameter]
+    public string TabListClass { get; set; } = string.Empty;
+    [Parameter]
+    public string TabButtonClass { get; set; } = string.Empty;
+
+    private int Active { get; set; } = 0;
+
+    private void SetActive(int index) => Active = index;
+
+    private string GetTabListClass()
+    {
+        var baseClass = "flex border-b-2 border-border";
+        return (Variant == WaxTabVariant.Secondary
+            ? baseClass.Merge("bg-muted rounded-xl border-none gap-1")
+            : baseClass).Merge(TabListClass);
+    }
+
+    private string GetTabButtonClass(int index)
+    {
+        const string common = "inline-flex items-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 cursor-pointer relative";
+        var isActive = Active == index;
+
+        var variantClass = Variant == WaxTabVariant.Primary
+            ? "border-b-2 -mb-px"
+                .Merge(isActive
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border")
+            : "rounded-xl flex-1 justify-center"
+                .Merge(isActive
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground");
+
+        return common.Merge(variantClass, TabButtonClass);
+    }
+
+    public record TabItem(string Label, RenderFragment Content, RenderFragment? Icon = null);
+}
