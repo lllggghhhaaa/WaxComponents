@@ -1,0 +1,81 @@
+﻿@using System.Globalization
+@using WaxComponents.Theme
+
+<div class="w-full">
+    @if (!string.IsNullOrEmpty(Label) || ShowValue)
+    {
+        <div class="flex justify-between mb-2">
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <label for="@_inputId" class="text-sm font-medium text-foreground">@Label</label>
+            }
+            @if (ShowValue)
+            {
+                <span class="text-sm font-mono text-muted-foreground">@Value.ToString(Format)</span>
+            }
+        </div>
+    }
+
+    <div class="relative h-5 flex items-center">
+        <div class="absolute w-full h-2 rounded-full bg-muted overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-100"
+                 style='@($"width: {FillPercentage}%; background-color: var(--{Color});")'>
+            </div>
+        </div>
+
+        <input id="@_inputId"
+               type="range"
+               min="@Min"
+               max="@Max"
+               step="@Step"
+               value="@Value"
+               @oninput="OnInput"
+               class="absolute w-full opacity-0 h-5 cursor-pointer" />
+
+        <div class="absolute w-5 h-5 rounded-full shadow-md border-2 border-background transition-all duration-100 pointer-events-none"
+             style='@($"left: calc({FillPercentage}% - 10px); background-color: var(--{Color});")'
+             aria-hidden="true">
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly string _inputId = $"slider-{Guid.NewGuid():N}";
+
+    [Parameter] public double Value { get; set; }
+
+    [Parameter] public EventCallback<double> ValueChanged { get; set; }
+
+    [Parameter] public double Min { get; set; } = 0;
+
+    [Parameter] public double Max { get; set; } = 100;
+
+    [Parameter] public double Step { get; set; } = 1;
+
+    [Parameter] public WaxColor Color { get; set; } = WaxColor.Primary;
+
+    [Parameter] public string? Label { get; set; }
+
+    [Parameter] public bool ShowValue { get; set; } = true;
+
+    [Parameter] public string Format { get; set; } = "0.##";
+
+    private string FillPercentage
+    {
+        get
+        {
+            if (Max <= Min) return "0";
+            var pct = (Value - Min) / (Max - Min) * 100;
+            return Math.Clamp(pct, 0, 100).ToString("0.##", CultureInfo.InvariantCulture);
+        }
+    }
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var newValue))
+        {
+            Value = newValue;
+            await ValueChanged.InvokeAsync(newValue);
+        }
+    }
+}

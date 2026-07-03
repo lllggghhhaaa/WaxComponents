@@ -11,6 +11,7 @@
 @using WaxComponents.Fab
 @using WaxComponents.Progress
 @using WaxComponents.Services.Theme
+@using WaxComponents.Slider
 @using WaxComponents.Switch
 @using WaxComponents.Tabs
 @using WaxComponents.TextField
@@ -308,12 +309,21 @@ Welcome to your new app.
 <WaxTab Variant="WaxTabVariant.Primary" Tabs="_tabs" />
 <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_tabs" />
 
+<div>
+    <h1>Slider</h1>
+    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Primary" Min="0" Max="100" />
+    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Secondary" Min="0" Max="100" />
+    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Accent" Min="0" Max="100" />
+    <WaxSlider Value="10" Label="Brightness" Color="WaxColor.Muted" Min="0" Max="200" Step="2" />
+</div>
+
 @code {
+    private double _volume = 50;
 
     private List<WaxTab.TabItem> _tabs =
     [
-        new("Overview", Content: @<div>Conteúdo da aba 1</div>),
-        new("Settings", Content: @<div>Conteúdo da aba 2</div>, Icon: @<SettingsIcon/>)
+        new("Overview", Content: @<div>First tab content</div>),
+        new("Settings", Content: @<div>Second tab content</div>, Icon: @<SettingsIcon/>)
     ];
     
     private bool _notifyMorning = true;
