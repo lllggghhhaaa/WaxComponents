@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 @using LucideBlazor
 @using WaxComponents.Accordion
+@using WaxComponents.Badge
 @using WaxComponents.Button
 @using WaxComponents.Card
 @using WaxComponents.Checkbox
@@ -281,6 +282,14 @@ Welcome to your new app.
         <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Small" Icon="leaf" />
         <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Small" Icon="leaf" />
     </WaxCard>
+</div>
+
+<div>
+    <h1>Badge</h1>
+    <WaxBadge Variant="WaxBadgeVariant.Primary">Primary</WaxBadge>
+    <WaxBadge Variant="WaxBadgeVariant.Secondary">Secondary</WaxBadge>
+    <WaxBadge Variant="WaxBadgeVariant.Accent">Accent</WaxBadge>
+    <WaxBadge Variant="WaxBadgeVariant.Muted">Muted</WaxBadge>
 </div>
 
 @code {
