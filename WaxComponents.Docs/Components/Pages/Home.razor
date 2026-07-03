@@ -9,6 +9,7 @@
 @using WaxComponents.Checkbox
 @using WaxComponents.Chip
 @using WaxComponents.Fab
+@using WaxComponents.Progress
 @using WaxComponents.Services.Theme
 @using WaxComponents.Switch
 @using WaxComponents.TextField
@@ -290,6 +291,16 @@ Welcome to your new app.
     <WaxBadge Variant="WaxBadgeVariant.Secondary">Secondary</WaxBadge>
     <WaxBadge Variant="WaxBadgeVariant.Accent">Accent</WaxBadge>
     <WaxBadge Variant="WaxBadgeVariant.Muted">Muted</WaxBadge>
+</div>
+
+<div>
+    <h1>Progress</h1>
+    <WaxCard>
+        <WaxProgressBar Variant="WaxProgressBarVariant.Primary" Value="20" Class="my-1" />
+        <WaxProgressBar Variant="WaxProgressBarVariant.Secondary" Value="30" Class="my-1" />
+        <WaxProgressBar Variant="WaxProgressBarVariant.Accent" Value="45" Class="my-1" />
+        <WaxProgressBar Variant="WaxProgressBarVariant.Muted" Value="60" Class="my-1" />
+    </WaxCard>
 </div>
 
 @code {

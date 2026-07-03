@@ -1,0 +1,28 @@
+﻿@using WaxComponents.Utils
+<div class="@CssClass">
+    <div
+        class="h-full rounded-full transition-all duration-700"
+        style="@Style"
+    />
+</div>
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public WaxProgressBarVariant Variant { get; set; } = WaxProgressBarVariant.Primary;
+    [Parameter] public string Class { get; set; } = string.Empty;
+    
+    private string CssClass => 
+        "w-full bg-muted rounded-full h-2 overflow-hidden"
+            .Merge(Class);
+
+    private string Style => $"width: {Value}%; background-color: var(--{_color});";
+    
+    private string _color => Variant switch
+    {
+        WaxProgressBarVariant.Primary => "primary",
+        WaxProgressBarVariant.Secondary => "secondary",
+        WaxProgressBarVariant.Accent => "accent",
+        WaxProgressBarVariant.Muted => "muted",
+        _ => "primary"
+    };
+}
