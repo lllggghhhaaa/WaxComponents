@@ -23,9 +23,9 @@
 
     private string SizeClass => Size switch
     {
-        WaxButtonSize.Small => "px-4 py-1.5 text-sm rounded-[999px]",
-        WaxButtonSize.Medium => "px-6 py-2.5 text-base rounded-[999px]",
-        WaxButtonSize.Large => "px-8 py-3.5 text-lg rounded-[999px]",
+        WaxButtonSize.Small => "px-4 py-1.5 text-sm rounded-full",
+        WaxButtonSize.Medium => "px-6 py-2.5 text-base rounded-full",
+        WaxButtonSize.Large => "px-8 py-3.5 text-lg rounded-full",
         _ => throw new ArgumentOutOfRangeException(nameof(Size)),
     };
 
