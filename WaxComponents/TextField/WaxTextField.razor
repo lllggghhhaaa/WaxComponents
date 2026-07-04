@@ -21,7 +21,7 @@
 
         @if (Variant == WaxFieldVariant.Filled)
         {
-            <span class="absolute bottom-0 left-0 right-0 h-0.5 transition-colors duration-200 @BottomLineClass"></span>
+            <span class="absolute bottom-0 left-0 right-0 h-0.5 mx-4 rounded-full transition-colors duration-200 @BottomLineClass mask-[linear-gradient(to_right,transparent_0,black_24px,black_calc(100%-24px),transparent_100%)]"></span>
         }
 
         <label for="@_fieldId" class="@LabelClass">
