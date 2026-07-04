@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-border bg-card/80 backdrop-blur-sm flex flex-col z-40">
+
+    @if (Header is not null)
+    {
+        <div class="p-6 border-b border-border shrink-0">
+            @Header
+        </div>
+    }
+
+    <nav class="scrollbar-thin flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
+        @foreach (var group in Groups)
+        {
+            <div>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest font-mono mb-2 px-2">
+                    @group.Label
+                </p>
+                <div class="space-y-0.5">
+                    @foreach (var item in group.Items)
+                    {
+                        <NavLink href="@item.Href"
+                                 Match="item.Match"
+                                 ActiveClass="bg-primary/12 text-primary font-semibold"
+                                 class="@GetItemClass()">
+                            <NavLinkContent Item="item" />
+                        </NavLink>
+                    }
+                </div>
+            </div>
+        }
+    </nav>
+
+    @if (Footer is not null)
+    {
+        <div class="p-4 border-t border-border shrink-0">
+            @Footer
+        </div>
+    }
+</aside>
+
+@code {
+    [Parameter]
+    public RenderFragment? Header { get; set; }
+
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+
+    [Parameter, EditorRequired]
+    public List<WaxSidebarGroup> Groups { get; set; } = [];
+
+    private string GetItemClass() =>
+        "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all duration-150 text-left cursor-pointer no-underline text-foreground hover:bg-muted hover:text-foreground";
+}

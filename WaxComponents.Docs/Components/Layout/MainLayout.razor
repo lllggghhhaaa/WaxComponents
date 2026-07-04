@@ -1,19 +1,39 @@
 ﻿@rendermode InteractiveServer
+@implements IDisposable
 @inject IThemeService Theme
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Navigation
 @using WaxComponents.Services.Theme
+@using WaxComponents.Switch
+@using WaxComponents.Theme
 @inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
+    <WaxSidebar Groups="_groups">
+        <Header>
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-2xl bg-primary flex items-center justify-center">
+                    <LucideIcon Name="coffee" Size="18" ClassName="text-primary-foreground" />
+                </div>
+                <div>
+                    <p class="font-display font-semibold text-foreground leading-tight">Wax Components</p>
+                    <p class="text-xs text-muted-foreground">.</p>
+                </div>
+            </div>
+            <WaxBadge Color="WaxColor.Muted">v1.0.0</WaxBadge>
+        </Header>
+
+        <Footer>
+            <div class="flex items-center justify-between px-2">
+                <span class="text-sm text-muted-foreground">Dark mode</span>
+                <WaxSwitch @bind-Value="_darkMode" />
+            </div>
+        </Footer>
+    </WaxSidebar>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+        <article class="px-6 py-8 max-w-5xl mx-auto w-full">
             @Body
         </article>
     </main>
@@ -26,6 +46,21 @@
 </div>
 
 @code {
+    private bool _darkMode;
+
+    private List<WaxSidebarGroup> _groups =
+    [
+        new("Foundations",
+        [
+            new WaxSidebarItem("colors", "Colors", "palette"),
+            new WaxSidebarItem("typography", "Typography", "type"),
+        ]),
+        new("Components",
+        [
+            new WaxSidebarItem("buttons", "Buttons", "square")
+        ]),
+        new("Infinity", Enumerable.Repeat(new WaxSidebarItem("colors", "Colors", "palette"), 20).ToList() )
+    ];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

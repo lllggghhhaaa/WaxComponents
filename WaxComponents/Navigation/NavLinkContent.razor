@@ -1,0 +1,33 @@
+﻿@inject NavigationManager Nav
+@using LucideBlazor
+@using Microsoft.AspNetCore.Components.Routing
+@implements IDisposable
+
+@if (Item.Icon is not null)
+{
+    <LucideIcon Name="@Item.Icon" Size="15" ClassName="@(IsActive ? "text-primary" : "text-muted-foreground")" />
+}
+@Item.Label
+
+@code {
+    [Parameter, EditorRequired]
+    public WaxSidebarItem Item { get; set; } = null!;
+
+    private bool IsActive =>
+        Item.Match == NavLinkMatch.All
+            ? Nav.Uri.Equals(Nav.ToAbsoluteUri(Item.Href).ToString(), StringComparison.OrdinalIgnoreCase)
+            : Nav.Uri.Contains(Item.Href, StringComparison.OrdinalIgnoreCase);
+
+    protected override void OnInitialized()
+    {
+        Nav.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e) =>
+        InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        Nav.LocationChanged -= OnLocationChanged;
+    }
+}
