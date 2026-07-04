@@ -1,17 +1,19 @@
 ﻿@using WaxComponents.Theme
 @using WaxComponents.Utils
-<span class="@CssClass">
+
+@inherits WaxComponent
+
+<span class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     @ChildContent
 </span>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public WaxColor Color { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public WaxColor Color { get; set; } = WaxColor.Primary;
 
     private string CssClass =>
         "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
-            .Merge(VariantClass, Class);
+            .MergeClass(VariantClass, Class);
 
     private string VariantClass => $"bg-{Color} text-{Color}-foreground";
 }

@@ -1,10 +1,16 @@
-﻿<div class="grid gap-5 @Class"
-     style='grid-template-columns:repeat(@Columns, minmax(0,1fr));'>
+﻿@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="@CssClass"
+     style='grid-template-columns:repeat(@Columns, minmax(0,1fr)); @Style'
+     @attributes="AdditionalAttributes">
     @ChildContent
 </div>
 
 @code {
     [Parameter] public int Columns { get; set; } = 3;
-    [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string CssClass => "grid gap-5".MergeClass(Class);
 }

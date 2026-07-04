@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Routing
+@using WaxComponents.Utils
 
-<aside class="fixed left-0 top-0 h-screen w-64 border-r border-border bg-card/80 backdrop-blur-sm flex flex-col z-40">
+@inherits WaxComponent
+
+<aside class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
 
     @if (Header is not null)
     {
@@ -48,7 +51,14 @@
 
     [Parameter, EditorRequired]
     public List<WaxSidebarGroup> Groups { get; set; } = [];
+    
+    [Parameter]
+    public string ItemClass { get; set; } = string.Empty;
+
+    private string CssClass => "fixed left-0 top-0 h-screen w-64 border-r border-border bg-card/80 backdrop-blur-sm flex flex-col z-40"
+        .MergeClass(Class);
 
     private string GetItemClass() =>
-        "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all duration-150 text-left cursor-pointer no-underline text-foreground hover:bg-muted hover:text-foreground";
+        "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all duration-150 text-left cursor-pointer no-underline text-foreground hover:bg-muted hover:text-foreground"
+            .MergeClass(ItemClass);
 }

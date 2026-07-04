@@ -1,20 +1,21 @@
 ﻿@using WaxComponents.Theme
 @using WaxComponents.Utils
-<div class="@CssClass">
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     <div
         class="h-full rounded-full transition-all duration-700"
-        style="@Style"
-    />
+        style="@TrackStyle"></div>
 </div>
 
 @code {
     [Parameter] public int Value { get; set; }
     [Parameter] public WaxColor Color { get; set; } = WaxColor.Primary;
-    [Parameter] public string Class { get; set; } = string.Empty;
-    
+
     private string CssClass => 
         "w-full bg-muted rounded-full h-2 overflow-hidden"
-            .Merge(Class);
+            .MergeClass(Class);
 
-    private string Style => $"width: {Value}%; background-color: var(--{Color});";
+    private string TrackStyle => $"width: {Value}%; background-color: var(--{Color});";
 }

@@ -1,18 +1,20 @@
 ﻿@using WaxComponents.Utils
-<button class="@CssClass" disabled="@Disabled" @onclick="HandleClick">
+
+@inherits WaxComponent
+
+<button class="@CssClass" style="@Style" disabled="@Disabled" @onclick="HandleClick" @attributes="AdditionalAttributes">
     @if (Icon is not null)
     {
         <span class="shrink-0">@Icon</span>
     }
-    @Text
+    @ChildContent
 </button>
 
 @code {
     [Parameter] public WaxButtonVariant Variant { get; set; } = WaxButtonVariant.Filled;
     [Parameter] public WaxButtonSize Size { get; set; } = WaxButtonSize.Medium;
-    [Parameter] public RenderFragment? Text { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public RenderFragment? Icon { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }
 
@@ -42,7 +44,7 @@
         _ => throw new ArgumentOutOfRangeException(nameof(Variant)),
     };
 
-    private string CssClass => Base.Merge(
+    private string CssClass => Base.MergeClass(
         Base,
         SizeClass,
         VariantClass,

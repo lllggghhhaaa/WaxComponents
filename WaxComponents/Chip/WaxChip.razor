@@ -1,8 +1,9 @@
 ﻿@using LucideBlazor
 @using WaxComponents.Utils
 
-<button @onclick="Toggle"
-        class="@CssClass">
+@inherits WaxComponent
+
+<button @onclick="Toggle" class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     @if (!string.IsNullOrEmpty(Icon))
     {
         <LucideIcon Size="14" Name="@Icon" ClassName="ml-0.5" />
@@ -10,7 +11,7 @@
 
     @ChildContent
 
-    @if (Selected)
+    @if (Value)
     {
         <LucideIcon Size="14" Name="check" ClassName="ml-0.5" />
     }
@@ -29,14 +30,13 @@
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Icon { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public WaxChipVariant Variant { get; set; } = WaxChipVariant.Filter;
 
     [Parameter]
-    public bool Selected { get; set; }
+    public bool Value { get; set; }
 
     [Parameter]
-    public EventCallback<bool> SelectedChanged { get; set; }
+    public EventCallback<bool> ValueChanged { get; set; }
 
     [Parameter]
     public EventCallback<bool> OnToggle { get; set; }
@@ -48,7 +48,7 @@
         "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[999px] text-sm font-medium transition-all duration-200 cursor-pointer";
 
     private string SelectedClass =>
-        Selected
+        Value
             ? "bg-primary text-primary-foreground shadow-sm"
             : "bg-muted text-foreground hover:bg-[#E8D4C0] border border-border";
 
@@ -56,17 +56,17 @@
         Variant == WaxChipVariant.Input ? "pr-2" : string.Empty;
 
     private string CssClass =>
-        Base.Merge(
+        Base.MergeClass(
             SelectedClass,
             VariantClass,
             Class);
 
     private async Task Toggle()
     {
-        Selected = !Selected;
+        Value = !Value;
 
-        await SelectedChanged.InvokeAsync(Selected);
-        await OnToggle.InvokeAsync(Selected);
+        await ValueChanged.InvokeAsync(Value);
+        await OnToggle.InvokeAsync(Value);
     }
 
     private async Task Remove()

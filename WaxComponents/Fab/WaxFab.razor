@@ -1,8 +1,9 @@
 ﻿@using LucideBlazor
 @using WaxComponents.Utils
-<button type="button"
-        class="@RootClass"
-        @attributes="AdditionalAttributes">
+
+@inherits WaxComponent
+
+<button type="button" class="@RootClass" style="@Style" @attributes="AdditionalAttributes">
     <LucideIcon Size="IconSize" Name="@Icon"></LucideIcon>
     @if (ChildContent is not null)
     {
@@ -16,12 +17,9 @@
     [Parameter, EditorRequired] public string Icon { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
     private string RootClass =>
         "inline-flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
-            .Merge(SizeClass, VariantClass);
+            .MergeClass(SizeClass, VariantClass, Class);
 
     private string SizeClass => Size switch
     {
@@ -30,7 +28,7 @@
             ? "h-14 px-6 rounded-[18px] gap-3"
             : "w-14 h-14 rounded-[18px]",
         WaxFabSize.Large => "w-24 h-24 rounded-[28px]",
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Size))
     };
 
     private string VariantClass => Variant switch
@@ -39,7 +37,7 @@
         WaxFabVariant.Secondary => "bg-secondary text-secondary-foreground shadow-lg shadow-secondary/20 hover:shadow-xl hover:shadow-secondary/30",
         WaxFabVariant.Tertiary => "bg-accent text-accent-foreground shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30",
         WaxFabVariant.Surface => "bg-card text-foreground shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15",
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Variant))
     };
 
     private int IconSize => Size switch
@@ -47,7 +45,7 @@
         WaxFabSize.Small => 18,
         WaxFabSize.Medium => 24,
         WaxFabSize.Large => 36,
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Size))
     };
 
 }

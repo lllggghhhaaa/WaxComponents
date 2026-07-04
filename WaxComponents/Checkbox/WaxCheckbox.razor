@@ -1,6 +1,9 @@
 ﻿@using LucideBlazor
 @using WaxComponents.Utils
-<label class="@LabelClass">
+
+@inherits WaxComponent
+
+<label class="@LabelClass" style="@Style" @attributes="AdditionalAttributes">
     <button
         type="button"
         role="checkbox"
@@ -22,8 +25,8 @@
 </label>
 
 @code {
-    [Parameter] public bool Checked { get; set; }
-    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
 
     [Parameter] public bool Indeterminate { get; set; }
 
@@ -39,41 +42,42 @@
         if (OnClick.HasDelegate)
             await OnClick.InvokeAsync(e);
 
-        await SetCheckedAsync(!Checked);
+        await SetValueAsync(!Value);
     }
 
-    public async Task SetCheckedAsync(bool value)
+    public async Task SetValueAsync(bool value)
     {
-        if (Checked == value) return;
-        Checked = value;
-        await CheckedChanged.InvokeAsync(Checked);
+        if (Value == value) return;
+        Value = value;
+        await ValueChanged.InvokeAsync(Value);
         StateHasChanged();
     }
 
-    public Task CheckAsync() => SetCheckedAsync(true);
-    public Task UncheckAsync() => SetCheckedAsync(false);
-    public Task ToggleAsync() => SetCheckedAsync(!Checked);
+    public Task CheckAsync() => SetValueAsync(true);
+    public Task UncheckAsync() => SetValueAsync(false);
+    public Task ToggleAsync() => SetValueAsync(!Value);
 
 
-    private string AriaChecked => Indeterminate ? "mixed" : Checked.ToString().ToLowerInvariant();
+    private string AriaChecked => Indeterminate ? "mixed" : Value.ToString().ToLowerInvariant();
 
     private string LabelClass =>
         "inline-flex items-center gap-3 group"
-            .Merge(Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer");
+            .MergeClass(Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer",
+                Class);
 
     private string BoxClass =>
         "relative w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center flex-shrink-0"
-            .Merge(Checked || Indeterminate
+            .MergeClass(Value || Indeterminate
                     ? "bg-primary border-primary"
                     : "border-border bg-background group-hover:border-primary/50",
                 Disabled ? "pointer-events-none" : string.Empty);
 
     private string MarkClass =>
         "absolute inset-0 flex items-center justify-center transition-opacity duration-150"
-            .Merge(Indeterminate ? "opacity-100" : "opacity-0");
+            .MergeClass(Indeterminate ? "opacity-100" : "opacity-0");
 
     private string CheckWrapperClass =>
         "absolute inset-0 flex items-center justify-center text-primary-foreground transition-opacity duration-150"
-            .Merge(Checked && !Indeterminate ? "opacity-100" : "opacity-0");
+            .MergeClass(Value && !Indeterminate ? "opacity-100" : "opacity-0");
 
 }

@@ -7,6 +7,5 @@ public record WaxColor(string Name)
     public static WaxColor Accent => new("accent");
     public static WaxColor Muted => new("muted");
 
-    public override string ToString()
-        => Name;
+    public override string ToString() => Name;
 }

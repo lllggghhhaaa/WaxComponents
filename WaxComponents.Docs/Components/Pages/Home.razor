@@ -37,33 +37,33 @@ Welcome to your new app.
         <Icon>
             <LucideIcon Size="16" Name="leaf" />
         </Icon>
-        <Text>
+        <ChildContent>
             Small
-        </Text>
+        </ChildContent>
     </WaxButton>
     <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium">
         <Icon>
             <LucideIcon Size="16" Name="leaf" />
         </Icon>
-        <Text>
+        <ChildContent>
             Medium
-        </Text>
+        </ChildContent>
     </WaxButton>
     <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Large">
         <Icon>
             <LucideIcon Size="16" Name="leaf" />
         </Icon>
-        <Text>
+        <ChildContent>
             Large
-        </Text>
+        </ChildContent>
     </WaxButton>
     <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium" Disabled="true">
         <Icon>
             <LucideIcon Size="16" Name="leaf" />
         </Icon>
-        <Text>
+        <ChildContent>
             Disabled
-        </Text>
+        </ChildContent>
     </WaxButton>
 </div>
 
@@ -87,7 +87,7 @@ Welcome to your new app.
                 <div class="mt-auto pt-4">
                     <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
                         <Icon>arrow_right</Icon>
-                        <Text>Learn more</Text>
+                        <ChildContent>Learn more</ChildContent>
                     </WaxButton>
                 </div>
             </div>
@@ -109,7 +109,7 @@ Welcome to your new app.
                 <div class="mt-auto pt-4">
                     <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
                         <Icon>arrow_right</Icon>
-                        <Text>Learn more</Text>
+                        <ChildContent>Learn more</ChildContent>
                     </WaxButton>
                 </div>
             </div>
@@ -131,7 +131,7 @@ Welcome to your new app.
                 <div class="mt-auto pt-4">
                     <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
                         <Icon>arrow_right</Icon>
-                        <Text>Learn more</Text>
+                        <ChildContent>Learn more</ChildContent>
                     </WaxButton>
                 </div>
             </div>
@@ -175,8 +175,8 @@ Welcome to your new app.
             @foreach (var chip in FilterChips)
             {
                 <WaxChip
-                    Selected="@FilterSelected.Contains(chip)"
-                    SelectedChanged="@(v => ToggleFilter(chip, v))">
+                    Value="@FilterSelected.Contains(chip)"
+                    ValueChanged="@(v => ToggleFilter(chip, v))">
                     @chip
                 </WaxChip>
             }
@@ -198,8 +198,8 @@ Welcome to your new app.
             {
                 <WaxChip
                     Variant="WaxChipVariant.Suggestion"
-                    Selected="@(Suggestion == chip)"
-                    SelectedChanged="@(v => SelectSuggestion(chip, v))">
+                    Value="@(Suggestion == chip)"
+                    ValueChanged="@(v => SelectSuggestion(chip, v))">
                     @chip
                 </WaxChip>
             }
@@ -221,7 +221,7 @@ Welcome to your new app.
             {
                 <WaxChip
                     Variant="WaxChipVariant.Input"
-                    Selected="true"
+                    Value="true"
                     OnRemove="@(_ => RemoveChip(chip))">
                     @chip
                 </WaxChip>
@@ -262,17 +262,17 @@ Welcome to your new app.
     
     <WaxCard>
         <WaxCheckbox
-            Checked="AllChecked"
+            Value="AllChecked"
             Indeterminate="IsPartial"
             Label="Select all"
-            CheckedChanged="SelectAll" />
+            ValueChanged="SelectAll" />
 
-        <WaxCheckbox @bind-Checked="_notifyMorning" Label="Notify on morning" />
-        <WaxCheckbox @bind-Checked="_agreed" Label="I agree" />
+        <WaxCheckbox @bind-Value="_notifyMorning" Label="Notify on morning" />
+        <WaxCheckbox @bind-Value="_agreed" Label="I agree" />
 
-        <WaxCheckbox @ref="_checkboxRef" @bind-Checked="_agreedRef" Label="I agree (ref)" />
+        <WaxCheckbox @ref="_checkboxRef" @bind-Value="_agreedRef" Label="I agree (ref)" />
         <WaxButton OnClick="@(() => _checkboxRef.UncheckAsync())" Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Text">
-            <Text>Reset</Text>
+            <ChildContent>Reset</ChildContent>
         </WaxButton>
     </WaxCard>
 </div>

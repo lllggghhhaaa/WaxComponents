@@ -1,5 +1,8 @@
 ﻿@using WaxComponents.Utils
-<div class="@GetContainerClass()">
+
+@inherits WaxComponent
+
+<div class="@GetContainerClass()" style="@Style" @attributes="AdditionalAttributes">
     @foreach (var opt in Options)
     {
         <button type="button"
@@ -27,7 +30,7 @@
 
 @code {
     [Parameter, EditorRequired]
-    public List<RadioOption> Options { get; set; } = new();
+    public List<RadioOption> Options { get; set; } = [];
 
     [Parameter]
     public string Value { get; set; } = string.Empty;
@@ -45,21 +48,16 @@
         await ValueChanged.InvokeAsync(opt.Value);
     }
 
-    private string GetContainerClass()
-    {
-        var orientationClass = Orientation == WaxRadioOrientation.Horizontal
-            ? "flex flex-wrap"
-            : "flex flex-col";
-        return "gap-3".Merge(orientationClass);
-    }
+    private string GetContainerClass() =>
+        "gap-3".MergeClass(Orientation == WaxRadioOrientation.Horizontal ? "flex flex-wrap" : "flex flex-col", Class);
 
     private string GetButtonClass(RadioOption opt) =>
         "flex items-start gap-3 text-left transition-all duration-150 cursor-pointer group"
-            .Merge(opt.Disabled ? "opacity-40 cursor-not-allowed" : string.Empty);
+            .MergeClass(opt.Disabled ? "opacity-40 cursor-not-allowed" : string.Empty);
 
     private string GetIndicatorClass(RadioOption opt) =>
         "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-200"
-            .Merge(Value == opt.Value
+            .MergeClass(Value == opt.Value
                 ? "border-primary"
                 : "border-border group-hover:border-primary/50"
             );

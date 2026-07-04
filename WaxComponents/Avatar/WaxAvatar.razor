@@ -1,7 +1,9 @@
 ﻿@using WaxComponents.Utils
 
-<div class="relative inline-flex shrink-0">
-    <div class="@GetAvatarClass()">
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    <div class="@AvatarCssClass">
         @if (!string.IsNullOrEmpty(Src))
         {
             <img src="@Src" alt="@Name" class="w-full h-full object-cover" />
@@ -14,7 +16,7 @@
 
     @if (Status.HasValue)
     {
-        <span class="@GetStatusClass()"></span>
+        <span class="@StatusCssClass"></span>
     }
 </div>
 
@@ -30,7 +32,16 @@
 
     [Parameter]
     public WaxAvatarStatus? Status { get; set; }
+    
+    [Parameter]
+    public string AvatarClass { get; set; } = string.Empty;
 
+    [Parameter]
+    public string StatusClass { get; set; } = string.Empty;
+
+    private string CssClass => "relative inline-flex shrink-0"
+        .MergeClass(Class);
+    
     private string SizeClass => Size switch
     {
         WaxAvatarSize.ExtraSmall => "w-6 h-6 text-[10px]",
@@ -38,7 +49,7 @@
         WaxAvatarSize.Medium => "w-10 h-10 text-sm",
         WaxAvatarSize.Large => "w-14 h-14 text-base",
         WaxAvatarSize.ExtraLarge => "w-20 h-20 text-xl",
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Size))
     };
 
     private string StatusColor => Status switch
@@ -47,7 +58,7 @@
         WaxAvatarStatus.Away => "bg-accent",
         WaxAvatarStatus.Busy => "bg-destructive",
         WaxAvatarStatus.Offline => "bg-muted-foreground",
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Status))
     };
 
     private string StatusSize => Size switch
@@ -57,7 +68,7 @@
         WaxAvatarSize.Medium => "w-2.5 h-2.5",
         WaxAvatarSize.Large => "w-3 h-3",
         WaxAvatarSize.ExtraLarge => "w-4 h-4",
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new ArgumentOutOfRangeException(nameof(Size))
     };
 
     private static readonly string[] Colors =
@@ -77,18 +88,20 @@
 
     private int ColorIdx => string.IsNullOrEmpty(Name) ? 0 : Name[0] % Colors.Length;
 
-    private string GetAvatarClass() =>
+    private string AvatarCssClass =>
         "rounded-full flex items-center justify-center font-semibold overflow-hidden"
-            .Merge(
+            .MergeClass(
                 SizeClass,
-                string.IsNullOrEmpty(Src) ? Colors[ColorIdx] : string.Empty
+                string.IsNullOrEmpty(Src) ? Colors[ColorIdx] : string.Empty,
+                AvatarClass
             );
 
-    private string GetStatusClass() =>
+    private string StatusCssClass =>
         "absolute bottom-0 right-0 rounded-full border-2 border-background"
-            .Merge(
+            .MergeClass(
                 StatusColor,
-                StatusSize
+                StatusSize,
+                StatusClass
             );
 
 }

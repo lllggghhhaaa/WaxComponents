@@ -1,14 +1,14 @@
 ﻿@using WaxComponents.Utils
-<div class="@CssClass" @attributes="AdditionalAttributes">
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     @ChildContent
 </div>
 
 @code {
     [Parameter] public WaxCardVariant Variant { get; set; } = WaxCardVariant.Elevated;
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
-    [Parameter(CaptureUnmatchedValues = true)] 
-    public IDictionary<string, object>? AdditionalAttributes { get; set; }
 
     private const string Base = "rounded-3xl p-6 transition-all duration-300";
 
@@ -20,5 +20,5 @@
         _ => throw new ArgumentOutOfRangeException(nameof(Variant))
     };
 
-    private string CssClass => Base.Merge(VariantClass, Class);
+    private string CssClass => Base.MergeClass(VariantClass, Class);
 }

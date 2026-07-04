@@ -1,5 +1,8 @@
 ﻿@using WaxComponents.Utils
-<div class="@Class">
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     <div class="@GetTabListClass()">
         @for (var i = 0; i < Tabs.Count; i++)
         {
@@ -31,13 +34,13 @@
     public WaxTabVariant Variant { get; set; } = WaxTabVariant.Primary;
     
     [Parameter]
-    public string Class { get; set; } = string.Empty;
-    [Parameter]
     public string TabListClass { get; set; } = string.Empty;
     [Parameter]
     public string TabButtonClass { get; set; } = string.Empty;
 
-    private int Active { get; set; } = 0;
+    private string CssClass => Class;
+
+    private int Active { get; set; }
 
     private void SetActive(int index) => Active = index;
 
@@ -45,8 +48,8 @@
     {
         var baseClass = "flex border-b-2 border-border";
         return (Variant == WaxTabVariant.Secondary
-            ? baseClass.Merge("bg-muted rounded-xl border-none gap-1")
-            : baseClass).Merge(TabListClass);
+            ? baseClass.MergeClass("bg-muted rounded-xl border-none gap-1")
+            : baseClass).MergeClass(TabListClass);
     }
 
     private string GetTabButtonClass(int index)
@@ -56,15 +59,15 @@
 
         var variantClass = Variant == WaxTabVariant.Primary
             ? "border-b-2 -mb-px"
-                .Merge(isActive
+                .MergeClass(isActive
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground hover:border-border")
             : "rounded-xl flex-1 justify-center"
-                .Merge(isActive
+                .MergeClass(isActive
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground");
 
-        return common.Merge(variantClass, TabButtonClass);
+        return common.MergeClass(variantClass, TabButtonClass);
     }
 
     public record TabItem(string Label, RenderFragment Content, RenderFragment? Icon = null);

@@ -1,5 +1,9 @@
 ﻿@using LucideBlazor
-<div class="divide-y divide-border rounded-3xl overflow-hidden border border-border">
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
     @if (Items is not null)
     {
         var index = 0;
@@ -37,6 +41,9 @@
 @code {
     [Parameter] public List<WaxAccordionItemData>? Items { get; set; }
     [Parameter] public int DefaultOpenIndex { get; set; }
+
+    private string CssClass => "divide-y divide-border rounded-3xl overflow-hidden border border-border"
+        .MergeClass(Class);
 
     private int? _openIndex;
 
