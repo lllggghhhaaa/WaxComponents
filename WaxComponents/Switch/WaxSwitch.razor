@@ -5,12 +5,12 @@
     <button
         type="button"
         role="switch"
-        aria-checked="@Checked.ToString().ToLowerInvariant()"
+        aria-checked="@Value.ToString().ToLowerInvariant()"
         disabled="@Disabled"
         @onclick="HandleClick"
         class="@TrackClass">
         <span class="@ThumbClass">
-            @if (Checked)
+            @if (Value)
             {
                 <LucideIcon Size="10" Name="check" ClassName="text-primary" StrokeWidth="3" />
             }
@@ -23,8 +23,8 @@
 </label>
 
 @code {
-    [Parameter] public bool Checked { get; set; }
-    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
     [Parameter] public string? Label { get; set; }
     [Parameter] public bool Disabled { get; set; }
 
@@ -32,8 +32,8 @@
     {
         if (Disabled) return;
 
-        Checked = !Checked;
-        await CheckedChanged.InvokeAsync(Checked);
+        Value = !Value;
+        await ValueChanged.InvokeAsync(Value);
     }
 
     private string LabelClass =>
@@ -44,12 +44,12 @@
     private string TrackClass =>
         "relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0"
             .Merge(
-                Checked ? "bg-primary" : "bg-switch-background",
+                Value ? "bg-primary" : "bg-switch-background",
                 Disabled ? "pointer-events-none" : string.Empty);
 
     private string ThumbClass =>
         "absolute top-1 w-5 h-5 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center"
             .Merge(
-                Checked ? "left-8 bg-primary-foreground" : "left-1 bg-background");
+                Value ? "left-8 bg-primary-foreground" : "left-1 bg-background");
 
 }
