@@ -1,4 +1,5 @@
-﻿@using WaxComponents.Utils
+﻿@using LucideBlazor
+@using WaxComponents.Utils
 
 @inherits WaxComponent
 
@@ -14,9 +15,12 @@
                     class="@GetTabButtonClass(index)">
                 @if (tab.Icon is not null)
                 {
-                    @tab.Icon
+                    <LucideIcon Size="16" Name="@tab.Icon" />
                 }
-                @tab.Label
+                @if (tab.Label is not null)
+                {
+                    @tab.Label
+                }
             </button>
         }
     </div>
@@ -28,7 +32,7 @@
 
 @code {
     [Parameter, EditorRequired]
-    public List<TabItem> Tabs { get; set; } = []; 
+    public List<WaxTabItem> Tabs { get; set; } = []; 
 
     [Parameter]
     public WaxTabVariant Variant { get; set; } = WaxTabVariant.Primary;
@@ -69,6 +73,4 @@
 
         return common.MergeClass(variantClass, TabButtonClass);
     }
-
-    public record TabItem(string Label, RenderFragment Content, RenderFragment? Icon = null);
 }

@@ -50,16 +50,27 @@
 
     private List<WaxSidebarGroup> _groups =
     [
-        new("Foundations",
+        new("Getting Started",
         [
-            new WaxSidebarItem("colors", "Colors", "palette"),
-            new WaxSidebarItem("typography", "Typography", "type"),
+            new WaxSidebarItem("getting-started", "Installation", "book-open"),
         ]),
         new("Components",
         [
-            new WaxSidebarItem("buttons", "Buttons", "square")
+            new WaxSidebarItem("component/accordion", "Accordion", "chevrons-up-down"),
+            new WaxSidebarItem("component/avatar", "Avatar", "user"),
+            new WaxSidebarItem("component/badge", "Badge", "badge-check"),
+            new WaxSidebarItem("component/button", "Button", "square"),
+            new WaxSidebarItem("component/card", "Card", "credit-card"),
+            new WaxSidebarItem("component/checkbox", "Checkbox", "check-square"),
+            new WaxSidebarItem("component/chip", "Chip", "tags"),
+            new WaxSidebarItem("component/fab", "Fab", "plus"),
+            new WaxSidebarItem("component/progress", "Progress", "gauge"),
+            new WaxSidebarItem("component/radio", "Radio", "circle-dot"),
+            new WaxSidebarItem("component/slider", "Slider", "sliders"),
+            new WaxSidebarItem("component/switch", "Switch", "toggle-left"),
+            new WaxSidebarItem("component/tab", "Tab", "panel-left"),
+            new WaxSidebarItem("component/text-field", "Text Field", "type"),
         ]),
-        new("Infinity", Enumerable.Repeat(new WaxSidebarItem("colors", "Colors", "palette"), 20).ToList() )
     ];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

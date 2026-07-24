@@ -1,465 +1,63 @@
-﻿@inject IThemeService Theme
-@page "/"
+﻿@page "/"
 @rendermode InteractiveServer
 @using LucideBlazor
-@using WaxComponents.Accordion
-@using WaxComponents.Avatar
 @using WaxComponents.Badge
-@using WaxComponents.Button
 @using WaxComponents.Card
-@using WaxComponents.Checkbox
-@using WaxComponents.Chip
-@using WaxComponents.Fab
-@using WaxComponents.Progress
-@using WaxComponents.Radio
-@using WaxComponents.Services.Theme
-@using WaxComponents.Slider
-@using WaxComponents.Switch
-@using WaxComponents.Tabs
-@using WaxComponents.TextField
 @using WaxComponents.Theme
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Wax Components</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-<div>
-    <h1>Accordion</h1>
-    
-    <WaxAccordion Items="_accordionItemList" />
-</div>
-
-<div>
-    <h1>Buttons</h1>
-
-    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Small">
-        <Icon>
-            <LucideIcon Size="16" Name="leaf" />
-        </Icon>
-        <ChildContent>
-            Small
-        </ChildContent>
-    </WaxButton>
-    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium">
-        <Icon>
-            <LucideIcon Size="16" Name="leaf" />
-        </Icon>
-        <ChildContent>
-            Medium
-        </ChildContent>
-    </WaxButton>
-    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Large">
-        <Icon>
-            <LucideIcon Size="16" Name="leaf" />
-        </Icon>
-        <ChildContent>
-            Large
-        </ChildContent>
-    </WaxButton>
-    <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium" Disabled="true">
-        <Icon>
-            <LucideIcon Size="16" Name="leaf" />
-        </Icon>
-        <ChildContent>
-            Disabled
-        </ChildContent>
-    </WaxButton>
-</div>
-
-<div>
-    <h1>Card</h1>
-    <WaxCardGrid Columns="3">
-        <WaxCard Variant="WaxCardVariant.Elevated">
-            <div class="flex flex-col h-full">
-                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
-                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
-                </div>
-
-                <h3 class="font-semibold text-foreground mb-1">
-                    Elevated Card
-                </h3>
-
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
-                </p>
-
-                <div class="mt-auto pt-4">
-                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
-                        <Icon>arrow_right</Icon>
-                        <ChildContent>Learn more</ChildContent>
-                    </WaxButton>
-                </div>
-            </div>
-        </WaxCard>
-        <WaxCard Variant="WaxCardVariant.Elevated">
-            <div class="flex flex-col h-full">
-                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
-                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
-                </div>
-
-                <h3 class="font-semibold text-foreground mb-1">
-                    Elevated Card
-                </h3>
-
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
-                </p>
-
-                <div class="mt-auto pt-4">
-                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
-                        <Icon>arrow_right</Icon>
-                        <ChildContent>Learn more</ChildContent>
-                    </WaxButton>
-                </div>
-            </div>
-        </WaxCard>
-        <WaxCard Variant="WaxCardVariant.Elevated">
-            <div class="flex flex-col h-full">
-                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
-                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
-                </div>
-
-                <h3 class="font-semibold text-foreground mb-1">
-                    Elevated Card
-                </h3>
-
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                    panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.
-                </p>
-
-                <div class="mt-auto pt-4">
-                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
-                        <Icon>arrow_right</Icon>
-                        <ChildContent>Learn more</ChildContent>
-                    </WaxButton>
-                </div>
-            </div>
-        </WaxCard>
-    </WaxCardGrid>
-    <WaxCardGrid Columns="2" Class="mt-5">
-        <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
-            <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                <LucideIcon Name="leaf" Size="24" ClassName="text-secondary"/>
-            </div>
-            <div>
-                <h3 class="font-semibold text-foreground">Horizontal Card</h3>
-                <p class="text-sm text-muted-foreground">panoramic oranges endurable flock quarrelsome crush habitual curtain lonely volleyball open driving rabid detail mighty duck sleepy comfort detailed feeling.</p>
-            </div>
-        </WaxCard>
-        <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
-            <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                <LucideIcon Name="leaf" Size="24" ClassName="text-secondary"/>
-            </div>
-            <div>
-                <h3 class="font-semibold text-foreground">Horizontal Card</h3>
-                <p class="text-sm text-muted-foreground">Media on the left, content on the right.</p>
-            </div>
-        </WaxCard>
-    </WaxCardGrid>
-</div>
-
-<div class="space-y-8">
-
-    <!-- Filter Chips -->
-    <div class="p-6 rounded-3xl bg-card border border-border">
-        <h3 class="font-semibold text-foreground mb-1">
-            Filter Chips
-        </h3>
-
-        <p class="text-sm text-muted-foreground mb-4">
-            Toggle-select from a set of mutually inclusive options.
-        </p>
-
-        <div class="flex flex-wrap gap-2">
-            @foreach (var chip in FilterChips)
-            {
-                <WaxChip
-                    Value="@FilterSelected.Contains(chip)"
-                    ValueChanged="@(v => ToggleFilter(chip, v))">
-                    @chip
-                </WaxChip>
-            }
+<div class="max-w-2xl">
+    <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
+            <LucideIcon Name="coffee" Size="24" ClassName="text-primary-foreground" />
+        </div>
+        <div>
+            <h1 class="text-4xl font-display font-bold text-foreground">Wax Components</h1>
+            <p class="text-muted-foreground">A Blazor component library</p>
         </div>
     </div>
 
-    <!-- Suggestion Chips -->
-    <div class="p-6 rounded-3xl bg-card border border-border">
-        <h3 class="font-semibold text-foreground mb-1">
-            Suggestion Chips
-        </h3>
+    <p class="text-lg text-muted-foreground mb-8">
+        A collection of beautiful, reusable UI components for Blazor, styled with Tailwind CSS.
+    </p>
+</div>
 
-        <p class="text-sm text-muted-foreground mb-4">
-            Tap to select a suggestion.
-        </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+    <WaxCard Variant="WaxCardVariant.Outlined" Class="hover:shadow-md transition-shadow">
+        <a href="/getting-started" class="no-underline">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                    <LucideIcon Name="book-open" Size="20" ClassName="text-primary" />
+                </div>
+                <h3 class="font-semibold text-foreground">Getting Started</h3>
+            </div>
+            <p class="text-sm text-muted-foreground">Installation, setup, and basic usage guide.</p>
+        </a>
+    </WaxCard>
 
-        <div class="flex flex-wrap gap-2">
-            @foreach (var chip in Suggestions)
-            {
-                <WaxChip
-                    Variant="WaxChipVariant.Suggestion"
-                    Value="@(Suggestion == chip)"
-                    ValueChanged="@(v => SelectSuggestion(chip, v))">
-                    @chip
-                </WaxChip>
-            }
+    <WaxCard Variant="WaxCardVariant.Outlined" Class="hover:shadow-md transition-shadow">
+        <a href="/component/button" class="no-underline">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                    <LucideIcon Name="square" Size="20" ClassName="text-primary" />
+                </div>
+                <h3 class="font-semibold text-foreground">Components</h3>
+            </div>
+            <p class="text-sm text-muted-foreground">Explore all available components and their APIs.</p>
+        </a>
+    </WaxCard>
+
+    <WaxCard Variant="WaxCardVariant.Outlined" Class="hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                <LucideIcon Name="package" Size="20" ClassName="text-primary" />
+            </div>
+            <h3 class="font-semibold text-foreground">NuGet</h3>
         </div>
-    </div>
-
-    <!-- Input Chips -->
-    <div class="p-6 rounded-3xl bg-card border border-border">
-        <h3 class="font-semibold text-foreground mb-1">
-            Input Chips
-        </h3>
-
-        <p class="text-sm text-muted-foreground mb-4">
-            Dismissable tokens.
+        <p class="text-sm text-muted-foreground mb-3">
+            <code class="bg-muted px-2 py-0.5 rounded text-xs">dotnet add package WaxComponents</code>
         </p>
-
-        <div class="flex flex-wrap gap-2">
-            @foreach (var chip in InputChipList)
-            {
-                <WaxChip
-                    Variant="WaxChipVariant.Input"
-                    Value="true"
-                    OnRemove="@(_ => RemoveChip(chip))">
-                    @chip
-                </WaxChip>
-            }
-
-            @if (InputChipList.Count < InputChips.Count)
-            {
-                <button class="text-xs text-primary underline underline-offset-2"
-                        @onclick="ResetInputChips">
-                    Reset
-                </button>
-            }
-        </div>
-    </div>
-</div>
-
-<div>
-    <h1>Text Fields</h1>
-    <WaxTextField Placeholder="Placeholder" Label="Email" @bind-Value="email" Variant="WaxFieldVariant.Filled">
-        <Icon>
-            <LucideIcon Size="16" Name="mail" />
-        </Icon>
-    </WaxTextField>
-
-    <WaxTextField Label="Password"
-                  Placeholder="Placeholder"
-                  @bind-Value="password"
-                  Variant="WaxFieldVariant.Outlined" />
-</div>
-
-<div>
-    <h1>Switch</h1>
-
-    <WaxCard>
-        <WaxSwitch Value="@(Theme.CurrentTheme == ThemeMode.Dark)" ValueChanged="DarkMode" Label="Dark mode" />
-        <WaxSwitch />
-    </WaxCard>
-    
-    <WaxCard>
-        <WaxCheckbox
-            Value="AllChecked"
-            Indeterminate="IsPartial"
-            Label="Select all"
-            ValueChanged="SelectAll" />
-
-        <WaxCheckbox @bind-Value="_notifyMorning" Label="Notify on morning" />
-        <WaxCheckbox @bind-Value="_agreed" Label="I agree" />
-
-        <WaxCheckbox @ref="_checkboxRef" @bind-Value="_agreedRef" Label="I agree (ref)" />
-        <WaxButton OnClick="@(() => _checkboxRef.UncheckAsync())" Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Text">
-            <ChildContent>Reset</ChildContent>
-        </WaxButton>
+        <WaxBadge Color="WaxColor.Muted">v1.0.0</WaxBadge>
     </WaxCard>
 </div>
-
-<div>
-    <h1>FAB</h1>
-    <WaxCard>
-        <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="leaf">
-            Add
-        </WaxFab>
-        <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Large" Icon="leaf" />
-        <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Small" Icon="leaf" />
-        <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Small" Icon="leaf" />
-        <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Small" Icon="leaf" />
-    </WaxCard>
-</div>
-
-<div>
-    <h1>Badge</h1>
-    <WaxBadge Color="WaxColor.Primary">Primary</WaxBadge>
-    <WaxBadge Color="WaxColor.Secondary">Secondary</WaxBadge>
-    <WaxBadge Color="WaxColor.Accent">Accent</WaxBadge>
-    <WaxBadge Color="WaxColor.Muted">Muted</WaxBadge>
-</div>
-
-<div>
-    <h1>Progress</h1>
-    <WaxCard>
-        <WaxProgressBar Color="WaxColor.Primary" Value="20" Class="my-1" />
-        <WaxProgressBar Color="WaxColor.Secondary" Value="30" Class="my-1" />
-        <WaxProgressBar Color="WaxColor.Accent" Value="45" Class="my-1" />
-    </WaxCard>
-</div>
-
-<WaxTab Variant="WaxTabVariant.Primary" Tabs="_tabs" />
-<WaxTab Variant="WaxTabVariant.Secondary" Tabs="_tabs" />
-
-<div>
-    <h1>Slider</h1>
-    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Primary" Min="0" Max="100" />
-    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Secondary" Min="0" Max="100" />
-    <WaxSlider @bind-Value="_volume" Label="Volume" Color="WaxColor.Accent" Min="0" Max="100" />
-    <WaxSlider Value="10" Label="Brightness" Color="WaxColor.Muted" Min="0" Max="200" Step="2" />
-</div>
-
-<WaxCard>
-    <WaxRadio @bind-Value="_option" Orientation="WaxRadioOrientation.Horizontal" Options="_options" />
-</WaxCard>
-
-<WaxCard>
-    <WaxRadio @bind-Value="_option" Orientation="WaxRadioOrientation.Vertical" Options="_options" />
-</WaxCard>
-
-<WaxCard>
-    <h1>Avatar</h1>
-    <WaxAvatar Name="Yuki Tanaka" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Online"/>
-    <WaxAvatar Name="lllggghhhaaa" Src="https://cdn.discordapp.com/avatars/597926883069394996/52e26e7246749cdd7893f9090bc939a1.webp?size=80" Size="WaxAvatarSize.Medium"/>
-</WaxCard>
-
-@code {
-    private string _option = "standard";
-
-    private List<WaxRadio.RadioOption> _options =
-    [
-        new("Express", "express", "1–2 business days"),
-        new("Standard", "standard", "3–5 business days"),
-        new("Eco", "eco", "7–10 days, carbon offset", Disabled: true)
-    ];
-    
-    private double _volume = 50;
-
-    private List<WaxTab.TabItem> _tabs =
-    [
-        new("Overview", Content: @<div>First tab content</div>),
-        new("Settings", Content: @<div>Second tab content</div>, Icon: @<SettingsIcon/>)
-    ];
-    
-    private bool _notifyMorning = true;
-    private bool _agreed;
-    
-    private string email = "";
-    private string password = "";
-
-    private bool AllChecked => _notifyMorning && _agreed;
-    private bool IsPartial => (_notifyMorning || _agreed) && !AllChecked;
-
-    private void SelectAll(bool check)
-    {
-        _notifyMorning = check;
-        _agreed = check;
-    }
-
-    private WaxCheckbox _checkboxRef = default!;
-    private bool _agreedRef;
-
-    private List<WaxAccordionItemData> _accordionItemList =
-    [
-        new()
-        {
-            Title = "Title 1",
-            Body = (MarkupString)"First <strong>item</strong>",
-            Icon = @<LucideIcon Size="16" Name="leaf" />
-        },
-        new()
-        {
-            Title = "Title 2",
-            Body = (MarkupString)"Second item"
-        }
-    ];
-    
-    
-    private List<string> FilterChips =
-    [
-        "Coffee",
-        "Tea",
-        "Juice",
-        "Milk"
-    ];
-
-    private HashSet<string> FilterSelected = [];
-
-    private void ToggleFilter(string chip, bool selected)
-    {
-        if (selected)
-            FilterSelected.Add(chip);
-        else
-            FilterSelected.Remove(chip);
-    }
-
-    // -------------------------
-
-    private List<string> Suggestions =
-    [
-        "Design",
-        "Blazor",
-        "AI",
-        "Tailwind"
-    ];
-
-    private string? Suggestion;
-
-    private void SelectSuggestion(string chip, bool selected)
-    {
-        Suggestion = selected ? chip : null;
-    }
-
-    // -------------------------
-
-    private List<string> InputChips =
-    [
-        "C#",
-        ".NET",
-        "Tailwind",
-        "Blazor"
-    ];
-
-    private List<string> InputChipList = [];
-
-    protected override void OnInitialized()
-    {
-        InputChipList = InputChips.ToList();
-        Theme.ThemeChanged += OnThemeChanged;
-    }
-
-    private void OnThemeChanged()
-    {
-        InvokeAsync(StateHasChanged);
-    }
-
-    public void Dispose()
-    {
-        Theme.ThemeChanged -= OnThemeChanged;
-    }
-
-    private void RemoveChip(string chip)
-    {
-        InputChipList.Remove(chip);
-    }
-
-    private void ResetInputChips()
-    {
-        InputChipList = InputChips.ToList();
-    }
-
-    private async Task DarkMode(bool value)
-    {
-        await Theme.SetThemeAsync(value ? ThemeMode.Dark : ThemeMode.Light);
-    }
-
-}
