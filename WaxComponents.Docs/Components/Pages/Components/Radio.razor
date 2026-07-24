@@ -1,0 +1,113 @@
+@page "/component/radio"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Radio
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Radio - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Radio Button</h1>
+    <p class="text-muted-foreground">Radio button groups for single-selection from a set of options.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Vertical Orientation</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_verticalTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Horizontal Orientation</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_horizontalTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Disabled Option</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Current Selection</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_selectionTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private List<WaxTabItem> _verticalTabs = [];
+    private List<WaxTabItem> _horizontalTabs = [];
+    private List<WaxTabItem> _disabledTabs = [];
+    private List<WaxTabItem> _selectionTabs = [];
+
+    private string _selectedVertical = "standard";
+    private string _selectedHorizontal = "m";
+    private string _selectedWithDisabled = "free";
+
+    private static List<WaxRadio.RadioOption> _shippingOptions =
+    [
+        new("Express", "express", "1-2 business days"),
+        new("Standard", "standard", "3-5 business days"),
+        new("Eco", "eco", "7-10 days, carbon offset")
+    ];
+
+    private static List<WaxRadio.RadioOption> _sizeOptions =
+    [
+        new("Small", "s"),
+        new("Medium", "m"),
+        new("Large", "l"),
+        new("Extra Large", "xl")
+    ];
+
+    private static List<WaxRadio.RadioOption> _optionsWithDisabled =
+    [
+        new("Free", "free", "Basic features"),
+        new("Pro", "pro", "Advanced features"),
+        new("Enterprise", "enterprise", "Custom solutions", Disabled: true)
+    ];
+
+    private static string _verticalCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selected\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_options\" />\n\n@code {\n    private List<RadioOption> _options =\n    [\n        new(\"Express\", \"express\", \"1-2 days\"),\n        new(\"Standard\", \"standard\", \"3-5 days\"),\n        new(\"Eco\", \"eco\", \"7-10 days\")\n    ];\n}";
+
+    private static string _horizontalCode = "<WaxRadio @bind-Value=\"_selected\" Orientation=\"WaxRadioOrientation.Horizontal\" Options=\"_options\" />";
+
+    private static string _disabledCode = "<WaxRadio @bind-Value=\"_selected\" Options=\"_options\" />\n\n// Option with Disabled: true";
+
+    private static string _selectionCode = "@_selected // Contains the current value";
+
+    protected override void OnInitialized()
+    {
+        _verticalTabs =
+        [
+            new("Preview", Content: @<WaxRadio @bind-Value="_selectedVertical"
+                          Orientation="WaxRadioOrientation.Vertical"
+                          Options="_shippingOptions" />),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_verticalCode</code></pre>)
+        ];
+
+        _horizontalTabs =
+        [
+            new("Preview", Content: @<WaxRadio @bind-Value="_selectedHorizontal"
+                          Orientation="WaxRadioOrientation.Horizontal"
+                          Options="_sizeOptions" />),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_horizontalCode</code></pre>)
+        ];
+
+        _disabledTabs =
+        [
+            new("Preview", Content: @<WaxRadio @bind-Value="_selectedWithDisabled"
+                          Orientation="WaxRadioOrientation.Vertical"
+                          Options="_optionsWithDisabled" />),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>)
+        ];
+
+        _selectionTabs =
+        [
+            new("Preview", Content: @<div>
+                <p class="text-sm text-muted-foreground">Current selection: <WaxBadge Color="WaxColor.Primary">@_selectedVertical</WaxBadge></p>
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_selectionCode</code></pre>)
+        ];
+    }
+}

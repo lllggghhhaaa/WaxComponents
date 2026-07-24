@@ -1,0 +1,137 @@
+@page "/component/chip"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Chip
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Chip - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Chip</h1>
+    <p class="text-muted-foreground">Compact elements for filters, suggestions, and input tokens.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Filter Chips</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_filterTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Suggestion Chips</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_suggestionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Input Chips</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_inputTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_iconTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private List<WaxTabItem> _filterTabs = [];
+    private List<WaxTabItem> _suggestionTabs = [];
+    private List<WaxTabItem> _inputTabs = [];
+    private static List<WaxTabItem> _iconTabs =
+    [
+        new("Preview", Content: @<div class="flex flex-wrap gap-2">
+            <WaxChip Icon="coffee">Coffee</WaxChip>
+            <WaxChip Icon="leaf">Nature</WaxChip>
+            <WaxChip Icon="bell">Alerts</WaxChip>
+            <WaxChip Icon="settings">Settings</WaxChip>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+    ];
+
+    private List<string> _filterChips = ["Coffee", "Tea", "Juice", "Milk"];
+    private HashSet<string> _filterSelected = [];
+
+    private void ToggleFilter(string chip, bool selected)
+    {
+        if (selected) _filterSelected.Add(chip);
+        else _filterSelected.Remove(chip);
+    }
+
+    private List<string> _suggestions = ["Design", "Blazor", "AI", "Tailwind"];
+    private string? _suggestion;
+
+    private void SelectSuggestion(string chip, bool selected)
+    {
+        _suggestion = selected ? chip : null;
+    }
+
+    private List<string> _inputChips = ["C#", ".NET", "Tailwind", "Blazor"];
+    private List<string> _inputChipList = [];
+
+    private void RemoveChip(string chip) => _inputChipList.Remove(chip);
+    private void ResetInputChips() => _inputChipList = _inputChips.ToList();
+
+    private static string _filterCode = "@using WaxComponents.Chip\n\n<WaxChip Value=\"_selected.Contains(\"Coffee\")\" ValueChanged=\"@(v => Toggle(\"Coffee\", v))\">\n    Coffee\n</WaxChip>";
+
+    private static string _suggestionCode = "<WaxChip Variant=\"WaxChipVariant.Suggestion\" Value=\"_value\" ValueChanged=\"@(v => ...)\">\n    Design\n</WaxChip>";
+
+    private static string _inputCode = "<WaxChip Variant=\"WaxChipVariant.Input\" OnRemove=\"@(e => Remove(chip))\">\n    .NET\n</WaxChip>";
+
+    private static string _iconCode = "<WaxChip Icon=\"coffee\">Coffee</WaxChip>\n<WaxChip Icon=\"leaf\">Nature</WaxChip>";
+
+    protected override void OnInitialized()
+    {
+        _inputChipList = _inputChips.ToList();
+
+        _filterTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap gap-2">
+                @foreach (var chip in _filterChips)
+                {
+                    <WaxChip Value="@_filterSelected.Contains(chip)" ValueChanged="@(v => ToggleFilter(chip, v))">
+                        @chip
+                    </WaxChip>
+                }
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_filterCode</code></pre>)
+        ];
+
+        _suggestionTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap gap-2">
+                @foreach (var chip in _suggestions)
+                {
+                    <WaxChip Variant="WaxChipVariant.Suggestion"
+                             Value="@(_suggestion == chip)"
+                             ValueChanged="@(v => SelectSuggestion(chip, v))">
+                        @chip
+                    </WaxChip>
+                }
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_suggestionCode</code></pre>)
+        ];
+
+        _inputTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap gap-2">
+                @foreach (var chip in _inputChipList)
+                {
+                    <WaxChip Variant="WaxChipVariant.Input" Value="true" OnRemove="@(_ => RemoveChip(chip))">
+                        @chip
+                    </WaxChip>
+                }
+                @if (_inputChipList.Count < _inputChips.Count)
+                {
+                    <button class="text-xs text-primary underline underline-offset-2 cursor-pointer bg-transparent border-none"
+                            @onclick="ResetInputChips">
+                        Reset
+                    </button>
+                }
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_inputCode</code></pre>)
+        ];
+    }
+}

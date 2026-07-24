@@ -1,0 +1,148 @@
+@page "/component/button"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Button
+@using WaxComponents.Card
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Button - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Button</h1>
+    <p class="text-muted-foreground">Versatile buttons with multiple variants, sizes, and icon support.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_variantsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_sizesTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_iconsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">States</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_statesTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants x Sizes Matrix</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_matrixTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _variantsTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3 flex-wrap">
+            <WaxButton Variant="WaxButtonVariant.Filled">Filled</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Tonal">Tonal</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Outlined">Outlined</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Text">Text</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Elevated">Elevated</WaxButton>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _sizesTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3 flex-wrap">
+            <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Small">Small</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Medium">Medium</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Large">Large</WaxButton>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _iconsTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3 flex-wrap">
+            <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Medium">
+                <Icon><LucideIcon Size="16" Name="leaf" /></Icon>
+                <ChildContent>Leaf</ChildContent>
+            </WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Tonal" Size="WaxButtonSize.Medium">
+                <Icon><LucideIcon Size="16" Name="bell" /></Icon>
+                <ChildContent>Notify</ChildContent>
+            </WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Outlined" Size="WaxButtonSize.Medium">
+                <Icon><LucideIcon Size="16" Name="settings" /></Icon>
+                <ChildContent>Settings</ChildContent>
+            </WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Medium">
+                <Icon><LucideIcon Size="16" Name="arrow-right" /></Icon>
+                <ChildContent>Learn more</ChildContent>
+            </WaxButton>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconsCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _statesTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3 flex-wrap">
+            <WaxButton Variant="WaxButtonVariant.Filled" Disabled="true">Disabled</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Tonal" Disabled="true">Disabled</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Outlined" Disabled="true">Disabled</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Text" Disabled="true">Disabled</WaxButton>
+            <WaxButton Variant="WaxButtonVariant.Elevated" Disabled="true">Disabled</WaxButton>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statesCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _matrixTabs =
+    [
+        new("Preview", Content: @<div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium"></th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Small</th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Medium</th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Large</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var (variant, name) in _variants)
+                    {
+                        <tr class="border-b border-border/50">
+                            <td class="py-3 pr-4 text-foreground font-medium">@name</td>
+                            <td class="py-3 pr-4"><WaxButton Variant="variant" Size="WaxButtonSize.Small">@name</WaxButton></td>
+                            <td class="py-3 pr-4"><WaxButton Variant="variant" Size="WaxButtonSize.Medium">@name</WaxButton></td>
+                            <td class="py-3"><WaxButton Variant="variant" Size="WaxButtonSize.Large">@name</WaxButton></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>)
+    ];
+
+    private static List<(WaxButtonVariant variant, string name)> _variants =
+    [
+        (WaxButtonVariant.Filled, "Filled"),
+        (WaxButtonVariant.Tonal, "Tonal"),
+        (WaxButtonVariant.Outlined, "Outlined"),
+        (WaxButtonVariant.Text, "Text"),
+        (WaxButtonVariant.Elevated, "Elevated"),
+    ];
+
+    private static string _variantsCode = "@using WaxComponents.Button\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\">Filled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\">Tonal</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\">Outlined</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\">Text</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Elevated\">Elevated</WaxButton>";
+
+    private static string _sizesCode = "<WaxButton Size=\"WaxButtonSize.Small\">Small</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Medium\">Medium</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Large\">Large</WaxButton>";
+
+    private static string _iconsCode = "<WaxButton>\n    <Icon><LucideIcon Size=\"16\" Name=\"leaf\" /></Icon>\n    <ChildContent>Label</ChildContent>\n</WaxButton>";
+
+    private static string _statesCode = "<WaxButton Disabled=\"true\">Disabled</WaxButton>";
+
+    private static string _matrixCode = "<WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">Button</WaxButton>";
+}

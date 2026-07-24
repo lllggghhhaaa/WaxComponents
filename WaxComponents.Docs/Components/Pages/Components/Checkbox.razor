@@ -1,0 +1,123 @@
+@page "/component/checkbox"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Button
+@using WaxComponents.Card
+@using WaxComponents.Checkbox
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Checkbox - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Checkbox</h1>
+    <p class="text-muted-foreground">Checkbox inputs with indeterminate state, labels, and two-way binding support.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Labels</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_labelsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Indeterminate State</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_indeterminateTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Programmatic Control</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_programmaticTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private List<WaxTabItem> _labelsTabs = [];
+    private List<WaxTabItem> _indeterminateTabs = [];
+    private static List<WaxTabItem> _disabledTabs =
+    [
+        new("Preview", Content: @<div class="space-y-2">
+            <WaxCheckbox Value="true" Label="Checked and disabled" Disabled="true" />
+            <WaxCheckbox Value="false" Label="Unchecked and disabled" Disabled="true" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>)
+    ];
+    private List<WaxTabItem> _programmaticTabs = [];
+
+    private bool _notifyEmail = true;
+    private bool _notifySms;
+    private bool _notifyPush;
+    private bool _option1 = true;
+    private bool _option2;
+    private bool _option3 = true;
+    private bool _allChecked => _option1 && _option2 && _option3;
+    private bool _isPartial => (_option1 || _option2 || _option3) && !_allChecked;
+
+    private void SelectAll(bool check)
+    {
+        _option1 = check;
+        _option2 = check;
+        _option3 = check;
+    }
+
+    private WaxCheckbox _checkboxRef = default!;
+
+    private static string _labelsCode = "@using WaxComponents.Checkbox\n\n<WaxCheckbox @bind-Value=\"_value\" Label=\"Notify via email\" />";
+
+    private static string _indeterminateCode = "<WaxCheckbox Value=\"_allChecked\" Indeterminate=\"_isPartial\" Label=\"Select all\" ValueChanged=\"SelectAll\" />";
+
+    private static string _disabledCode = "<WaxCheckbox Value=\"true\" Disabled=\"true\" Label=\"Checked and disabled\" />\n<WaxCheckbox Value=\"false\" Disabled=\"true\" Label=\"Unchecked and disabled\" />";
+
+    private static string _programmaticCode = "<WaxCheckbox @ref=\"_ref\" Label=\"Controlled\" />\n<button @onclick=\"_ref.CheckAsync()\">Check</button>\n<button @onclick=\"_ref.UncheckAsync()\">Uncheck</button>\n<button @onclick=\"_ref.ToggleAsync()\">Toggle</button>";
+
+    protected override void OnInitialized()
+    {
+        _labelsTabs =
+        [
+            new("Preview", Content: @<div class="space-y-2">
+                <WaxCheckbox @bind-Value="_notifyEmail" Label="Notify via email" />
+                <WaxCheckbox @bind-Value="_notifySms" Label="Notify via SMS" />
+                <WaxCheckbox @bind-Value="_notifyPush" Label="Push notifications" />
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>)
+        ];
+
+        _indeterminateTabs =
+        [
+            new("Preview", Content: @<div class="space-y-2">
+                <WaxCheckbox Value="_allChecked" Indeterminate="_isPartial" Label="Select all" ValueChanged="SelectAll" />
+                <div class="ml-6 space-y-2">
+                    <WaxCheckbox @bind-Value="_option1" Label="Option 1" />
+                    <WaxCheckbox @bind-Value="_option2" Label="Option 2" />
+                    <WaxCheckbox @bind-Value="_option3" Label="Option 3" />
+                </div>
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_indeterminateCode</code></pre>)
+        ];
+
+        _programmaticTabs =
+        [
+            new("Preview", Content: @<div class="space-y-3">
+                <WaxCheckbox @ref="_checkboxRef" Label="Controlled checkbox" />
+                <div class="flex gap-2">
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="@(() => _checkboxRef.CheckAsync())">
+                        <ChildContent>Check</ChildContent>
+                    </WaxButton>
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="@(() => _checkboxRef.UncheckAsync())">
+                        <ChildContent>Uncheck</ChildContent>
+                    </WaxButton>
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="@(() => _checkboxRef.ToggleAsync())">
+                        <ChildContent>Toggle</ChildContent>
+                    </WaxButton>
+                </div>
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_programmaticCode</code></pre>)
+        ];
+    }
+}

@@ -1,0 +1,134 @@
+@page "/component/card"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Button
+@using WaxComponents.Card
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Card - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Card</h1>
+    <p class="text-muted-foreground">Content containers with multiple visual styles and grid layouts.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_variantsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Card Grid</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_gridTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _variantsTabs =
+    [
+        new("Preview", Content: @<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <WaxCard Variant="WaxCardVariant.Elevated">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
+                </div>
+                <h3 class="font-semibold text-foreground mb-1">Elevated</h3>
+                <p class="text-sm text-muted-foreground">Card with shadow and hover lift effect.</p>
+            </WaxCard>
+            <WaxCard Variant="WaxCardVariant.Filled">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="leaf" Size="20" ClassName="text-primary" />
+                </div>
+                <h3 class="font-semibold text-foreground mb-1">Filled</h3>
+                <p class="text-sm text-muted-foreground">Card with muted background fill.</p>
+            </WaxCard>
+            <WaxCard Variant="WaxCardVariant.Outlined">
+                <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                    <LucideIcon Name="bell" Size="20" ClassName="text-primary" />
+                </div>
+                <h3 class="font-semibold text-foreground mb-1">Outlined</h3>
+                <p class="text-sm text-muted-foreground">Card with border outline style.</p>
+            </WaxCard>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _gridTabs =
+    [
+        new("Preview", Content: @<div>
+            <h4 class="text-sm font-medium text-foreground mb-2">3 columns</h4>
+            <WaxCardGrid Columns="3" Class="mb-6">
+                <WaxCard Variant="WaxCardVariant.Elevated">
+                    <div class="flex flex-col h-full">
+                        <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                            <LucideIcon Name="coffee" Size="20" ClassName="text-primary" />
+                        </div>
+                        <h3 class="font-semibold text-foreground mb-1">Design</h3>
+                        <p class="text-sm text-muted-foreground flex-1">Clean and modern component design.</p>
+                        <div class="mt-auto pt-4">
+                            <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                                <ChildContent>Explore</ChildContent>
+                            </WaxButton>
+                        </div>
+                    </div>
+                </WaxCard>
+                <WaxCard Variant="WaxCardVariant.Elevated">
+                    <div class="flex flex-col h-full">
+                        <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                            <LucideIcon Name="leaf" Size="20" ClassName="text-primary" />
+                        </div>
+                        <h3 class="font-semibold text-foreground mb-1">Development</h3>
+                        <p class="text-sm text-muted-foreground flex-1">Built with Blazor and Tailwind CSS.</p>
+                        <div class="mt-auto pt-4">
+                            <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                                <ChildContent>Explore</ChildContent>
+                            </WaxButton>
+                        </div>
+                    </div>
+                </WaxCard>
+                <WaxCard Variant="WaxCardVariant.Elevated">
+                    <div class="flex flex-col h-full">
+                        <div class="w-10 h-10 rounded-2xl bg-primary/15 flex items-center justify-center mb-4">
+                            <LucideIcon Name="bell" Size="20" ClassName="text-primary" />
+                        </div>
+                        <h3 class="font-semibold text-foreground mb-1">Accessibility</h3>
+                        <p class="text-sm text-muted-foreground flex-1">Accessible by default.</p>
+                        <div class="mt-auto pt-4">
+                            <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">
+                                <ChildContent>Explore</ChildContent>
+                            </WaxButton>
+                        </div>
+                    </div>
+                </WaxCard>
+            </WaxCardGrid>
+            <h4 class="text-sm font-medium text-foreground mb-2">2 columns (horizontal cards)</h4>
+            <WaxCardGrid Columns="2">
+                <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                        <LucideIcon Name="leaf" Size="24" ClassName="text-secondary" />
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-foreground">Horizontal Card</h3>
+                        <p class="text-sm text-muted-foreground">Content on the right side.</p>
+                    </div>
+                </WaxCard>
+                <WaxCard Variant="WaxCardVariant.Elevated" Class="flex gap-4 items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center flex-shrink-0">
+                        <LucideIcon Name="bell" Size="24" ClassName="text-accent" />
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-foreground">Notifications</h3>
+                        <p class="text-sm text-muted-foreground">Stay updated with alerts.</p>
+                    </div>
+                </WaxCard>
+            </WaxCardGrid>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_gridCode</code></pre>)
+    ];
+
+    private static string _variantsCode = "@using WaxComponents.Card\n\n<WaxCard Variant=\"WaxCardVariant.Elevated\">Content</WaxCard>\n<WaxCard Variant=\"WaxCardVariant.Filled\">Content</WaxCard>\n<WaxCard Variant=\"WaxCardVariant.Outlined\">Content</WaxCard>";
+
+    private static string _gridCode = "@using WaxComponents.Card\n\n<WaxCardGrid Columns=\"3\">\n    <WaxCard>Item 1</WaxCard>\n    <WaxCard>Item 2</WaxCard>\n    <WaxCard>Item 3</WaxCard>\n</WaxCardGrid>";
+}

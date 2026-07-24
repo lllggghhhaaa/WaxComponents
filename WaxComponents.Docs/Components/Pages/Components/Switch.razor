@@ -1,0 +1,86 @@
+@page "/component/switch"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Switch
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Switch - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Switch</h1>
+    <p class="text-muted-foreground">Toggle switches for binary settings.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Labels</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_labelsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Without Labels</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_noLabelsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private List<WaxTabItem> _labelsTabs = [];
+    private List<WaxTabItem> _noLabelsTabs = [];
+    private static List<WaxTabItem> _disabledTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <WaxSwitch Value="true" Label="Checked and disabled" Disabled="true" />
+            <WaxSwitch Value="false" Label="Disabled and unchecked" Disabled="true" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>)
+    ];
+
+    private bool _notifications = true;
+    private bool _autoSave;
+    private bool _darkMode;
+    private bool _toggle1 = true;
+    private bool _toggle2;
+    private bool _toggle3 = true;
+
+    private static string _labelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_value\" Label=\"Enable notifications\" />";
+
+    private static string _noLabelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_value\" />";
+
+    private static string _disabledCode = "@using WaxComponents.Switch\n\n<WaxSwitch Value=\"true\" Disabled=\"true\" />\n<WaxSwitch Value=\"false\" Disabled=\"true\" />";
+
+    protected override void OnInitialized()
+    {
+        _labelsTabs =
+        [
+            new("Preview", Content: @<div class="space-y-4">
+                <WaxSwitch @bind-Value="_notifications" Label="Enable notifications" />
+                <WaxSwitch @bind-Value="_autoSave" Label="Auto-save" />
+                <WaxSwitch @bind-Value="_darkMode" Label="Dark mode" />
+                <div class="mt-4 p-3 rounded-xl bg-muted/50">
+                    <p class="text-sm text-foreground">
+                        Dark mode: <WaxBadge Color="WaxColor.Primary">@(_darkMode ? "On" : "Off")</WaxBadge>
+                    </p>
+                </div>
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>)
+        ];
+
+        _noLabelsTabs =
+        [
+            new("Preview", Content: @<div class="flex items-center gap-3">
+                <WaxSwitch @bind-Value="_toggle1" />
+                <WaxSwitch @bind-Value="_toggle2" />
+                <WaxSwitch @bind-Value="_toggle3" />
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_noLabelsCode</code></pre>)
+        ];
+    }
+}

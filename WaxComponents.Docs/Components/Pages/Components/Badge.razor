@@ -1,0 +1,66 @@
+@page "/component/badge"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Badge - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Badge</h1>
+    <p class="text-muted-foreground">Small labels for status, counts, or categories.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Colors</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_colorsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Usage Examples</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_usageTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _colorsTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3 flex-wrap">
+            <WaxBadge Color="WaxColor.Primary">Primary</WaxBadge>
+            <WaxBadge Color="WaxColor.Secondary">Secondary</WaxBadge>
+            <WaxBadge Color="WaxColor.Accent">Accent</WaxBadge>
+            <WaxBadge Color="WaxColor.Muted">Muted</WaxBadge>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_colorsCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _usageTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">Inbox</span>
+                <WaxBadge Color="WaxColor.Primary">12</WaxBadge>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">Status</span>
+                <WaxBadge Color="WaxColor.Secondary">Active</WaxBadge>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">Version</span>
+                <WaxBadge Color="WaxColor.Muted">v1.0.0</WaxBadge>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">New</span>
+                <WaxBadge Color="WaxColor.Accent">Feature</WaxBadge>
+            </div>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_usageCode</code></pre>)
+    ];
+
+    private static string _colorsCode = "@using WaxComponents.Badge\n\n<WaxBadge Color=\"WaxColor.Primary\">Primary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Secondary\">Secondary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Accent\">Accent</WaxBadge>\n<WaxBadge Color=\"WaxColor.Muted\">Muted</WaxBadge>";
+
+    private static string _usageCode = "@using WaxComponents.Badge\n\n<span>Inbox</span>\n<WaxBadge Color=\"WaxColor.Primary\">12</WaxBadge>\n\n<span>Status</span>\n<WaxBadge Color=\"WaxColor.Secondary\">Active</WaxBadge>";
+}

@@ -1,0 +1,77 @@
+@page "/component/tab"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Tabs - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Tabs</h1>
+    <p class="text-muted-foreground">Tabbed navigation for organizing content into panels.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Primary Variant</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_primarySectionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Secondary Variant</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_secondarySectionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_iconSectionTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _primarySectionTabs =
+    [
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_primaryTabs" />),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_primaryCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _secondarySectionTabs =
+    [
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Secondary" Tabs="_secondaryTabs" />),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_secondaryCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _iconSectionTabs =
+    [
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" />),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _primaryTabs =
+    [
+        new("Details", Content: @<div class="text-muted-foreground">View detailed information about this item.</div>),
+        new("Settings", Content: @<div class="text-muted-foreground">Configure your preferences and options.</div>)
+    ];
+
+    private static List<WaxTabItem> _secondaryTabs =
+    [
+        new("Profile", Content: @<div class="text-muted-foreground">Your profile information and public settings.</div>),
+        new("Account", Content: @<div class="text-muted-foreground">Manage your account settings and security.</div>),
+        new("Billing", Content: @<div class="text-muted-foreground">View and manage your billing information.</div>)
+    ];
+
+    private static List<WaxTabItem> _iconTabs =
+    [
+        new("Overview", Content: @<div class="text-muted-foreground">Project overview and key metrics.</div>, Icon: "eye"),
+        new("Notifications", Content: @<div class="text-muted-foreground">Your notification history and preferences.</div>, Icon: "bell"),
+        new("Security", Content: @<div class="text-muted-foreground">Security settings and access control.</div>, Icon: "shield")
+    ];
+
+    private static string _primaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_tabs\" />\n\n@@code {\n    private List<WaxTabItem> _tabs =\n    [\n        new(\"Tab 1\", Content: @@<div>Content 1</div>),\n        new(\"Tab 2\", Content: @@<div>Content 2</div>)\n    ];\n}";
+
+    private static string _secondaryCode = "<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_tabs\" />";
+
+    private static string _iconCode = "<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_tabs\" />\n\n// TabItem with Icon:\n// new(\"Label\", Content: @@<div>...</div>, Icon: @@<LucideIcon Size=\"16\" Name=\"bell\" />)";
+}

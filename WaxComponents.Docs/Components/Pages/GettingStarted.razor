@@ -1,0 +1,72 @@
+@page "/getting-started"
+@rendermode InteractiveServer
+@using WaxComponents.Badge
+@using WaxComponents.Theme
+
+<PageTitle>Getting Started - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Getting Started</h1>
+    <p class="text-muted-foreground">Install and configure Wax Components in your Blazor project.</p>
+</div>
+
+<div class="space-y-8">
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h2 class="font-semibold text-foreground mb-1">Installation</h2>
+        <p class="text-sm text-muted-foreground mb-4">Add the NuGet package to your project.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>dotnet add package WaxComponents</code></pre>
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h2 class="font-semibold text-foreground mb-1">Register Services</h2>
+        <p class="text-sm text-muted-foreground mb-4">Add WaxComponents to the service collection in <code class="bg-muted px-1 rounded">Program.cs</code>.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>builder.Services.AddWaxComponents();</code></pre>
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h2 class="font-semibold text-foreground mb-1">Add Imports</h2>
+        <p class="text-sm text-muted-foreground mb-4">Add the following to your <code class="bg-muted px-1 rounded">_Imports.razor</code>.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@@using WaxComponents
+@@using WaxComponents.Theme
+@@using WaxComponents.Services.Theme
+@@using WaxComponents.Button
+@@using WaxComponents.Card
+@@using WaxComponents.Badge
+@@using WaxComponents.Switch
+@@using WaxComponents.TextField
+@@using WaxComponents.Checkbox
+@@using WaxComponents.Radio
+@@using WaxComponents.Tabs
+@@using WaxComponents.Accordion
+@@using WaxComponents.Avatar
+@@using WaxComponents.Chip
+@@using WaxComponents.Fab
+@@using WaxComponents.Progress
+@@using WaxComponents.Slider
+@@using WaxComponents.Navigation</code></pre>
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h2 class="font-semibold text-foreground mb-1">Include Theme Support</h2>
+        <p class="text-sm text-muted-foreground mb-4">Add <code class="bg-muted px-1 rounded">FontMap.razor</code> and <code class="bg-muted px-1 rounded">ThemePreloader.razor</code> to your root layout.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>&lt;HeadOutlet /&gt;
+&lt;FontMap /&gt;
+&lt;ThemePreloader /&gt;
+&lt;Routes /&gt;</code></pre>
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h2 class="font-semibold text-foreground mb-1">Basic Usage</h2>
+        <p class="text-sm text-muted-foreground mb-4">Start using components in your pages.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>&lt;WaxButton Variant="WaxButtonVariant.Filled"
+          Size="WaxButtonSize.Medium"&gt;
+    &lt;ChildContent&gt;Click me&lt;/ChildContent&gt;
+&lt;/WaxButton&gt;
+
+&lt;WaxBadge Color="WaxColor.Primary"&gt;New&lt;/WaxBadge&gt;
+
+&lt;WaxSwitch Label="Dark mode" /&gt;</code></pre>
+    </div>
+
+</div>

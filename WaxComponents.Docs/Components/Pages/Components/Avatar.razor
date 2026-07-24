@@ -1,0 +1,84 @@
+@page "/component/avatar"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Avatar
+@using WaxComponents.Card
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Avatar - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Avatar</h1>
+    <p class="text-muted-foreground">User avatar with initials fallback and status indicator.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_sizesTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Status Indicators</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_statusTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Image</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_imageTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _sizesTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <WaxAvatar Name="Alice" Size="WaxAvatarSize.ExtraSmall" />
+            <WaxAvatar Name="Bob" Size="WaxAvatarSize.Small" />
+            <WaxAvatar Name="Charlie" Size="WaxAvatarSize.Medium" />
+            <WaxAvatar Name="Diana" Size="WaxAvatarSize.Large" />
+            <WaxAvatar Name="Edward" Size="WaxAvatarSize.ExtraLarge" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _statusTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <div class="flex flex-col items-center gap-2">
+                <WaxAvatar Name="Online" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Online" />
+                <span class="text-xs text-muted-foreground">Online</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <WaxAvatar Name="Away" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Away" />
+                <span class="text-xs text-muted-foreground">Away</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <WaxAvatar Name="Busy" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Busy" />
+                <span class="text-xs text-muted-foreground">Busy</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+                <WaxAvatar Name="Offline" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Offline" />
+                <span class="text-xs text-muted-foreground">Offline</span>
+            </div>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statusCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _imageTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <WaxAvatar Name="Yuki Tanaka" Src="https://i.pravatar.cc/80?img=11" Size="WaxAvatarSize.Large" />
+            <WaxAvatar Name="Sarah Johnson" Src="https://i.pravatar.cc/80?img=5" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Online" />
+            <WaxAvatar Name="Mike Chen" Src="https://i.pravatar.cc/80?img=12" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Busy" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_imageCode</code></pre>)
+    ];
+
+    private static string _sizesCode = "@using WaxComponents.Avatar\n\n<WaxAvatar Name=\"Alice\" Size=\"WaxAvatarSize.ExtraSmall\" />\n<WaxAvatar Name=\"Bob\" Size=\"WaxAvatarSize.Small\" />\n<WaxAvatar Name=\"Charlie\" Size=\"WaxAvatarSize.Medium\" />\n<WaxAvatar Name=\"Diana\" Size=\"WaxAvatarSize.Large\" />\n<WaxAvatar Name=\"Edward\" Size=\"WaxAvatarSize.ExtraLarge\" />";
+
+    private static string _statusCode = "<WaxAvatar Name=\"Online\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Online\" />\n<WaxAvatar Name=\"Away\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Away\" />\n<WaxAvatar Name=\"Busy\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Busy\" />\n<WaxAvatar Name=\"Offline\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Offline\" />";
+
+    private static string _imageCode = "<WaxAvatar Name=\"Yuki\" Src=\"https://i.pravatar.cc/80?img=11\" Size=\"WaxAvatarSize.Large\" />\n<WaxAvatar Name=\"Sarah\" Src=\"https://i.pravatar.cc/80?img=5\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Online\" />";
+}

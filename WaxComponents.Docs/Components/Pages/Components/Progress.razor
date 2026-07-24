@@ -1,0 +1,85 @@
+@page "/component/progress"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Progress
+@using WaxComponents.Slider
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Progress - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Progress Bar</h1>
+    <p class="text-muted-foreground">Animated progress bars for loading states and completion tracking.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Colors</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_colorsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Interactive Demo</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_interactiveTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _colorsTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-foreground">Primary</span>
+                    <span class="text-muted-foreground">25%</span>
+                </div>
+                <WaxProgressBar Color="WaxColor.Primary" Value="25" />
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-foreground">Secondary</span>
+                    <span class="text-muted-foreground">50%</span>
+                </div>
+                <WaxProgressBar Color="WaxColor.Secondary" Value="50" />
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-foreground">Accent</span>
+                    <span class="text-muted-foreground">75%</span>
+                </div>
+                <WaxProgressBar Color="WaxColor.Accent" Value="75" />
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-foreground">Muted</span>
+                    <span class="text-muted-foreground">100%</span>
+                </div>
+                <WaxProgressBar Color="WaxColor.Muted" Value="100" />
+            </div>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_colorsCode</code></pre>)
+    ];
+
+    private List<WaxTabItem> _interactiveTabs = [];
+
+    private double _progressValue = 65;
+
+    private static string _colorsCode = "@using WaxComponents.Progress\n\n<WaxProgressBar Color=\"WaxColor.Primary\" Value=\"25\" />\n<WaxProgressBar Color=\"WaxColor.Secondary\" Value=\"50\" />\n<WaxProgressBar Color=\"WaxColor.Accent\" Value=\"75\" />\n<WaxProgressBar Color=\"WaxColor.Muted\" Value=\"100\" />";
+
+    private static string _interactiveCode = "@using WaxComponents.Progress\n\n<WaxProgressBar Color=\"WaxColor.Primary\" Value=\"@((int)_value)\" />\n<WaxSlider @bind-Value=\"_value\" Label=\"Progress\" Min=\"0\" Max=\"100\" />";
+
+    protected override void OnInitialized()
+    {
+        _interactiveTabs =
+        [
+            new("Preview", Content: @<div class="space-y-4">
+                <WaxProgressBar Color="WaxColor.Primary" Value="@((int)_progressValue)" />
+                <WaxSlider @bind-Value="_progressValue" Label="Progress" Min="0" Max="100" Color="WaxColor.Primary" Format="0" />
+            </div>),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_interactiveCode</code></pre>)
+        ];
+    }
+}

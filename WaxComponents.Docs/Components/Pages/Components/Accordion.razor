@@ -1,0 +1,78 @@
+@page "/component/accordion"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Accordion
+@using WaxComponents.Tabs
+
+<PageTitle>Accordion - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Accordion</h1>
+    <p class="text-muted-foreground">Expandable accordion panels for organizing content.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Default Accordion</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_defaultTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">All Closed</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_allClosedTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _defaultTabs =
+    [
+        new("Preview", Content: @<WaxAccordion Items="_defaultItems" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_defaultCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _allClosedTabs =
+    [
+        new("Preview", Content: @<div>
+            <p class="text-sm text-muted-foreground mb-4">Set <code class="bg-muted px-1 rounded">DefaultOpenIndex="-1"</code> to start with all items collapsed.</p>
+            <WaxAccordion Items="_allClosedItems" DefaultOpenIndex="-1" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_allClosedCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _iconTabs =
+    [
+        new("Preview", Content: @<WaxAccordion Items="_iconItems" />),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+    ];
+
+    private static List<WaxAccordionItemData> _defaultItems =
+    [
+        new() { Title = "Installation", Body = (MarkupString)"Run <code>dotnet add package WaxComponents</code> to install the library." },
+        new() { Title = "Configuration", Body = (MarkupString)"Add <code>builder.Services.AddWaxComponents()</code> in Program.cs." },
+        new() { Title = "Usage", Body = (MarkupString)"Import the component namespace and start using it in your pages." }
+    ];
+
+    private static List<WaxAccordionItemData> _allClosedItems =
+    [
+        new() { Title = "Getting Started", Body = (MarkupString)"Quick start guide for Wax Components." },
+        new() { Title = "Customization", Body = (MarkupString)"Override styles using the <code>Class</code> parameter." }
+    ];
+
+    private static List<WaxAccordionItemData> _iconItems =
+    [
+        new() { Title = "Notifications", Body = (MarkupString)"Manage your notification preferences.", Icon = @<LucideIcon Size="16" Name="bell" /> },
+        new() { Title = "Security", Body = (MarkupString)"Update your security settings and password.", Icon = @<LucideIcon Size="16" Name="shield" /> },
+        new() { Title = "Privacy", Body = (MarkupString)"Control your data and privacy settings.", Icon = @<LucideIcon Size="16" Name="lock" /> }
+    ];
+
+    private static string _defaultCode = "@using WaxComponents.Accordion\n\n<WaxAccordion Items=\"_items\" />\n\n@code {\n    private List<WaxAccordionItemData> _items =\n    [\n        new() { Title = \"Item 1\", Body = (MarkupString)\"Content\" },\n        new() { Title = \"Item 2\", Body = (MarkupString)\"Content\" }\n    ];\n}";
+
+    private static string _allClosedCode = "<WaxAccordion Items=\"_items\" DefaultOpenIndex=\"-1\" />";
+
+    private static string _iconCode = "@@using LucideBlazor\n\n<WaxAccordion Items=\"_items\" />\n\n@@code {\n    private List<WaxAccordionItemData> _items =\n    [\n        new() { Title = \"Alerts\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"bell\" /> }\n    ];\n}";
+}

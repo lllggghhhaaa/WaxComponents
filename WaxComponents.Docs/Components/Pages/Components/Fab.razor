@@ -1,0 +1,120 @@
+@page "/component/fab"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Card
+@using WaxComponents.Fab
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>FAB - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">FAB</h1>
+    <p class="text-muted-foreground">Floating action buttons for prominent actions.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_variantsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_sizesTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Extended FAB</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_extendedTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">All Variants x Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_matrixTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _variantsTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus" />
+            <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Medium" Icon="leaf" />
+            <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Medium" Icon="bell" />
+            <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Medium" Icon="settings" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _sizesTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Small" Icon="plus" />
+            <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus" />
+            <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Large" Icon="plus" />
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _extendedTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-4 flex-wrap">
+            <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus">Create</WaxFab>
+            <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Medium" Icon="edit">Edit</WaxFab>
+            <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Medium" Icon="share-2">Share</WaxFab>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_extendedCode</code></pre>)
+    ];
+
+    private static List<WaxTabItem> _matrixTabs =
+    [
+        new("Preview", Content: @<div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium"></th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Small</th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Medium</th>
+                        <th class="py-2 pr-4 text-left text-muted-foreground font-medium">Large</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border/50">
+                        <td class="py-3 pr-4 text-foreground font-medium">Primary</td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Small" Icon="plus" /></td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus" /></td>
+                        <td class="py-3"><WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Large" Icon="plus" /></td>
+                    </tr>
+                    <tr class="border-b border-border/50">
+                        <td class="py-3 pr-4 text-foreground font-medium">Secondary</td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Small" Icon="leaf" /></td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Medium" Icon="leaf" /></td>
+                        <td class="py-3"><WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Large" Icon="leaf" /></td>
+                    </tr>
+                    <tr class="border-b border-border/50">
+                        <td class="py-3 pr-4 text-foreground font-medium">Tertiary</td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Small" Icon="bell" /></td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Medium" Icon="bell" /></td>
+                        <td class="py-3"><WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Large" Icon="bell" /></td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 pr-4 text-foreground font-medium">Surface</td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Small" Icon="settings" /></td>
+                        <td class="py-3 pr-4"><WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Medium" Icon="settings" /></td>
+                        <td class="py-3"><WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Large" Icon="settings" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>)
+    ];
+
+    private static string _variantsCode = "@using WaxComponents.Fab\n\n<WaxFab Variant=\"WaxFabVariant.Primary\" Icon=\"plus\" />\n<WaxFab Variant=\"WaxFabVariant.Secondary\" Icon=\"leaf\" />\n<WaxFab Variant=\"WaxFabVariant.Tertiary\" Icon=\"bell\" />\n<WaxFab Variant=\"WaxFabVariant.Surface\" Icon=\"settings\" />";
+
+    private static string _sizesCode = "<WaxFab Variant=\"WaxFabVariant.Primary\" Size=\"WaxFabSize.Small\" Icon=\"plus\" />\n<WaxFab Variant=\"WaxFabVariant.Primary\" Size=\"WaxFabSize.Medium\" Icon=\"plus\" />\n<WaxFab Variant=\"WaxFabVariant.Primary\" Size=\"WaxFabSize.Large\" Icon=\"plus\" />";
+
+    private static string _extendedCode = "<WaxFab Variant=\"WaxFabVariant.Primary\" Icon=\"plus\">Create</WaxFab>\n<WaxFab Variant=\"WaxFabVariant.Surface\" Icon=\"edit\">Edit</WaxFab>";
+
+    private static string _matrixCode = "<WaxFab Variant=\"WaxFabVariant.Primary\" Size=\"WaxFabSize.Medium\" Icon=\"plus\" />";
+}
