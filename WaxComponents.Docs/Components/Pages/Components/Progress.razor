@@ -59,8 +59,8 @@
                 </div>
                 <WaxProgressBar Color="WaxColor.Muted" Value="100" />
             </div>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_colorsCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_colorsCode</code></pre>, Icon: "code")
     ];
 
     private List<WaxTabItem> _interactiveTabs = [];
@@ -69,7 +69,7 @@
 
     private static string _colorsCode = "@using WaxComponents.Progress\n\n<WaxProgressBar Color=\"WaxColor.Primary\" Value=\"25\" />\n<WaxProgressBar Color=\"WaxColor.Secondary\" Value=\"50\" />\n<WaxProgressBar Color=\"WaxColor.Accent\" Value=\"75\" />\n<WaxProgressBar Color=\"WaxColor.Muted\" Value=\"100\" />";
 
-    private static string _interactiveCode = "@using WaxComponents.Progress\n\n<WaxProgressBar Color=\"WaxColor.Primary\" Value=\"@((int)_value)\" />\n<WaxSlider @bind-Value=\"_value\" Label=\"Progress\" Min=\"0\" Max=\"100\" />";
+    private static string _interactiveCode = "@using WaxComponents.Progress\n@using WaxComponents.Slider\n\n<WaxProgressBar Color=\"WaxColor.Primary\" Value=\"@((int)_progressValue)\" />\n<WaxSlider @bind-Value=\"_progressValue\" Label=\"Progress\" Min=\"0\" Max=\"100\" Color=\"WaxColor.Primary\" Format=\"0\" />";
 
     protected override void OnInitialized()
     {
@@ -78,8 +78,8 @@
             new("Preview", Content: @<div class="space-y-4">
                 <WaxProgressBar Color="WaxColor.Primary" Value="@((int)_progressValue)" />
                 <WaxSlider @bind-Value="_progressValue" Label="Progress" Min="0" Max="100" Color="WaxColor.Primary" Format="0" />
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_interactiveCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_interactiveCode</code></pre>, Icon: "code")
         ];
     }
 }

@@ -43,8 +43,8 @@
             <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Medium" Icon="leaf" />
             <WaxFab Variant="WaxFabVariant.Tertiary" Size="WaxFabSize.Medium" Icon="bell" />
             <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Medium" Icon="settings" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _sizesTabs =
@@ -53,8 +53,8 @@
             <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Small" Icon="plus" />
             <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus" />
             <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Large" Icon="plus" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _extendedTabs =
@@ -63,8 +63,8 @@
             <WaxFab Variant="WaxFabVariant.Primary" Size="WaxFabSize.Medium" Icon="plus">Create</WaxFab>
             <WaxFab Variant="WaxFabVariant.Surface" Size="WaxFabSize.Medium" Icon="edit">Edit</WaxFab>
             <WaxFab Variant="WaxFabVariant.Secondary" Size="WaxFabSize.Medium" Icon="share-2">Share</WaxFab>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_extendedCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_extendedCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _matrixTabs =
@@ -106,8 +106,8 @@
                     </tr>
                 </tbody>
             </table>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>, Icon: "code")
     ];
 
     private static string _variantsCode = "@using WaxComponents.Fab\n\n<WaxFab Variant=\"WaxFabVariant.Primary\" Icon=\"plus\" />\n<WaxFab Variant=\"WaxFabVariant.Secondary\" Icon=\"leaf\" />\n<WaxFab Variant=\"WaxFabVariant.Tertiary\" Icon=\"bell\" />\n<WaxFab Variant=\"WaxFabVariant.Surface\" Icon=\"settings\" />";

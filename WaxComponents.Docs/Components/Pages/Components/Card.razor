@@ -51,8 +51,8 @@
                 <h3 class="font-semibold text-foreground mb-1">Outlined</h3>
                 <p class="text-sm text-muted-foreground">Card with border outline style.</p>
             </WaxCard>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _gridTabs =
@@ -124,8 +124,8 @@
                     </div>
                 </WaxCard>
             </WaxCardGrid>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_gridCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_gridCode</code></pre>, Icon: "code")
     ];
 
     private static string _variantsCode = "@using WaxComponents.Card\n\n<WaxCard Variant=\"WaxCardVariant.Elevated\">Content</WaxCard>\n<WaxCard Variant=\"WaxCardVariant.Filled\">Content</WaxCard>\n<WaxCard Variant=\"WaxCardVariant.Outlined\">Content</WaxCard>";

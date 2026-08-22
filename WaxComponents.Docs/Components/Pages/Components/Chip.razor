@@ -47,8 +47,8 @@
             <WaxChip Icon="leaf">Nature</WaxChip>
             <WaxChip Icon="bell">Alerts</WaxChip>
             <WaxChip Icon="settings">Settings</WaxChip>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
     ];
 
     private List<string> _filterChips = ["Coffee", "Tea", "Juice", "Milk"];
@@ -74,13 +74,13 @@
     private void RemoveChip(string chip) => _inputChipList.Remove(chip);
     private void ResetInputChips() => _inputChipList = _inputChips.ToList();
 
-    private static string _filterCode = "@using WaxComponents.Chip\n\n<WaxChip Value=\"_selected.Contains(\"Coffee\")\" ValueChanged=\"@(v => Toggle(\"Coffee\", v))\">\n    Coffee\n</WaxChip>";
+    private static string _filterCode = "@using WaxComponents.Chip\n\n@foreach (var chip in _filterChips)\n{\n    <WaxChip Value=\"@_filterSelected.Contains(chip)\" ValueChanged=\"@(v => ToggleFilter(chip, v))\">\n        @chip\n    </WaxChip>\n}";
 
-    private static string _suggestionCode = "<WaxChip Variant=\"WaxChipVariant.Suggestion\" Value=\"_value\" ValueChanged=\"@(v => ...)\">\n    Design\n</WaxChip>";
+    private static string _suggestionCode = "@using WaxComponents.Chip\n\n@foreach (var chip in _suggestions)\n{\n    <WaxChip Variant=\"WaxChipVariant.Suggestion\"\n             Value=\"@(_suggestion == chip)\"\n             ValueChanged=\"@(v => SelectSuggestion(chip, v))\">\n        @chip\n    </WaxChip>\n}";
 
-    private static string _inputCode = "<WaxChip Variant=\"WaxChipVariant.Input\" OnRemove=\"@(e => Remove(chip))\">\n    .NET\n</WaxChip>";
+    private static string _inputCode = "@using WaxComponents.Chip\n\n@foreach (var chip in _inputChipList)\n{\n    <WaxChip Variant=\"WaxChipVariant.Input\" Value=\"true\" OnRemove=\"@(_ => RemoveChip(chip))\">\n        @chip\n    </WaxChip>\n}\n@if (_inputChipList.Count < _inputChips.Count)\n{\n    <button @onclick=\"ResetInputChips\">Reset</button>\n}";
 
-    private static string _iconCode = "<WaxChip Icon=\"coffee\">Coffee</WaxChip>\n<WaxChip Icon=\"leaf\">Nature</WaxChip>";
+    private static string _iconCode = "@using WaxComponents.Chip\n\n<WaxChip Icon=\"coffee\">Coffee</WaxChip>\n<WaxChip Icon=\"leaf\">Nature</WaxChip>\n<WaxChip Icon=\"bell\">Alerts</WaxChip>\n<WaxChip Icon=\"settings\">Settings</WaxChip>";
 
     protected override void OnInitialized()
     {
@@ -95,8 +95,8 @@
                         @chip
                     </WaxChip>
                 }
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_filterCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_filterCode</code></pre>, Icon: "code")
         ];
 
         _suggestionTabs =
@@ -110,8 +110,8 @@
                         @chip
                     </WaxChip>
                 }
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_suggestionCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_suggestionCode</code></pre>, Icon: "code")
         ];
 
         _inputTabs =
@@ -130,8 +130,8 @@
                         Reset
                     </button>
                 }
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_inputCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_inputCode</code></pre>, Icon: "code")
         ];
     }
 }

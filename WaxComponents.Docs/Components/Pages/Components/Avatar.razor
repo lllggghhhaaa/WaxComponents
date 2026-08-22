@@ -39,8 +39,8 @@
             <WaxAvatar Name="Charlie" Size="WaxAvatarSize.Medium" />
             <WaxAvatar Name="Diana" Size="WaxAvatarSize.Large" />
             <WaxAvatar Name="Edward" Size="WaxAvatarSize.ExtraLarge" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _statusTabs =
@@ -62,8 +62,8 @@
                 <WaxAvatar Name="Offline" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Offline" />
                 <span class="text-xs text-muted-foreground">Offline</span>
             </div>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statusCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statusCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _imageTabs =
@@ -72,13 +72,13 @@
             <WaxAvatar Name="Yuki Tanaka" Src="https://i.pravatar.cc/80?img=11" Size="WaxAvatarSize.Large" />
             <WaxAvatar Name="Sarah Johnson" Src="https://i.pravatar.cc/80?img=5" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Online" />
             <WaxAvatar Name="Mike Chen" Src="https://i.pravatar.cc/80?img=12" Size="WaxAvatarSize.Large" Status="WaxAvatarStatus.Busy" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_imageCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_imageCode</code></pre>, Icon: "code")
     ];
 
     private static string _sizesCode = "@using WaxComponents.Avatar\n\n<WaxAvatar Name=\"Alice\" Size=\"WaxAvatarSize.ExtraSmall\" />\n<WaxAvatar Name=\"Bob\" Size=\"WaxAvatarSize.Small\" />\n<WaxAvatar Name=\"Charlie\" Size=\"WaxAvatarSize.Medium\" />\n<WaxAvatar Name=\"Diana\" Size=\"WaxAvatarSize.Large\" />\n<WaxAvatar Name=\"Edward\" Size=\"WaxAvatarSize.ExtraLarge\" />";
 
     private static string _statusCode = "<WaxAvatar Name=\"Online\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Online\" />\n<WaxAvatar Name=\"Away\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Away\" />\n<WaxAvatar Name=\"Busy\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Busy\" />\n<WaxAvatar Name=\"Offline\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Offline\" />";
 
-    private static string _imageCode = "<WaxAvatar Name=\"Yuki\" Src=\"https://i.pravatar.cc/80?img=11\" Size=\"WaxAvatarSize.Large\" />\n<WaxAvatar Name=\"Sarah\" Src=\"https://i.pravatar.cc/80?img=5\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Online\" />";
+    private static string _imageCode = "@using WaxComponents.Avatar\n\n<WaxAvatar Name=\"Yuki Tanaka\" Src=\"https://i.pravatar.cc/80?img=11\" Size=\"WaxAvatarSize.Large\" />\n<WaxAvatar Name=\"Sarah Johnson\" Src=\"https://i.pravatar.cc/80?img=5\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Online\" />\n<WaxAvatar Name=\"Mike Chen\" Src=\"https://i.pravatar.cc/80?img=12\" Size=\"WaxAvatarSize.Large\" Status=\"WaxAvatarStatus.Busy\" />";
 }

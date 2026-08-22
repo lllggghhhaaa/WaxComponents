@@ -33,20 +33,20 @@
 @code {
     private static List<WaxTabItem> _primarySectionTabs =
     [
-        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_primaryTabs" />),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_primaryCode</code></pre>)
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_primaryTabs" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_primaryCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _secondarySectionTabs =
     [
-        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Secondary" Tabs="_secondaryTabs" />),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_secondaryCode</code></pre>)
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Secondary" Tabs="_secondaryTabs" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_secondaryCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _iconSectionTabs =
     [
-        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" />),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _primaryTabs =
@@ -69,9 +69,9 @@
         new("Security", Content: @<div class="text-muted-foreground">Security settings and access control.</div>, Icon: "shield")
     ];
 
-    private static string _primaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_tabs\" />\n\n@@code {\n    private List<WaxTabItem> _tabs =\n    [\n        new(\"Tab 1\", Content: @@<div>Content 1</div>),\n        new(\"Tab 2\", Content: @@<div>Content 2</div>)\n    ];\n}";
+    private static string _primaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_primaryTabs\" />\n\n@@code {\n    private List<WaxTabItem> _primaryTabs =\n    [\n        new(\"Details\", Content: @@<div>View detailed information about this item.</div>),\n        new(\"Settings\", Content: @@<div>Configure your preferences and options.</div>)\n    ];\n}";
 
-    private static string _secondaryCode = "<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_tabs\" />";
+    private static string _secondaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_secondaryTabs\" />\n\n@@code {\n    private List<WaxTabItem> _secondaryTabs =\n    [\n        new(\"Profile\", Content: @@<div>Your profile information and public settings.</div>),\n        new(\"Account\", Content: @@<div>Manage your account settings and security.</div>),\n        new(\"Billing\", Content: @@<div>View and manage your billing information.</div>)\n    ];\n}";
 
-    private static string _iconCode = "<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_tabs\" />\n\n// TabItem with Icon:\n// new(\"Label\", Content: @@<div>...</div>, Icon: @@<LucideIcon Size=\"16\" Name=\"bell\" />)";
+    private static string _iconCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_iconTabs\" />\n\n@@code {\n    private List<WaxTabItem> _iconTabs =\n    [\n        new(\"Overview\", Content: @@<div>Project overview and key metrics.</div>, Icon: \"eye\"),\n        new(\"Notifications\", Content: @@<div>Your notification history and preferences.</div>, Icon: \"bell\"),\n        new(\"Security\", Content: @@<div>Security settings and access control.</div>, Icon: \"shield\")\n    ];\n}";
 }

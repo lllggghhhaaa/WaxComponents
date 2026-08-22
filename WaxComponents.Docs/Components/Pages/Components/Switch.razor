@@ -39,8 +39,8 @@
         new("Preview", Content: @<div class="space-y-4">
             <WaxSwitch Value="true" Label="Checked and disabled" Disabled="true" />
             <WaxSwitch Value="false" Label="Disabled and unchecked" Disabled="true" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
     ];
 
     private bool _notifications = true;
@@ -50,11 +50,11 @@
     private bool _toggle2;
     private bool _toggle3 = true;
 
-    private static string _labelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_value\" Label=\"Enable notifications\" />";
+    private static string _labelsCode = "@using WaxComponents.Switch\n@using WaxComponents.Badge\n\n<WaxSwitch @bind-Value=\"_notifications\" Label=\"Enable notifications\" />\n<WaxSwitch @bind-Value=\"_autoSave\" Label=\"Auto-save\" />\n<WaxSwitch @bind-Value=\"_darkMode\" Label=\"Dark mode\" />\n<div>\n    <p>Dark mode: <WaxBadge Color=\"WaxColor.Primary\">@(_darkMode ? \"On\" : \"Off\")</WaxBadge></p>\n</div>";
 
-    private static string _noLabelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_value\" />";
+    private static string _noLabelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_toggle1\" />\n<WaxSwitch @bind-Value=\"_toggle2\" />\n<WaxSwitch @bind-Value=\"_toggle3\" />";
 
-    private static string _disabledCode = "@using WaxComponents.Switch\n\n<WaxSwitch Value=\"true\" Disabled=\"true\" />\n<WaxSwitch Value=\"false\" Disabled=\"true\" />";
+    private static string _disabledCode = "@using WaxComponents.Switch\n\n<WaxSwitch Value=\"true\" Label=\"Checked and disabled\" Disabled=\"true\" />\n<WaxSwitch Value=\"false\" Label=\"Disabled and unchecked\" Disabled=\"true\" />";
 
     protected override void OnInitialized()
     {
@@ -69,8 +69,8 @@
                         Dark mode: <WaxBadge Color="WaxColor.Primary">@(_darkMode ? "On" : "Off")</WaxBadge>
                     </p>
                 </div>
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>, Icon: "code")
         ];
 
         _noLabelsTabs =
@@ -79,8 +79,8 @@
                 <WaxSwitch @bind-Value="_toggle1" />
                 <WaxSwitch @bind-Value="_toggle2" />
                 <WaxSwitch @bind-Value="_toggle3" />
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_noLabelsCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_noLabelsCode</code></pre>, Icon: "code")
         ];
     }
 }

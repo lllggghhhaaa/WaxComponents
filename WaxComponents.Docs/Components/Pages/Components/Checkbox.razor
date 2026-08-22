@@ -45,8 +45,8 @@
         new("Preview", Content: @<div class="space-y-2">
             <WaxCheckbox Value="true" Label="Checked and disabled" Disabled="true" />
             <WaxCheckbox Value="false" Label="Unchecked and disabled" Disabled="true" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
     ];
     private List<WaxTabItem> _programmaticTabs = [];
 
@@ -68,13 +68,13 @@
 
     private WaxCheckbox _checkboxRef = default!;
 
-    private static string _labelsCode = "@using WaxComponents.Checkbox\n\n<WaxCheckbox @bind-Value=\"_value\" Label=\"Notify via email\" />";
+    private static string _labelsCode = "@using WaxComponents.Checkbox\n\n<WaxCheckbox @bind-Value=\"_notifyEmail\" Label=\"Notify via email\" />\n<WaxCheckbox @bind-Value=\"_notifySms\" Label=\"Notify via SMS\" />\n<WaxCheckbox @bind-Value=\"_notifyPush\" Label=\"Push notifications\" />";
 
-    private static string _indeterminateCode = "<WaxCheckbox Value=\"_allChecked\" Indeterminate=\"_isPartial\" Label=\"Select all\" ValueChanged=\"SelectAll\" />";
+    private static string _indeterminateCode = "<WaxCheckbox Value=\"_allChecked\" Indeterminate=\"_isPartial\" Label=\"Select all\" ValueChanged=\"SelectAll\" />\n<WaxCheckbox @bind-Value=\"_option1\" Label=\"Option 1\" />\n<WaxCheckbox @bind-Value=\"_option2\" Label=\"Option 2\" />\n<WaxCheckbox @bind-Value=\"_option3\" Label=\"Option 3\" />";
 
-    private static string _disabledCode = "<WaxCheckbox Value=\"true\" Disabled=\"true\" Label=\"Checked and disabled\" />\n<WaxCheckbox Value=\"false\" Disabled=\"true\" Label=\"Unchecked and disabled\" />";
+    private static string _disabledCode = "<WaxCheckbox Value=\"true\" Label=\"Checked and disabled\" Disabled=\"true\" />\n<WaxCheckbox Value=\"false\" Label=\"Unchecked and disabled\" Disabled=\"true\" />";
 
-    private static string _programmaticCode = "<WaxCheckbox @ref=\"_ref\" Label=\"Controlled\" />\n<button @onclick=\"_ref.CheckAsync()\">Check</button>\n<button @onclick=\"_ref.UncheckAsync()\">Uncheck</button>\n<button @onclick=\"_ref.ToggleAsync()\">Toggle</button>";
+    private static string _programmaticCode = "@using WaxComponents.Button\n\n<WaxCheckbox @ref=\"_ref\" Label=\"Controlled checkbox\" />\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.CheckAsync())\">Check</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.UncheckAsync())\">Uncheck</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.ToggleAsync())\">Toggle</WaxButton>";
 
     protected override void OnInitialized()
     {
@@ -84,8 +84,8 @@
                 <WaxCheckbox @bind-Value="_notifyEmail" Label="Notify via email" />
                 <WaxCheckbox @bind-Value="_notifySms" Label="Notify via SMS" />
                 <WaxCheckbox @bind-Value="_notifyPush" Label="Push notifications" />
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_labelsCode</code></pre>, Icon: "code")
         ];
 
         _indeterminateTabs =
@@ -97,8 +97,8 @@
                     <WaxCheckbox @bind-Value="_option2" Label="Option 2" />
                     <WaxCheckbox @bind-Value="_option3" Label="Option 3" />
                 </div>
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_indeterminateCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_indeterminateCode</code></pre>, Icon: "code")
         ];
 
         _programmaticTabs =
@@ -116,8 +116,8 @@
                         <ChildContent>Toggle</ChildContent>
                     </WaxButton>
                 </div>
-            </div>),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_programmaticCode</code></pre>)
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_programmaticCode</code></pre>, Icon: "code")
         ];
     }
 }

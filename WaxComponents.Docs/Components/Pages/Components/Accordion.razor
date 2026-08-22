@@ -40,14 +40,14 @@
         new("Preview", Content: @<div>
             <p class="text-sm text-muted-foreground mb-4">Set <code class="bg-muted px-1 rounded">DefaultOpenIndex="-1"</code> to start with all items collapsed.</p>
             <WaxAccordion Items="_allClosedItems" DefaultOpenIndex="-1" />
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_allClosedCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_allClosedCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _iconTabs =
     [
-        new("Preview", Content: @<WaxAccordion Items="_iconItems" />),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>)
+        new("Preview", Content: @<WaxAccordion Items="_iconItems" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxAccordionItemData> _defaultItems =
@@ -70,9 +70,9 @@
         new() { Title = "Privacy", Body = (MarkupString)"Control your data and privacy settings.", Icon = @<LucideIcon Size="16" Name="lock" /> }
     ];
 
-    private static string _defaultCode = "@using WaxComponents.Accordion\n\n<WaxAccordion Items=\"_items\" />\n\n@code {\n    private List<WaxAccordionItemData> _items =\n    [\n        new() { Title = \"Item 1\", Body = (MarkupString)\"Content\" },\n        new() { Title = \"Item 2\", Body = (MarkupString)\"Content\" }\n    ];\n}";
+    private static string _defaultCode = "@using WaxComponents.Accordion\n\n<WaxAccordion Items=\"_defaultItems\" />\n\n@code {\n    private List<WaxAccordionItemData> _defaultItems =\n    [\n        new() { Title = \"Item 1\", Body = (MarkupString)\"Content\" },\n        new() { Title = \"Item 2\", Body = (MarkupString)\"Content\" }\n    ];\n}";
 
-    private static string _allClosedCode = "<WaxAccordion Items=\"_items\" DefaultOpenIndex=\"-1\" />";
+    private static string _allClosedCode = "<WaxAccordion Items=\"_allClosedItems\" DefaultOpenIndex=\"-1\" />";
 
-    private static string _iconCode = "@@using LucideBlazor\n\n<WaxAccordion Items=\"_items\" />\n\n@@code {\n    private List<WaxAccordionItemData> _items =\n    [\n        new() { Title = \"Alerts\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"bell\" /> }\n    ];\n}";
+    private static string _iconCode = "@@using LucideBlazor\n\n<WaxAccordion Items=\"_iconItems\" />\n\n@@code {\n    private List<WaxAccordionItemData> _iconItems =\n    [\n        new() { Title = \"Notifications\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"bell\" /> },\n        new() { Title = \"Security\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"shield\" /> },\n        new() { Title = \"Privacy\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"lock\" /> }\n    ];\n}";
 }

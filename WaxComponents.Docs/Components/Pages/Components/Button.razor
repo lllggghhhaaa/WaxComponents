@@ -50,8 +50,8 @@
             <WaxButton Variant="WaxButtonVariant.Outlined">Outlined</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Text">Text</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Elevated">Elevated</WaxButton>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _sizesTabs =
@@ -60,8 +60,8 @@
             <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Small">Small</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Medium">Medium</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Filled" Size="WaxButtonSize.Large">Large</WaxButton>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizesCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _iconsTabs =
@@ -83,8 +83,8 @@
                 <Icon><LucideIcon Size="16" Name="arrow-right" /></Icon>
                 <ChildContent>Learn more</ChildContent>
             </WaxButton>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconsCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconsCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _statesTabs =
@@ -95,8 +95,8 @@
             <WaxButton Variant="WaxButtonVariant.Outlined" Disabled="true">Disabled</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Text" Disabled="true">Disabled</WaxButton>
             <WaxButton Variant="WaxButtonVariant.Elevated" Disabled="true">Disabled</WaxButton>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statesCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statesCode</code></pre>, Icon: "code")
     ];
 
     private static List<WaxTabItem> _matrixTabs =
@@ -123,8 +123,8 @@
                     }
                 </tbody>
             </table>
-        </div>),
-        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>)
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>, Icon: "code")
     ];
 
     private static List<(WaxButtonVariant variant, string name)> _variants =
@@ -140,9 +140,9 @@
 
     private static string _sizesCode = "<WaxButton Size=\"WaxButtonSize.Small\">Small</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Medium\">Medium</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Large\">Large</WaxButton>";
 
-    private static string _iconsCode = "<WaxButton>\n    <Icon><LucideIcon Size=\"16\" Name=\"leaf\" /></Icon>\n    <ChildContent>Label</ChildContent>\n</WaxButton>";
+    private static string _iconsCode = "@using LucideBlazor\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"leaf\" /></Icon>\n    <ChildContent>Leaf</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"bell\" /></Icon>\n    <ChildContent>Notify</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"settings\" /></Icon>\n    <ChildContent>Settings</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"arrow-right\" /></Icon>\n    <ChildContent>Learn more</ChildContent>\n</WaxButton>";
 
-    private static string _statesCode = "<WaxButton Disabled=\"true\">Disabled</WaxButton>";
+    private static string _statesCode = "@using WaxComponents.Button\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Elevated\" Disabled=\"true\">Disabled</WaxButton>";
 
-    private static string _matrixCode = "<WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">Button</WaxButton>";
+    private static string _matrixCode = "@using WaxComponents.Button\n\n@foreach (var (variant, name) in _variants)\n{\n    <tr>\n        <td>@name</td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Small\">@name</WaxButton></td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Medium\">@name</WaxButton></td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Large\">@name</WaxButton></td>\n    </tr>\n}";
 }
