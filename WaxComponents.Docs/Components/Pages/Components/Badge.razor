@@ -16,12 +16,12 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Colors</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_colorsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_colorsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Usage Examples</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_usageTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_usageTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -62,5 +62,5 @@
 
     private static string _colorsCode = "@using WaxComponents.Badge\n\n<WaxBadge Color=\"WaxColor.Primary\">Primary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Secondary\">Secondary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Accent\">Accent</WaxBadge>\n<WaxBadge Color=\"WaxColor.Muted\">Muted</WaxBadge>";
 
-    private static string _usageCode = "@using WaxComponents.Badge\n\n<div class=\"flex items-center gap-3\">\n    <span>Inbox</span>\n    <WaxBadge Color=\"WaxColor.Primary\">12</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span>Status</span>\n    <WaxBadge Color=\"WaxColor.Secondary\">Active</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span>Version</span>\n    <WaxBadge Color=\"WaxColor.Muted\">v1.0.0</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span>New</span>\n    <WaxBadge Color=\"WaxColor.Accent\">Feature</WaxBadge>\n</div>";
+    private static string _usageCode = "@using WaxComponents.Badge\n\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Inbox</span>\n    <WaxBadge Color=\"WaxColor.Primary\">12</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Status</span>\n    <WaxBadge Color=\"WaxColor.Secondary\">Active</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Version</span>\n    <WaxBadge Color=\"WaxColor.Muted\">v1.0.0</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">New</span>\n    <WaxBadge Color=\"WaxColor.Accent\">Feature</WaxBadge>\n</div>";
 }

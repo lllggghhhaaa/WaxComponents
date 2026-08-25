@@ -18,22 +18,22 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Labels</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_labelsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_labelsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Indeterminate State</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_indeterminateTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_indeterminateTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Programmatic Control</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_programmaticTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_programmaticTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -68,13 +68,13 @@
 
     private WaxCheckbox _checkboxRef = default!;
 
-    private static string _labelsCode = "@using WaxComponents.Checkbox\n\n<WaxCheckbox @bind-Value=\"_notifyEmail\" Label=\"Notify via email\" />\n<WaxCheckbox @bind-Value=\"_notifySms\" Label=\"Notify via SMS\" />\n<WaxCheckbox @bind-Value=\"_notifyPush\" Label=\"Push notifications\" />";
+    private static string _labelsCode = "@using WaxComponents.Checkbox\n\n<div class=\"space-y-2\">\n    <WaxCheckbox @bind-Value=\"_notifyEmail\" Label=\"Notify via email\" />\n    <WaxCheckbox @bind-Value=\"_notifySms\" Label=\"Notify via SMS\" />\n    <WaxCheckbox @bind-Value=\"_notifyPush\" Label=\"Push notifications\" />\n</div>";
 
-    private static string _indeterminateCode = "<WaxCheckbox Value=\"_allChecked\" Indeterminate=\"_isPartial\" Label=\"Select all\" ValueChanged=\"SelectAll\" />\n<WaxCheckbox @bind-Value=\"_option1\" Label=\"Option 1\" />\n<WaxCheckbox @bind-Value=\"_option2\" Label=\"Option 2\" />\n<WaxCheckbox @bind-Value=\"_option3\" Label=\"Option 3\" />";
+    private static string _indeterminateCode = "@using WaxComponents.Checkbox\n\n<div class=\"space-y-2\">\n    <WaxCheckbox Value=\"_allChecked\" Indeterminate=\"_isPartial\" Label=\"Select all\" ValueChanged=\"SelectAll\" />\n    <div class=\"ml-6 space-y-2\">\n        <WaxCheckbox @bind-Value=\"_option1\" Label=\"Option 1\" />\n        <WaxCheckbox @bind-Value=\"_option2\" Label=\"Option 2\" />\n        <WaxCheckbox @bind-Value=\"_option3\" Label=\"Option 3\" />\n    </div>\n</div>\n\n@code {\n    private bool _option1 = true;\n    private bool _option2;\n    private bool _option3 = true;\n    private bool _allChecked => _option1 && _option2 && _option3;\n    private bool _isPartial => (_option1 || _option2 || _option3) && !_allChecked;\n\n    private void SelectAll(bool check)\n    {\n        _option1 = check;\n        _option2 = check;\n        _option3 = check;\n    }\n}";
 
-    private static string _disabledCode = "<WaxCheckbox Value=\"true\" Label=\"Checked and disabled\" Disabled=\"true\" />\n<WaxCheckbox Value=\"false\" Label=\"Unchecked and disabled\" Disabled=\"true\" />";
+    private static string _disabledCode = "@using WaxComponents.Checkbox\n\n<div class=\"space-y-2\">\n    <WaxCheckbox Value=\"true\" Label=\"Checked and disabled\" Disabled=\"true\" />\n    <WaxCheckbox Value=\"false\" Label=\"Unchecked and disabled\" Disabled=\"true\" />\n</div>";
 
-    private static string _programmaticCode = "@using WaxComponents.Button\n\n<WaxCheckbox @ref=\"_ref\" Label=\"Controlled checkbox\" />\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.CheckAsync())\">Check</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.UncheckAsync())\">Uncheck</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _ref.ToggleAsync())\">Toggle</WaxButton>";
+    private static string _programmaticCode = "@using WaxComponents.Checkbox\n@using WaxComponents.Button\n\n<WaxCheckbox @ref=\"_checkboxRef\" Label=\"Controlled checkbox\" />\n<div class=\"flex gap-2\">\n    <WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _checkboxRef.CheckAsync())\">\n        <ChildContent>Check</ChildContent>\n    </WaxButton>\n    <WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _checkboxRef.UncheckAsync())\">\n        <ChildContent>Uncheck</ChildContent>\n    </WaxButton>\n    <WaxButton Size=\"WaxButtonSize.Small\" Variant=\"WaxButtonVariant.Outlined\" OnClick=\"@(() => _checkboxRef.ToggleAsync())\">\n        <ChildContent>Toggle</ChildContent>\n    </WaxButton>\n</div>\n\n@code {\n    private WaxCheckbox _checkboxRef = default!;\n}";
 
     protected override void OnInitialized()
     {

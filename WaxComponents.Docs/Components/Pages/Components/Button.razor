@@ -17,27 +17,27 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Variants</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_variantsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_variantsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_sizesTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sizesTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_iconsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">States</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_statesTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_statesTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Variants x Sizes Matrix</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_matrixTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_matrixTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -136,13 +136,13 @@
         (WaxButtonVariant.Elevated, "Elevated"),
     ];
 
-    private static string _variantsCode = "@using WaxComponents.Button\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\">Filled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\">Tonal</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\">Outlined</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\">Text</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Elevated\">Elevated</WaxButton>";
+    private static string _variantsCode = "@using WaxComponents.Button\n\n<div class=\"flex items-center gap-3 flex-wrap\">\n    <WaxButton Variant=\"WaxButtonVariant.Filled\">Filled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Tonal\">Tonal</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Outlined\">Outlined</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Text\">Text</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Elevated\">Elevated</WaxButton>\n</div>";
 
-    private static string _sizesCode = "<WaxButton Size=\"WaxButtonSize.Small\">Small</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Medium\">Medium</WaxButton>\n<WaxButton Size=\"WaxButtonSize.Large\">Large</WaxButton>";
+    private static string _sizesCode = "@using WaxComponents.Button\n\n<div class=\"flex items-center gap-3 flex-wrap\">\n    <WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Small\">Small</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">Medium</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Large\">Large</WaxButton>\n</div>";
 
-    private static string _iconsCode = "@using LucideBlazor\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"leaf\" /></Icon>\n    <ChildContent>Leaf</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"bell\" /></Icon>\n    <ChildContent>Notify</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"settings\" /></Icon>\n    <ChildContent>Settings</ChildContent>\n</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\" Size=\"WaxButtonSize.Medium\">\n    <Icon><LucideIcon Size=\"16\" Name=\"arrow-right\" /></Icon>\n    <ChildContent>Learn more</ChildContent>\n</WaxButton>";
+    private static string _iconsCode = "@using WaxComponents.Button\n@using LucideBlazor\n\n<div class=\"flex items-center gap-3 flex-wrap\">\n    <WaxButton Variant=\"WaxButtonVariant.Filled\" Size=\"WaxButtonSize.Medium\">\n        <Icon><LucideIcon Size=\"16\" Name=\"leaf\" /></Icon>\n        <ChildContent>Leaf</ChildContent>\n    </WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Tonal\" Size=\"WaxButtonSize.Medium\">\n        <Icon><LucideIcon Size=\"16\" Name=\"bell\" /></Icon>\n        <ChildContent>Notify</ChildContent>\n    </WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Outlined\" Size=\"WaxButtonSize.Medium\">\n        <Icon><LucideIcon Size=\"16\" Name=\"settings\" /></Icon>\n        <ChildContent>Settings</ChildContent>\n    </WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Text\" Size=\"WaxButtonSize.Medium\">\n        <Icon><LucideIcon Size=\"16\" Name=\"arrow-right\" /></Icon>\n        <ChildContent>Learn more</ChildContent>\n    </WaxButton>\n</div>";
 
-    private static string _statesCode = "@using WaxComponents.Button\n\n<WaxButton Variant=\"WaxButtonVariant.Filled\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Tonal\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Outlined\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Text\" Disabled=\"true\">Disabled</WaxButton>\n<WaxButton Variant=\"WaxButtonVariant.Elevated\" Disabled=\"true\">Disabled</WaxButton>";
+    private static string _statesCode = "@using WaxComponents.Button\n\n<div class=\"flex items-center gap-3 flex-wrap\">\n    <WaxButton Variant=\"WaxButtonVariant.Filled\" Disabled=\"true\">Disabled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Tonal\" Disabled=\"true\">Disabled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Outlined\" Disabled=\"true\">Disabled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Text\" Disabled=\"true\">Disabled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Elevated\" Disabled=\"true\">Disabled</WaxButton>\n</div>";
 
-    private static string _matrixCode = "@using WaxComponents.Button\n\n@foreach (var (variant, name) in _variants)\n{\n    <tr>\n        <td>@name</td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Small\">@name</WaxButton></td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Medium\">@name</WaxButton></td>\n        <td><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Large\">@name</WaxButton></td>\n    </tr>\n}";
+    private static string _matrixCode = "@using WaxComponents.Button\n\n<div class=\"overflow-x-auto\">\n    <table class=\"w-full text-sm\">\n        <thead>\n            <tr class=\"border-b border-border\">\n                <th class=\"py-2 pr-4 text-left text-muted-foreground font-medium\"></th>\n                <th class=\"py-2 pr-4 text-left text-muted-foreground font-medium\">Small</th>\n                <th class=\"py-2 pr-4 text-left text-muted-foreground font-medium\">Medium</th>\n                <th class=\"py-2 pr-4 text-left text-muted-foreground font-medium\">Large</th>\n            </tr>\n        </thead>\n        <tbody>\n            @foreach (var (variant, name) in _variants)\n            {\n                <tr class=\"border-b border-border/50\">\n                    <td class=\"py-3 pr-4 text-foreground font-medium\">@name</td>\n                    <td class=\"py-3 pr-4\"><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Small\">@name</WaxButton></td>\n                    <td class=\"py-3 pr-4\"><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Medium\">@name</WaxButton></td>\n                    <td class=\"py-3\"><WaxButton Variant=\"variant\" Size=\"WaxButtonSize.Large\">@name</WaxButton></td>\n                </tr>\n            }\n        </tbody>\n    </table>\n</div>\n\n@code {\n    private static List<(WaxButtonVariant variant, string name)> _variants =\n    [\n        (WaxButtonVariant.Filled, \"Filled\"),\n        (WaxButtonVariant.Tonal, \"Tonal\"),\n        (WaxButtonVariant.Outlined, \"Outlined\"),\n        (WaxButtonVariant.Text, \"Text\"),\n        (WaxButtonVariant.Elevated, \"Elevated\")\n    ];\n}";
 }

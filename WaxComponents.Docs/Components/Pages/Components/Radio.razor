@@ -17,22 +17,22 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Vertical Orientation</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_verticalTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_verticalTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Horizontal Orientation</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_horizontalTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_horizontalTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Disabled Option</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Current Selection</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_selectionTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_selectionTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -68,13 +68,13 @@
         new("Enterprise", "enterprise", "Custom solutions", Disabled: true)
     ];
 
-    private static string _verticalCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedVertical\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_shippingOptions\" />\n\n@code {\n    private List<RadioOption> _shippingOptions =\n    [\n        new(\"Express\", \"express\", \"1-2 business days\"),\n        new(\"Standard\", \"standard\", \"3-5 business days\"),\n        new(\"Eco\", \"eco\", \"7-10 days, carbon offset\")\n    ];\n}";
+    private static string _verticalCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedVertical\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_shippingOptions\" />\n\n@code {\n    private List<WaxRadio.RadioOption> _shippingOptions =\n    [\n        new(\"Express\", \"express\", \"1-2 business days\"),\n        new(\"Standard\", \"standard\", \"3-5 business days\"),\n        new(\"Eco\", \"eco\", \"7-10 days, carbon offset\")\n    ];\n}";
 
-    private static string _horizontalCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedHorizontal\" Orientation=\"WaxRadioOrientation.Horizontal\" Options=\"_sizeOptions\" />\n\n@code {\n    private List<RadioOption> _sizeOptions =\n    [\n        new(\"Small\", \"s\"),\n        new(\"Medium\", \"m\"),\n        new(\"Large\", \"l\"),\n        new(\"Extra Large\", \"xl\")\n    ];\n}";
+    private static string _horizontalCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedHorizontal\" Orientation=\"WaxRadioOrientation.Horizontal\" Options=\"_sizeOptions\" />\n\n@code {\n    private List<WaxRadio.RadioOption> _sizeOptions =\n    [\n        new(\"Small\", \"s\"),\n        new(\"Medium\", \"m\"),\n        new(\"Large\", \"l\"),\n        new(\"Extra Large\", \"xl\")\n    ];\n}";
 
-    private static string _disabledCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedWithDisabled\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_optionsWithDisabled\" />\n\n@code {\n    private List<RadioOption> _optionsWithDisabled =\n    [\n        new(\"Free\", \"free\", \"Basic features\"),\n        new(\"Pro\", \"pro\", \"Advanced features\"),\n        new(\"Enterprise\", \"enterprise\", \"Custom solutions\", Disabled: true)\n    ];\n}";
+    private static string _disabledCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedWithDisabled\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_optionsWithDisabled\" />\n\n@code {\n    private List<WaxRadio.RadioOption> _optionsWithDisabled =\n    [\n        new(\"Free\", \"free\", \"Basic features\"),\n        new(\"Pro\", \"pro\", \"Advanced features\"),\n        new(\"Enterprise\", \"enterprise\", \"Custom solutions\", Disabled: true)\n    ];\n}";
 
-    private static string _selectionCode = "@using WaxComponents.Badge\n\n<p class=\"text-sm text-muted-foreground\">Current selection: <WaxBadge Color=\"WaxColor.Primary\">@_selectedVertical</WaxBadge></p>";
+    private static string _selectionCode = "@using WaxComponents.Radio\n@using WaxComponents.Badge\n\n<p class=\"text-sm text-muted-foreground\">Current selection: <WaxBadge Color=\"WaxColor.Primary\">@_selectedVertical</WaxBadge></p>\n\n@code {\n    private string _selectedVertical = \"standard\";\n}";
 
     protected override void OnInitialized()
     {

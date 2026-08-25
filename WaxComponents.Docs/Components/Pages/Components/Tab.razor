@@ -16,17 +16,17 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Primary Variant</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_primarySectionTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_primarySectionTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Secondary Variant</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_secondarySectionTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_secondarySectionTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_iconSectionTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconSectionTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -69,9 +69,9 @@
         new("Security", Content: @<div class="text-muted-foreground">Security settings and access control.</div>, Icon: "shield")
     ];
 
-    private static string _primaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_primaryTabs\" />\n\n@@code {\n    private List<WaxTabItem> _primaryTabs =\n    [\n        new(\"Details\", Content: @@<div>View detailed information about this item.</div>),\n        new(\"Settings\", Content: @@<div>Configure your preferences and options.</div>)\n    ];\n}";
+    private static string _primaryCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_primaryTabs\" />\n\n@code {\n    private List<WaxTabItem> _primaryTabs =\n    [\n        new(\"Details\", Content: @<div>View detailed information about this item.</div>),\n        new(\"Settings\", Content: @<div>Configure your preferences and options.</div>)\n    ];\n}";
 
-    private static string _secondaryCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_secondaryTabs\" />\n\n@@code {\n    private List<WaxTabItem> _secondaryTabs =\n    [\n        new(\"Profile\", Content: @@<div>Your profile information and public settings.</div>),\n        new(\"Account\", Content: @@<div>Manage your account settings and security.</div>),\n        new(\"Billing\", Content: @@<div>View and manage your billing information.</div>)\n    ];\n}";
+    private static string _secondaryCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_secondaryTabs\" />\n\n@code {\n    private List<WaxTabItem> _secondaryTabs =\n    [\n        new(\"Profile\", Content: @<div>Your profile information and public settings.</div>),\n        new(\"Account\", Content: @<div>Manage your account settings and security.</div>),\n        new(\"Billing\", Content: @<div>View and manage your billing information.</div>)\n    ];\n}";
 
-    private static string _iconCode = "@@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_iconTabs\" />\n\n@@code {\n    private List<WaxTabItem> _iconTabs =\n    [\n        new(\"Overview\", Content: @@<div>Project overview and key metrics.</div>, Icon: \"eye\"),\n        new(\"Notifications\", Content: @@<div>Your notification history and preferences.</div>, Icon: \"bell\"),\n        new(\"Security\", Content: @@<div>Security settings and access control.</div>, Icon: \"shield\")\n    ];\n}";
+    private static string _iconCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_iconTabs\" />\n\n@code {\n    private List<WaxTabItem> _iconTabs =\n    [\n        new(\"Overview\", Content: @<div>Project overview and key metrics.</div>, Icon: \"eye\"),\n        new(\"Notifications\", Content: @<div>Your notification history and preferences.</div>, Icon: \"bell\"),\n        new(\"Security\", Content: @<div>Security settings and access control.</div>, Icon: \"shield\")\n    ];\n}";
 }

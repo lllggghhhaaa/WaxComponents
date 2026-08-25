@@ -74,5 +74,5 @@
 
     private static string _allClosedCode = "<WaxAccordion Items=\"_allClosedItems\" DefaultOpenIndex=\"-1\" />";
 
-    private static string _iconCode = "@@using LucideBlazor\n\n<WaxAccordion Items=\"_iconItems\" />\n\n@@code {\n    private List<WaxAccordionItemData> _iconItems =\n    [\n        new() { Title = \"Notifications\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"bell\" /> },\n        new() { Title = \"Security\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"shield\" /> },\n        new() { Title = \"Privacy\", Body = (MarkupString)\"...\", Icon = @@<LucideIcon Size=\"16\" Name=\"lock\" /> }\n    ];\n}";
+    private static string _iconCode = "@using LucideBlazor\n\n<WaxAccordion Items=\"_iconItems\" />\n\n@code {\n    private List<WaxAccordionItemData> _iconItems =\n    [\n        new() { Title = \"Notifications\", Body = (MarkupString)\"...\", Icon = @<LucideIcon Size=\"16\" Name=\"bell\" /> },\n        new() { Title = \"Security\", Body = (MarkupString)\"...\", Icon = @<LucideIcon Size=\"16\" Name=\"shield\" /> },\n        new() { Title = \"Privacy\", Body = (MarkupString)\"...\", Icon = @<LucideIcon Size=\"16\" Name=\"lock\" /> }\n    ];\n}";
 }

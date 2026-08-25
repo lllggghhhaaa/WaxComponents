@@ -17,17 +17,17 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Labels</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_labelsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_labelsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Without Labels</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_noLabelsTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_noLabelsTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -50,7 +50,7 @@
     private bool _toggle2;
     private bool _toggle3 = true;
 
-    private static string _labelsCode = "@using WaxComponents.Switch\n@using WaxComponents.Badge\n\n<WaxSwitch @bind-Value=\"_notifications\" Label=\"Enable notifications\" />\n<WaxSwitch @bind-Value=\"_autoSave\" Label=\"Auto-save\" />\n<WaxSwitch @bind-Value=\"_darkMode\" Label=\"Dark mode\" />\n<div>\n    <p>Dark mode: <WaxBadge Color=\"WaxColor.Primary\">@(_darkMode ? \"On\" : \"Off\")</WaxBadge></p>\n</div>";
+    private static string _labelsCode = "@using WaxComponents.Switch\n@using WaxComponents.Badge\n\n<div class=\"space-y-4\">\n    <WaxSwitch @bind-Value=\"_notifications\" Label=\"Enable notifications\" />\n    <WaxSwitch @bind-Value=\"_autoSave\" Label=\"Auto-save\" />\n    <WaxSwitch @bind-Value=\"_darkMode\" Label=\"Dark mode\" />\n    <div class=\"mt-4 p-3 rounded-xl bg-muted/50\">\n        <p class=\"text-sm text-foreground\">\n            Dark mode: <WaxBadge Color=\"WaxColor.Primary\">@(_darkMode ? \"On\" : \"Off\")</WaxBadge>\n        </p>\n    </div>\n</div>";
 
     private static string _noLabelsCode = "@using WaxComponents.Switch\n\n<WaxSwitch @bind-Value=\"_toggle1\" />\n<WaxSwitch @bind-Value=\"_toggle2\" />\n<WaxSwitch @bind-Value=\"_toggle3\" />";
 

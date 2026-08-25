@@ -17,27 +17,27 @@
 <div class="space-y-6">
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Filled Variant</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_filledTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_filledTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Outlined Variant</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_outlinedTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_outlinedTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Helper Text</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_helperTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_helperTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Error State</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_errorTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_errorTabs" TabListClass="mb-4" />
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
-        <WaxTab Variant="WaxTabVariant.Secondary" Tabs="_disabledTabs" TabListClass="mb-4" />
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -62,15 +62,15 @@
     private string _username = "";
     private string _emailError = "invalid-email";
 
-    private static string _filledCode = "@using WaxComponents.TextField\n@using LucideBlazor\n\n<WaxTextField Label=\"Email\" Placeholder=\"you@example.com\" @bind-Value=\"_email1\" Variant=\"WaxFieldVariant.Filled\">\n    <Icon><LucideIcon Size=\"16\" Name=\"mail\" /></Icon>\n</WaxTextField>\n<WaxTextField Label=\"Password\" Placeholder=\"Enter password\" @bind-Value=\"_password1\" Variant=\"WaxFieldVariant.Filled\" />";
+    private static string _filledCode = "@using WaxComponents.TextField\n@using LucideBlazor\n\n<div class=\"space-y-4 max-w-sm\">\n    <WaxTextField Label=\"Email\" Placeholder=\"you@example.com\" @bind-Value=\"_email1\" Variant=\"WaxFieldVariant.Filled\">\n        <Icon><LucideIcon Size=\"16\" Name=\"mail\" /></Icon>\n    </WaxTextField>\n    <WaxTextField Label=\"Password\" Placeholder=\"Enter password\" @bind-Value=\"_password1\" Variant=\"WaxFieldVariant.Filled\" />\n</div>\n\n@code {\n    private string _email1 = \"\";\n    private string _password1 = \"\";\n}";
 
-    private static string _outlinedCode = "@using LucideBlazor\n\n<WaxTextField Label=\"Full name\" Placeholder=\"John Doe\" @bind-Value=\"_name\" Variant=\"WaxFieldVariant.Outlined\">\n    <Icon><LucideIcon Size=\"16\" Name=\"user\" /></Icon>\n</WaxTextField>\n<WaxTextField Label=\"Phone\" Placeholder=\"+1 (555) 000-0000\" @bind-Value=\"_phone\" Variant=\"WaxFieldVariant.Outlined\" />";
+    private static string _outlinedCode = "@using WaxComponents.TextField\n@using LucideBlazor\n\n<div class=\"space-y-4 max-w-sm\">\n    <WaxTextField Label=\"Full name\" Placeholder=\"John Doe\" @bind-Value=\"_name\" Variant=\"WaxFieldVariant.Outlined\">\n        <Icon><LucideIcon Size=\"16\" Name=\"user\" /></Icon>\n    </WaxTextField>\n    <WaxTextField Label=\"Phone\" Placeholder=\"+1 (555) 000-0000\" @bind-Value=\"_phone\" Variant=\"WaxFieldVariant.Outlined\" />\n</div>\n\n@code {\n    private string _name = \"\";\n    private string _phone = \"\";\n}";
 
-    private static string _helperCode = "@using WaxComponents.TextField\n\n<WaxTextField Label=\"Username\" Placeholder=\"Choose a username\" @bind-Value=\"_username\" Variant=\"WaxFieldVariant.Outlined\" Helper=\"Must be at least 3 characters.\" />";
+    private static string _helperCode = "@using WaxComponents.TextField\n\n<div class=\"max-w-sm\">\n    <WaxTextField Label=\"Username\" Placeholder=\"Choose a username\" @bind-Value=\"_username\" Variant=\"WaxFieldVariant.Outlined\" Helper=\"Must be at least 3 characters.\" />\n</div>\n\n@code {\n    private string _username = \"\";\n}";
 
-    private static string _errorCode = "@using LucideBlazor\n\n<WaxTextField Label=\"Email\" Placeholder=\"you@example.com\" @bind-Value=\"_emailError\" Variant=\"WaxFieldVariant.Outlined\" Error=\"Invalid email address.\">\n    <Icon><LucideIcon Size=\"16\" Name=\"mail\" /></Icon>\n</WaxTextField>";
+    private static string _errorCode = "@using WaxComponents.TextField\n@using LucideBlazor\n\n<div class=\"max-w-sm\">\n    <WaxTextField Label=\"Email\" Placeholder=\"you@example.com\" @bind-Value=\"_emailError\" Variant=\"WaxFieldVariant.Outlined\" Error=\"Invalid email address.\">\n        <Icon><LucideIcon Size=\"16\" Name=\"mail\" /></Icon>\n    </WaxTextField>\n</div>\n\n@code {\n    private string _emailError = \"invalid-email\";\n}";
 
-    private static string _disabledCode = "@using WaxComponents.TextField\n\n<WaxTextField Label=\"Disabled filled\" Value=\"Pre-filled text\" Variant=\"WaxFieldVariant.Filled\" Disabled=\"true\" />\n<WaxTextField Label=\"Disabled outlined\" Value=\"Pre-filled text\" Variant=\"WaxFieldVariant.Outlined\" Disabled=\"true\" />";
+    private static string _disabledCode = "@using WaxComponents.TextField\n\n<div class=\"space-y-4 max-w-sm\">\n    <WaxTextField Label=\"Disabled filled\" Value=\"Pre-filled text\" Variant=\"WaxFieldVariant.Filled\" Disabled=\"true\" />\n    <WaxTextField Label=\"Disabled outlined\" Value=\"Pre-filled text\" Variant=\"WaxFieldVariant.Outlined\" Disabled=\"true\" />\n</div>";
 
     protected override void OnInitialized()
     {
