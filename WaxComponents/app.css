@@ -86,6 +86,47 @@
     --sidebar-ring: #E06B40;
 }
 
+@media (prefers-color-scheme: dark) {
+    html.theme-system {
+        --background: #1E1209;
+        --foreground: #F5E8D8;
+        --card: #2A1A0E;
+        --card-foreground: #F5E8D8;
+        --popover: #2A1A0E;
+        --popover-foreground: #F5E8D8;
+        --primary: #E06B40;
+        --primary-foreground: #1E1209;
+        --secondary: #5A8A54;
+        --secondary-foreground: #F5E8D8;
+        --muted: #3A2518;
+        --muted-foreground: #B89B82;
+        --accent: #F0B030;
+        --accent-foreground: #1E1209;
+        --destructive: #C44848;
+        --destructive-foreground: #F5E8D8;
+        --border: rgba(245, 232, 216, 0.12);
+        --input: rgba(245, 232, 216, 0.08);
+        --input-background: #3A2518;
+        --switch-background: #5A3E2A;
+        --ring: #E06B40;
+        --font-weight-medium: 500;
+        --font-weight-normal: 400;
+        --chart-1: #E06B40;
+        --chart-2: #5A8A54;
+        --chart-3: #F0B030;
+        --chart-4: #9B7EC8;
+        --chart-5: #4AAFCA;
+        --sidebar: #2A1A0E;
+        --sidebar-foreground: #F5E8D8;
+        --sidebar-primary: #E06B40;
+        --sidebar-primary-foreground: #1E1209;
+        --sidebar-accent: #3A2518;
+        --sidebar-accent-foreground: #F5E8D8;
+        --sidebar-border: rgba(245, 232, 216, 0.1);
+        --sidebar-ring: #E06B40;
+    }
+}
+
 @theme inline {
     --font-display: "Fraunces", Georgia, serif;
     --font-mono: "JetBrains Mono", "Courier New", monospace;

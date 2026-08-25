@@ -27,7 +27,7 @@
         <Footer>
             <div class="flex items-center justify-between px-2">
                 <span class="text-sm text-muted-foreground">Dark mode</span>
-                <WaxSwitch @bind-Value="_darkMode" />
+                <WaxSwitch Value="_darkMode" ValueChanged="OnDarkModeChanged" />
             </div>
         </Footer>
     </WaxSidebar>
@@ -81,8 +81,16 @@
 
             await Theme.InitializeAsync();
 
+            _darkMode = Theme.CurrentTheme == ThemeMode.Dark;
+
             StateHasChanged();
         }
+    }
+
+    private async Task OnDarkModeChanged(bool value)
+    {
+        _darkMode = value;
+        await Theme.SetThemeAsync(value ? ThemeMode.Dark : ThemeMode.Light);
     }
 
     void OnThemeChanged()
