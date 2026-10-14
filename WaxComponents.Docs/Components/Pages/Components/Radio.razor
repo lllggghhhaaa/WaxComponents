@@ -27,18 +27,12 @@
         <h3 class="font-semibold text-foreground mb-1">With Disabled Option</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
-
-    <div class="p-6 rounded-3xl bg-card border border-border">
-        <h3 class="font-semibold text-foreground mb-1">Current Selection</h3>
-        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_selectionTabs" TabListClass="mb-4" />
-    </div>
 </div>
 
 @code {
     private List<WaxTabItem> _verticalTabs = [];
     private List<WaxTabItem> _horizontalTabs = [];
     private List<WaxTabItem> _disabledTabs = [];
-    private List<WaxTabItem> _selectionTabs = [];
 
     private string _selectedVertical = "standard";
     private string _selectedHorizontal = "m";
@@ -78,9 +72,14 @@
     {
         _verticalTabs =
         [
-            new("Preview", Content: @<WaxRadio @bind-Value="_selectedVertical"
-                          Orientation="WaxRadioOrientation.Vertical"
-                          Options="_shippingOptions" />, Icon: "monitor-dot"),
+            new("Preview", 
+                Content: 
+                @<div>
+                    <WaxRadio @bind-Value="_selectedVertical"
+                              Orientation="WaxRadioOrientation.Vertical"
+                              Options="_shippingOptions"/>
+                    <p class="text-sm text-muted-foreground mt-5">Current selection: <WaxBadge Color="WaxColor.Primary">@_selectedVertical</WaxBadge></p>
+                </div>, Icon: "monitor-dot"),
             new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_verticalCode</code></pre>, Icon: "code")
         ];
 
@@ -98,14 +97,6 @@
                           Orientation="WaxRadioOrientation.Vertical"
                           Options="_optionsWithDisabled" />, Icon: "monitor-dot"),
             new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
-        ];
-
-        _selectionTabs =
-        [
-            new("Preview", Content: @<div>
-                <p class="text-sm text-muted-foreground">Current selection: <WaxBadge Color="WaxColor.Primary">@_selectedVertical</WaxBadge></p>
-            </div>, Icon: "monitor-dot"),
-            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_selectionCode</code></pre>, Icon: "code")
         ];
     }
 }

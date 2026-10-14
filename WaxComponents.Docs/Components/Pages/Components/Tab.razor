@@ -1,12 +1,14 @@
 @page "/component/tab"
 @rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Button
 @using WaxComponents.Tabs
 
 <PageTitle>Tabs - Wax Components</PageTitle>
 
 <div class="mb-8">
     <h1 class="text-3xl font-display font-bold text-foreground mb-2">Tabs</h1>
-    <p class="text-muted-foreground">Tabbed navigation for organizing content into panels.</p>
+    <p class="text-muted-foreground">Tabbed navigation for organizing content into panels. Supports icons, disabled tabs, keyboard navigation and two-way binding.</p>
 </div>
 
 <div class="space-y-6">
@@ -23,6 +25,23 @@
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconSectionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Custom Icon Fragments</h3>
+        <p class="text-sm text-muted-foreground mb-4">Use <code class="bg-muted px-1 rounded">IconContent</code> when a plain icon name is not enough.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_fragmentSectionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled Tabs</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledSectionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Controlled Active Tab</h3>
+        <p class="text-sm text-muted-foreground mb-4">Bind <code class="bg-muted px-1 rounded">ActiveIndex</code> to drive the selected tab from your own state.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_controlledSectionTabs" TabListClass="mb-4" />
     </div>
 </div>
 
@@ -45,6 +64,20 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _fragmentSectionTabs =
+    [
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_fragmentTabs" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_fragmentCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _disabledSectionTabs =
+    [
+        new("Preview", Content: @<WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" />, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
+    ];
+
+    private List<WaxTabItem> _controlledSectionTabs = [];
+
     private static List<WaxTabItem> _primaryTabs =
     [
         new("Details", Content: @<div class="text-muted-foreground">View detailed information about this item.</div>),
@@ -65,9 +98,54 @@
         new("Security", Content: @<div class="text-muted-foreground">Security settings and access control.</div>, Icon: "shield")
     ];
 
+    private static List<WaxTabItem> _fragmentTabs =
+    [
+        new("Inbox", Content: @<div class="text-muted-foreground">Your recent messages.</div>) { IconContent = @<LucideIcon Size="16" Name="mail" /> },
+        new("Starred", Content: @<div class="text-muted-foreground">Messages you starred.</div>) { IconContent = @<LucideIcon Size="16" Name="star" /> },
+        new("Archive", Content: @<div class="text-muted-foreground">Archived conversations.</div>) { IconContent = @<LucideIcon Size="16" Name="archive" /> }
+    ];
+
+    private static List<WaxTabItem> _disabledTabs =
+    [
+        new("Overview", Content: @<div class="text-muted-foreground">Project overview and key metrics.</div>),
+        new("Analytics", Content: @<div class="text-muted-foreground">Usage and performance analytics.</div>),
+        new("Billing", Content: @<div class="text-muted-foreground">Available on the Pro plan.</div>) { Disabled = true }
+    ];
+
+    private int _controlledIndex = 1;
+
     private static string _primaryCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_primaryTabs\" />\n\n@code {\n    private List<WaxTabItem> _primaryTabs =\n    [\n        new(\"Details\", Content: @<div>View detailed information about this item.</div>),\n        new(\"Settings\", Content: @<div>Configure your preferences and options.</div>)\n    ];\n}";
 
     private static string _secondaryCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Secondary\" Tabs=\"_secondaryTabs\" />\n\n@code {\n    private List<WaxTabItem> _secondaryTabs =\n    [\n        new(\"Profile\", Content: @<div>Your profile information and public settings.</div>),\n        new(\"Account\", Content: @<div>Manage your account settings and security.</div>),\n        new(\"Billing\", Content: @<div>View and manage your billing information.</div>)\n    ];\n}";
 
     private static string _iconCode = "@using WaxComponents.Tabs\n\n<WaxTab Variant=\"WaxTabVariant.Primary\" Tabs=\"_iconTabs\" />\n\n@code {\n    private List<WaxTabItem> _iconTabs =\n    [\n        new(\"Overview\", Content: @<div>Project overview and key metrics.</div>, Icon: \"eye\"),\n        new(\"Notifications\", Content: @<div>Your notification history and preferences.</div>, Icon: \"bell\"),\n        new(\"Security\", Content: @<div>Security settings and access control.</div>, Icon: \"shield\")\n    ];\n}";
+
+    private static string _fragmentCode = "@using WaxComponents.Tabs\n@using LucideBlazor\n\n<WaxTab Tabs=\"_fragmentTabs\" />\n\n@code {\n    private List<WaxTabItem> _fragmentTabs =\n    [\n        new(\"Inbox\", Content: @<div>Your recent messages.</div>) { IconContent = @<LucideIcon Size=\"16\" Name=\"mail\" /> },\n        new(\"Starred\", Content: @<div>Messages you starred.</div>) { IconContent = @<LucideIcon Size=\"16\" Name=\"star\" /> }\n    ];\n}";
+
+    private static string _disabledCode = "@using WaxComponents.Tabs\n\n<WaxTab Tabs=\"_disabledTabs\" />\n\n@code {\n    private List<WaxTabItem> _disabledTabs =\n    [\n        new(\"Overview\", Content: @<div>Project overview and key metrics.</div>),\n        new(\"Billing\", Content: @<div>Available on the Pro plan.</div>) { Disabled = true }\n    ];\n}";
+
+    private static string _controlledCode = "@using WaxComponents.Tabs\n@using WaxComponents.Button\n\n<WaxTab Tabs=\"_tabs\" @bind-ActiveIndex=\"_activeIndex\" />\n\n<div class=\"flex gap-2\">\n    <WaxButton Size=\"WaxButtonSize.Small\" OnClick=\"() => _activeIndex = 0\">Details</WaxButton>\n    <WaxButton Size=\"WaxButtonSize.Small\" OnClick=\"() => _activeIndex = 1\">Settings</WaxButton>\n</div>\n\n@code {\n    private int _activeIndex;\n    private List<WaxTabItem> _tabs =\n    [\n        new(\"Details\", Content: @<div>...</div>),\n        new(\"Settings\", Content: @<div>...</div>)\n    ];\n}";
+
+    protected override void OnInitialized()
+    {
+        _controlledSectionTabs =
+        [
+            new("Preview", Content: @<div class="space-y-4">
+                <WaxTab Variant="WaxTabVariant.Primary" Tabs="_controlledTabs" @bind-ActiveIndex="_controlledIndex" />
+                <div class="flex gap-2">
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="() => _controlledIndex = 0">Profile</WaxButton>
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="() => _controlledIndex = 1">Security</WaxButton>
+                    <WaxButton Size="WaxButtonSize.Small" Variant="WaxButtonVariant.Outlined" OnClick="() => _controlledIndex = 2">Billing</WaxButton>
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_controlledCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static List<WaxTabItem> _controlledTabs =
+    [
+        new("Profile", Content: @<div class="text-muted-foreground">Your profile information and public settings.</div>),
+        new("Security", Content: @<div class="text-muted-foreground">Manage your account settings and security.</div>),
+        new("Billing", Content: @<div class="text-muted-foreground">View and manage your billing information.</div>)
+    ];
 }

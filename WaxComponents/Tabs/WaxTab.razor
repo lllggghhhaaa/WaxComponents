@@ -4,62 +4,222 @@
 @inherits WaxComponent
 
 <div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
-    <div class="@GetTabListClass()">
-        @for (var i = 0; i < Tabs.Count; i++)
-        {
-            var index = i;
-            var tab = Tabs[index];
+    @if (Tabs is { Count: > 0 })
+    {
+        <div class="@GetTabListClass()" role="tablist" aria-label="@AriaLabel">
+            @for (var i = 0; i < Tabs.Count; i++)
+            {
+                var index = i;
+                var tab = Tabs[index];
+                var isActive = CurrentIndex == index;
 
-            <button type="button"
-                    @onclick="() => SetActive(index)"
-                    class="@GetTabButtonClass(index)">
-                @if (tab.Icon is not null)
-                {
-                    <LucideIcon Size="16" Name="@tab.Icon" />
-                }
-                @if (tab.Label is not null)
-                {
-                    @tab.Label
-                }
-            </button>
-        }
-    </div>
+                <button type="button"
+                        @key="index"
+                        id="@GetTabId(index)"
+                        role="tab"
+                        aria-selected="@(isActive ? "true" : "false")"
+                        aria-controls="@GetPanelId(index)"
+                        aria-disabled="@(tab.Disabled ? "true" : "false")"
+                        tabindex="@(isActive ? 0 : -1)"
+                        disabled="@tab.Disabled"
+                        @onclick="() => SetActiveAsync(index)"
+                        @onkeydown="e => OnKeyDown(index, e)"
+                        class="@GetTabButtonClass(index)">
+                    @if (tab.IconContent is not null)
+                    {
+                        @tab.IconContent
+                    }
+                    else if (tab.Icon is not null)
+                    {
+                        <LucideIcon Size="16" Name="@tab.Icon" />
+                    }
+                    @if (tab.Label is not null)
+                    {
+                        @tab.Label
+                    }
+                </button>
+            }
+        </div>
 
-    <div class="pt-5">
-        @Tabs[Active].Content
-    </div>
+        <div class="@GetTabContentClass()"
+             id="@GetPanelId(CurrentIndex)"
+             role="tabpanel"
+             aria-labelledby="@GetTabId(CurrentIndex)"
+             tabindex="0">
+            @Tabs[CurrentIndex].Content
+        </div>
+    }
 </div>
 
 @code {
+    private const string BaseTabListClass = "flex border-b-2 border-border";
+    private const string BaseTabButtonClass = "inline-flex items-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 cursor-pointer relative";
+
+    private readonly string _componentId = $"wax-tab-{Guid.NewGuid():N}";
+    private int _activeIndex;
+
     [Parameter, EditorRequired]
-    public List<WaxTabItem> Tabs { get; set; } = []; 
+    public List<WaxTabItem> Tabs { get; set; } = [];
 
     [Parameter]
     public WaxTabVariant Variant { get; set; } = WaxTabVariant.Primary;
-    
+
+    /// <summary>
+    /// Controlled active tab index. When set, combine with <see cref="ActiveIndexChanged"/>
+    /// (or <c>@bind-ActiveIndex</c>). When null, the component manages its own state.
+    /// </summary>
+    [Parameter]
+    public int? ActiveIndex { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ActiveIndexChanged { get; set; }
+
+    /// <summary>Index selected on first render when <see cref="ActiveIndex"/> is not set.</summary>
+    [Parameter]
+    public int DefaultActiveIndex { get; set; }
+
+    [Parameter]
+    public string? AriaLabel { get; set; }
+
     [Parameter]
     public string TabListClass { get; set; } = string.Empty;
+
     [Parameter]
     public string TabButtonClass { get; set; } = string.Empty;
 
+    [Parameter]
+    public string TabContentClass { get; set; } = string.Empty;
+
     private string CssClass => Class;
 
-    private int Active { get; set; }
+    private int CurrentIndex
+    {
+        get
+        {
+            if (Tabs is not { Count: > 0 })
+            {
+                return 0;
+            }
 
-    private void SetActive(int index) => Active = index;
+            return Math.Clamp(ActiveIndex ?? _activeIndex, 0, Tabs.Count - 1);
+        }
+    }
+
+    protected override void OnInitialized() => _activeIndex = DefaultActiveIndex;
+
+    protected override void OnParametersSet()
+    {
+        if (ActiveIndex is { } index)
+        {
+            _activeIndex = index;
+        }
+    }
+
+    private async Task SetActiveAsync(int index)
+    {
+        if (Tabs is not { Count: > 0 } || index < 0 || index >= Tabs.Count || Tabs[index].Disabled)
+        {
+            return;
+        }
+
+        if (CurrentIndex == index)
+        {
+            return;
+        }
+
+        _activeIndex = index;
+
+        if (ActiveIndexChanged.HasDelegate)
+        {
+            await ActiveIndexChanged.InvokeAsync(index);
+        }
+    }
+
+    private async Task OnKeyDown(int index, KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowRight":
+            case "ArrowDown":
+                await MoveAsync(index, 1);
+                break;
+            case "ArrowLeft":
+            case "ArrowUp":
+                await MoveAsync(index, -1);
+                break;
+            case "Home":
+                await SetActiveAsync(FirstEnabledIndex());
+                break;
+            case "End":
+                await SetActiveAsync(LastEnabledIndex());
+                break;
+        }
+    }
+
+    private async Task MoveAsync(int from, int direction)
+    {
+        if (Tabs is not { Count: > 0 })
+        {
+            return;
+        }
+
+        var count = Tabs.Count;
+
+        for (var step = 1; step <= count; step++)
+        {
+            var candidate = ((from + direction * step) % count + count) % count;
+
+            if (!Tabs[candidate].Disabled)
+            {
+                await SetActiveAsync(candidate);
+                return;
+            }
+        }
+    }
+
+    private int FirstEnabledIndex()
+    {
+        for (var i = 0; i < Tabs.Count; i++)
+        {
+            if (!Tabs[i].Disabled)
+            {
+                return i;
+            }
+        }
+
+        return CurrentIndex;
+    }
+
+    private int LastEnabledIndex()
+    {
+        for (var i = Tabs.Count - 1; i >= 0; i--)
+        {
+            if (!Tabs[i].Disabled)
+            {
+                return i;
+            }
+        }
+
+        return CurrentIndex;
+    }
+
+    private string GetTabId(int index) => $"{_componentId}-tab-{index}";
+
+    private string GetPanelId(int index) => $"{_componentId}-panel-{index}";
 
     private string GetTabListClass()
     {
-        var baseClass = "flex border-b-2 border-border";
-        return (Variant == WaxTabVariant.Secondary
-            ? baseClass.MergeClass("bg-muted rounded-xl border-none gap-1")
-            : baseClass).MergeClass(TabListClass);
+        var baseClass = Variant == WaxTabVariant.Secondary
+            ? BaseTabListClass.MergeClass("bg-muted rounded-xl border-none gap-1")
+            : BaseTabListClass;
+
+        return baseClass.MergeClass(TabListClass);
     }
 
     private string GetTabButtonClass(int index)
     {
-        const string common = "inline-flex items-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 cursor-pointer relative";
-        var isActive = Active == index;
+        var isActive = CurrentIndex == index;
+        var isDisabled = Tabs[index].Disabled;
 
         var variantClass = Variant == WaxTabVariant.Primary
             ? "border-b-2 -mb-px"
@@ -71,6 +231,11 @@
                     ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground");
 
-        return common.MergeClass(variantClass, TabButtonClass);
+        return BaseTabButtonClass
+            .MergeClass(variantClass)
+            .MergeClass(isDisabled ? "opacity-40 cursor-not-allowed pointer-events-none" : string.Empty)
+            .MergeClass(TabButtonClass);
     }
+
+    private string GetTabContentClass() => "pt-5".MergeClass(TabContentClass);
 }
