@@ -1,62 +1,60 @@
-### Instalando
+# WaxComponents
 
-Nuget: https://www.nuget.org/packages/WaxComponents
+A UI component library for Blazor, built with Tailwind CSS and light/dark mode support.
 
-- Adicionar na head do html
-```html
-<!-- Theme first -->
-<link href="_content/WaxComponents/Styles/Themes/lightPink.css" rel="stylesheet">
+- NuGet: [https://www.nuget.org/packages/WaxComponents](https://www.nuget.org/packages/WaxComponents)
+- Source: [https://github.com/lllggghhhaaa/WaxComponents](https://github.com/lllggghhhaaa/WaxComponents)
+- License: Apache-2.0
+- Target: .NET 11.0
 
-<!-- Styles -->
-<link href="_content/WaxComponents/Styles/waxComponents.css" rel="stylesheet">
+Components: Accordion, Avatar, Badge, Button, Card, Checkbox, Chip, Fab, Navigation, Progress, Radio, Slider, Switch, Tabs, Text Field.
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+## Install
 
-<!-- Scripts -->
-<script src="_content/WaxComponents/Scripts/waxComponents.js"></script>
+```bash
+dotnet add package WaxComponents
 ```
 
-- Importar a biblioteca
-```cs
-//...
-@using WaxComponents
+## Setup
+
+Register the services in `Program.cs`:
+
+```csharp
+builder.Services.AddWaxComponents();
 ```
 
-<br/>
+Add the stylesheet and theme support to `App.razor`:
 
-### Usando
+```razor
+<link rel="stylesheet" href="_content/WaxComponents/app.css" />
+<FontMap />
+<ThemePreloader />
+```
 
-```html
-<!-- Button -->
-<WaxButton OnClick="OnClick">
-    
-    <!--Icones baseados no tema Material-->
-    <!--https://fonts.google.com/icons-->
-    <Icon><WaxIcon Size="24px">done</WaxIcon></Icon>
-    <Text>Ceira</Text>
+## Usage
+
+```razor
+<WaxButton Variant="WaxButtonVariant.Filled" OnClick="OnClick">
+    <ChildContent>Click me</ChildContent>
 </WaxButton>
 
-<!-- Text Input -->
-<WaxTextInput @bind-Value="_text" Placeholder="Ceira"></WaxTextInput>
+<WaxBadge Color="WaxColor.Primary">New</WaxBadge>
+
+<WaxSwitch Label="Dark mode" />
 ```
 
-```c#
-private string _text = String.Empty;
-
-private void OnClick(object? sender, EventArgs e)
-{
-    Console.WriteLine(_text);
-}
+```csharp
+private void OnClick() { }
 ```
 
-<br/>
+## Theming
 
-### Resultado
-![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample1.png)
-![sample](https://raw.githubusercontent.com/lllggghhhaaa/WaxComponents/master/Assets/wcexample2.png)
+Inject `IThemeService` to change the theme at runtime:
 
-My discord server: https://discord.gg/MhCmnG6ZBA
+```razor
+@inject IThemeService Theme
+
+<button @onclick="() => Theme.ToggleDarkLightAsync()">Toggle theme</button>
+```
+
+Modes: `ThemeMode.System`, `ThemeMode.Light`, `ThemeMode.Dark`.
