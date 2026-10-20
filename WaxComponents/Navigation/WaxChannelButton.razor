@@ -1,0 +1,49 @@
+@using LucideBlazor
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<button type="button"
+        class="@CssClass"
+        style="@Style"
+        aria-label="@Label"
+        title="@Label"
+        @onclick="HandleClick"
+        @attributes="AdditionalAttributes">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <LucideIcon Name="@Icon" Size="17" ClassName="shrink-0"/>
+    }
+
+    <span class="min-w-0 flex-1 truncate">@Label</span>
+
+    @if (Count > 0)
+    {
+        <span class="rounded-full bg-primary px-2 py-0.5 font-mono text-xs text-primary-foreground">@Count</span>
+    }
+
+    @if (ShowDot)
+    {
+        <span class="h-2 w-2 rounded-full bg-primary"></span>
+    }
+</button>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string Icon { get; set; } = "hash";
+    [Parameter] public bool Active { get; set; }
+    [Parameter] public bool ShowDot { get; set; }
+    [Parameter] public int Count { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private const string Base =
+        "flex w-full cursor-pointer items-center gap-3 rounded-2xl px-3 py-2 text-left text-sm transition-colors";
+
+    private string ActiveClass => Active
+        ? "bg-primary/10 font-semibold text-primary"
+        : "text-muted-foreground hover:bg-muted/70 hover:text-foreground";
+
+    private string CssClass => Base.MergeClass(ActiveClass, Class);
+
+    private Task HandleClick() => OnClick.InvokeAsync();
+}

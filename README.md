@@ -7,7 +7,7 @@ A UI component library for Blazor, built with Tailwind CSS and light/dark mode s
 - License: Apache-2.0
 - Target: .NET 11.0
 
-Components: Accordion, Avatar, Badge, Button, Card, Checkbox, Chip, Fab, Navigation, Progress, Radio, Slider, Switch, Tabs, Text Field.
+Components: Accordion, Avatar, Badge, Button, Card, Checkbox, Chip, Channel Button, Fab, Icon Button, Navigation (Sidebar, Server Button), Progress, Radio, Reaction Chip, Slider, Switch, Tabs, Text Field.
 
 ## Install
 

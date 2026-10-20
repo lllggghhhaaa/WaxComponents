@@ -2,7 +2,9 @@
 @import 'tw-animate-css';
 
 @source "../**/*.razor";
+@source "../**/*.cs";
 @source "../../**/*.razor";
+@source "../../Waxalot/Waxalot/Components/**/*.cs";
 
 @custom-variant dark (&:where(html.theme-dark, html.theme-dark *));
 

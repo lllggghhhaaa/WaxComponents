@@ -1,0 +1,38 @@
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="relative flex justify-center">
+    @if (Active)
+    {
+        <span class="absolute -left-2 top-2 h-8 w-1 rounded-r-full bg-primary"></span>
+    }
+
+    <button type="button"
+            class="@CssClass"
+            style="@Style"
+            aria-label="@Title"
+            title="@Title"
+            @onclick="HandleClick"
+            @attributes="AdditionalAttributes">
+        @ChildContent
+    </button>
+</div>
+
+@code {
+    [Parameter] public bool Active { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private const string Base =
+        "flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl shadow-sm transition-all duration-200 cursor-pointer";
+
+    private string ActiveClass => Active
+        ? "bg-primary text-primary-foreground"
+        : "text-foreground bg-card hover:rounded-xl hover:bg-primary hover:text-primary-foreground";
+
+    private string CssClass => Base.MergeClass(ActiveClass, Class);
+
+    private Task HandleClick() => OnClick.InvokeAsync();
+}
