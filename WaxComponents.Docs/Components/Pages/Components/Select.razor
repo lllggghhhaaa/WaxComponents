@@ -1,0 +1,273 @@
+@page "/component/select"
+@rendermode InteractiveServer
+@using WaxComponents.Select
+@using WaxComponents.Tabs
+
+<PageTitle>Select - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Select</h1>
+    <p class="text-muted-foreground">Accessible dropdown selects with rich options, leading icons, and filled or outlined variants.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_variantTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Rich Options</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_richTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Icon</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">In a Form</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_formTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private string _plan = "pro";
+    private string _richPlan = "pro";
+    private string _env = "dev";
+    private string _size = "medium";
+    private string _country = "us";
+    private string _disabledPlan = "pro";
+    private string _disabledCountry = "us";
+    private string _iconPlan = "team";
+    private string _iconCountry = "us";
+
+    private List<WaxTabItem> _variantTabs = [];
+    private List<WaxTabItem> _richTabs = [];
+    private List<WaxTabItem> _iconTabs = [];
+    private List<WaxTabItem> _formTabs = [];
+    private List<WaxTabItem> _disabledTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _variantTabs =
+        [
+            new("Preview", Content: @<div class="grid max-w-sm gap-4">
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-muted-foreground">Filled</label>
+                    <WaxSelect TValue="string" @bind-Value="_plan" Label="Plan">
+                        <WaxSelectOption Value="free" />
+                        <WaxSelectOption Value="pro" />
+                        <WaxSelectOption Value="team" />
+                        <WaxSelectOption Value="enterprise" />
+                    </WaxSelect>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-muted-foreground">Outlined</label>
+                    <WaxSelect TValue="string" @bind-Value="_plan" Variant="WaxSelectVariant.Outlined" Label="Plan">
+                        <WaxSelectOption Value="free" />
+                        <WaxSelectOption Value="pro" />
+                        <WaxSelectOption Value="team" />
+                        <WaxSelectOption Value="enterprise" />
+                    </WaxSelect>
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantCode</code></pre>, Icon: "code")
+        ];
+
+        _richTabs =
+        [
+            new("Preview", Content: @<div class="grid max-w-sm gap-4">
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-muted-foreground">Plan</label>
+                    <WaxSelect TValue="string" @bind-Value="_richPlan" Label="Plan">
+                        <WaxSelectOption Value="free" Label="Free" Icon="sparkles" Description="Basics for solo builders" />
+                        <WaxSelectOption Value="pro" Label="Pro" Icon="zap" Badge="Popular" Description="Automations and integrations" />
+                        <WaxSelectOption Value="team" Label="Team" Icon="users" Description="Shared workspaces and roles" />
+                    </WaxSelect>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-muted-foreground">Environment</label>
+                    <WaxSelect TValue="string" @bind-Value="_env" Variant="WaxSelectVariant.Outlined" Label="Environment">
+                        <WaxSelectOption Value="dev" Label="Development" Icon="code" Description="Local sandbox" />
+                        <WaxSelectOption Value="staging" Label="Staging" Icon="flask-conical" Description="Pre-release checks" />
+                        <WaxSelectOption Value="prod" Label="Production" Icon="shield-check" Badge="Locked" Description="Freezes during launch" Disabled="true" />
+                    </WaxSelect>
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_richCode</code></pre>, Icon: "code")
+        ];
+
+        _iconTabs =
+        [
+            new("Preview", Content: @<div class="grid max-w-sm gap-4">
+                <WaxSelect TValue="string" @bind-Value="_iconPlan" Icon="credit-card" Label="Plan">
+                    <WaxSelectOption Value="free" />
+                    <WaxSelectOption Value="pro" />
+                    <WaxSelectOption Value="team" />
+                    <WaxSelectOption Value="enterprise" />
+                </WaxSelect>
+                <WaxSelect TValue="string" @bind-Value="_iconCountry" Icon="globe" Variant="WaxSelectVariant.Outlined" Label="Country">
+                    <WaxSelectOption Value="us" Label="United States" />
+                    <WaxSelectOption Value="ca" Label="Canada" />
+                    <WaxSelectOption Value="uk" Label="United Kingdom" />
+                    <WaxSelectOption Value="de" Label="Germany" />
+                </WaxSelect>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
+        ];
+
+        _formTabs =
+        [
+            new("Preview", Content: @<div class="grid max-w-sm gap-4">
+                <WaxSelect TValue="string" @bind-Value="_size" Label="Size">
+                    <WaxSelectOption Value="small" Label="Small" />
+                    <WaxSelectOption Value="medium" Label="Medium" />
+                    <WaxSelectOption Value="large" Label="Large" />
+                </WaxSelect>
+                <WaxSelect TValue="string" @bind-Value="_country" Variant="WaxSelectVariant.Outlined" Label="Country">
+                    <WaxSelectOption Value="us" Label="United States" />
+                    <WaxSelectOption Value="ca" Label="Canada" />
+                    <WaxSelectOption Value="uk" Label="United Kingdom" />
+                    <WaxSelectOption Value="de" Label="Germany" />
+                </WaxSelect>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_formCode</code></pre>, Icon: "code")
+        ];
+
+        _disabledTabs =
+        [
+            new("Preview", Content: @<div class="grid max-w-sm gap-4">
+                <WaxSelect TValue="string" Value="_disabledPlan" Disabled="true" Label="Plan">
+                    <WaxSelectOption Value="free" />
+                    <WaxSelectOption Value="pro" />
+                </WaxSelect>
+                <WaxSelect TValue="string" Value="_disabledCountry" Disabled="true" Variant="WaxSelectVariant.Outlined" Label="Country">
+                    <WaxSelectOption Value="us" Label="United States" />
+                    <WaxSelectOption Value="ca" Label="Canada" />
+                </WaxSelect>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _variantCode = """
+        @using WaxComponents.Select
+
+        <div>
+            <label class="mb-1 block text-xs font-medium text-muted-foreground">Filled</label>
+            <WaxSelect TValue="string" @bind-Value="_plan" Label="Plan">
+                <WaxSelectOption Value="free" />
+                <WaxSelectOption Value="pro" />
+                <WaxSelectOption Value="team" />
+                <WaxSelectOption Value="enterprise" />
+            </WaxSelect>
+        </div>
+
+        <div>
+            <label class="mb-1 block text-xs font-medium text-muted-foreground">Outlined</label>
+            <WaxSelect TValue="string" @bind-Value="_plan" Variant="WaxSelectVariant.Outlined" Label="Plan">
+                <WaxSelectOption Value="free" />
+                <WaxSelectOption Value="pro" />
+                <WaxSelectOption Value="team" />
+                <WaxSelectOption Value="enterprise" />
+            </WaxSelect>
+        </div>
+
+        @code {
+            private string _plan = "pro";
+        }
+        """;
+
+    private static string _richCode = """
+        @using WaxComponents.Select
+
+        <div>
+            <label class="mb-1 block text-xs font-medium text-muted-foreground">Plan</label>
+            <WaxSelect TValue="string" @bind-Value="_richPlan" Label="Plan">
+                <WaxSelectOption Value="free" Label="Free" Icon="sparkles" Description="Basics for solo builders" />
+                <WaxSelectOption Value="pro" Label="Pro" Icon="zap" Badge="Popular" Description="Automations and integrations" />
+                <WaxSelectOption Value="team" Label="Team" Icon="users" Description="Shared workspaces and roles" />
+            </WaxSelect>
+        </div>
+
+        <div>
+            <label class="mb-1 block text-xs font-medium text-muted-foreground">Environment</label>
+            <WaxSelect TValue="string" @bind-Value="_env" Variant="WaxSelectVariant.Outlined" Label="Environment">
+                <WaxSelectOption Value="dev" Label="Development" Icon="code" Description="Local sandbox" />
+                <WaxSelectOption Value="staging" Label="Staging" Icon="flask-conical" Description="Pre-release checks" />
+                <WaxSelectOption Value="prod" Label="Production" Icon="shield-check" Badge="Locked" Description="Freezes during launch" Disabled="true" />
+            </WaxSelect>
+        </div>
+
+        @code {
+            private string _richPlan = "pro";
+            private string _env = "dev";
+        }
+        """;
+
+    private static string _iconCode = """
+        @using WaxComponents.Select
+
+        <WaxSelect TValue="string" @bind-Value="_iconPlan" Icon="credit-card" Label="Plan">
+            <WaxSelectOption Value="free" />
+            <WaxSelectOption Value="pro" />
+            <WaxSelectOption Value="team" />
+            <WaxSelectOption Value="enterprise" />
+        </WaxSelect>
+
+        <WaxSelect TValue="string" @bind-Value="_iconCountry" Icon="globe" Variant="WaxSelectVariant.Outlined" Label="Country">
+            <WaxSelectOption Value="us" Label="United States" />
+            <WaxSelectOption Value="ca" Label="Canada" />
+            <WaxSelectOption Value="uk" Label="United Kingdom" />
+            <WaxSelectOption Value="de" Label="Germany" />
+        </WaxSelect>
+
+        @code {
+            private string _iconPlan = "team";
+            private string _iconCountry = "us";
+        }
+        """;
+
+    private static string _formCode = """
+        @using WaxComponents.Select
+
+        <WaxSelect TValue="string" @bind-Value="_size" Label="Size">
+            <WaxSelectOption Value="small" Label="Small" />
+            <WaxSelectOption Value="medium" Label="Medium" />
+            <WaxSelectOption Value="large" Label="Large" />
+        </WaxSelect>
+
+        <WaxSelect TValue="string" @bind-Value="_country" Variant="WaxSelectVariant.Outlined" Label="Country">
+            <WaxSelectOption Value="us" Label="United States" />
+            <WaxSelectOption Value="ca" Label="Canada" />
+            <WaxSelectOption Value="uk" Label="United Kingdom" />
+            <WaxSelectOption Value="de" Label="Germany" />
+        </WaxSelect>
+
+        @code {
+            private string _size = "medium";
+            private string _country = "us";
+        }
+        """;
+
+    private static string _disabledCode = """
+        @using WaxComponents.Select
+
+        <WaxSelect TValue="string" Value="pro" Disabled="true" Label="Plan">
+            <WaxSelectOption Value="free" />
+            <WaxSelectOption Value="pro" />
+        </WaxSelect>
+
+        <WaxSelect TValue="string" Value="us" Disabled="true" Variant="WaxSelectVariant.Outlined" Label="Country">
+            <WaxSelectOption Value="us" Label="United States" />
+            <WaxSelectOption Value="ca" Label="Canada" />
+        </WaxSelect>
+        """;
+}

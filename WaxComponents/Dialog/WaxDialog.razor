@@ -1,0 +1,107 @@
+@using WaxComponents.Card
+@using WaxComponents.Button
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+@if (Open)
+{
+    <div class="fixed inset-0 z-[75] flex items-center justify-center bg-foreground/45 p-4"
+         @onclick="HandleBackdropClick">
+        <div @onclick:stopPropagation="true">
+            <WaxCard Variant="WaxCardVariant.Elevated" Hoverable="false" Class="@CardCss">
+                @if (!string.IsNullOrEmpty(Title))
+                {
+                    <h3 class="mb-1.5 mt-0 text-lg">@Title</h3>
+                }
+                @if (DescriptionContent is not null)
+                {
+                    <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@DescriptionContent</p>
+                }
+                else if (!string.IsNullOrEmpty(Description))
+                {
+                    <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@Description</p>
+                }
+
+                @ChildContent
+
+                @if (!string.IsNullOrEmpty(Error))
+                {
+                    <p class="mb-2.5 mt-0 text-[13px] text-destructive">@Error</p>
+                }
+
+                @if (FooterContent is not null)
+                {
+                    @FooterContent
+                }
+                else if (HasFooterButtons)
+                {
+                    <div class="mt-3.5 flex items-center justify-end gap-2.5">
+                        @if (HasCancelButton)
+                        {
+                            <WaxButton Variant="WaxButtonVariant.Text" OnClick="HandleCancelClick">
+                                <ChildContent>@CancelText</ChildContent>
+                            </WaxButton>
+                        }
+                        @if (HasConfirmButton)
+                        {
+                            <WaxButton Variant="@ConfirmVariant" Disabled="@ConfirmDisabled" OnClick="HandleConfirmClick">
+                                <ChildContent>@ConfirmText</ChildContent>
+                            </WaxButton>
+                        }
+                    </div>
+                }
+            </WaxCard>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Open { get; set; }
+
+    [Parameter] public string Title { get; set; } = string.Empty;
+
+    [Parameter] public string? Description { get; set; }
+
+    /// <summary>Replaces the plain description paragraph with rich content (inline code, links…).</summary>
+    [Parameter] public RenderFragment? DescriptionContent { get; set; }
+
+    [Parameter] public string? Error { get; set; }
+
+    [Parameter] public string CancelText { get; set; } = "Cancel";
+
+    /// <summary>Text of the confirm button; omit for footerless dialogs (backdrop/cancel only).</summary>
+    [Parameter] public string? ConfirmText { get; set; }
+
+    [Parameter] public WaxButtonVariant ConfirmVariant { get; set; } = WaxButtonVariant.Filled;
+
+    [Parameter] public bool ConfirmDisabled { get; set; }
+
+    [Parameter] public EventCallback OnClosed { get; set; }
+
+    [Parameter] public EventCallback OnConfirm { get; set; }
+
+    /// <summary>Dialog body between the description and the error/footer.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Replaces the default cancel/confirm footer entirely.</summary>
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    private bool HasCancelButton => !string.IsNullOrEmpty(CancelText) && OnClosed.HasDelegate;
+
+    private bool HasConfirmButton => !string.IsNullOrEmpty(ConfirmText) && OnConfirm.HasDelegate;
+
+    private bool HasFooterButtons => FooterContent is null && (HasCancelButton || HasConfirmButton);
+
+    private bool HasBackdropClose => OnClosed.HasDelegate;
+
+    private string CardCss =>
+        "w-[min(440px,calc(100vw-32px))] max-h-[min(640px,calc(100vh-64px))] overflow-y-auto"
+            .MergeClass(Class);
+
+    private Task HandleBackdropClick() => HasBackdropClose ? OnClosed.InvokeAsync() : Task.CompletedTask;
+
+    private Task HandleCancelClick() => OnClosed.InvokeAsync();
+
+    private Task HandleConfirmClick() => ConfirmDisabled ? Task.CompletedTask : OnConfirm.InvokeAsync();
+}

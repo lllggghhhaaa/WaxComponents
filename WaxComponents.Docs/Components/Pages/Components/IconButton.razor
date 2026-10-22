@@ -1,0 +1,129 @@
+@page "/component/icon-button"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.IconButton
+@using WaxComponents.Tabs
+
+<PageTitle>Icon Button - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Icon Button</h1>
+    <p class="text-muted-foreground">Compact icon-only buttons in five sizes and three states.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sizeTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">States</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_stateTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Toolbar</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_toolbarTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _bold;
+    private bool _italic;
+    private bool _underlined;
+
+    private void ToggleBold() => _bold = !_bold;
+    private void ToggleItalic() => _italic = !_italic;
+    private void ToggleUnderlined() => _underlined = !_underlined;
+
+    private List<WaxTabItem> _sizeTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3">
+            <WaxIconButton Size="WaxIconButtonSize.XSmall" Title="Extra small"><LucideIcon Name="plus" Size="13" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Small" Title="Small"><LucideIcon Name="plus" Size="14" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Medium" Title="Medium"><LucideIcon Name="plus" Size="16" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Large" Title="Large"><LucideIcon Name="plus" Size="18" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.XLarge" Title="Extra large"><LucideIcon Name="plus" Size="20" /></WaxIconButton>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizeCode</code></pre>, Icon: "code")
+    ];
+
+    private List<WaxTabItem> _stateTabs =
+    [
+        new("Preview", Content: @<div class="flex items-center gap-3">
+            <WaxIconButton Title="Default"><LucideIcon Name="bell" Size="16" /></WaxIconButton>
+            <WaxIconButton Active="true" Title="Active"><LucideIcon Name="heart" Size="16" /></WaxIconButton>
+            <WaxIconButton Disabled="true" Title="Disabled"><LucideIcon Name="settings" Size="16" /></WaxIconButton>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_stateCode</code></pre>, Icon: "code")
+    ];
+
+    private List<WaxTabItem> _toolbarTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _toolbarTabs =
+        [
+            new("Preview", Content: @<div>
+                <div class="inline-flex items-center gap-1 rounded-2xl border border-border bg-card p-1.5">
+                    <WaxIconButton Active="_bold" OnClick="ToggleBold" Title="Bold"><LucideIcon Name="bold" Size="16" /></WaxIconButton>
+                    <WaxIconButton Active="_italic" OnClick="ToggleItalic" Title="Italic"><LucideIcon Name="italic" Size="16" /></WaxIconButton>
+                    <WaxIconButton Active="_underlined" OnClick="ToggleUnderlined" Title="Underline"><LucideIcon Name="underline" Size="16" /></WaxIconButton>
+                    <span class="mx-1 h-6 w-px bg-border"></span>
+                    <WaxIconButton Title="Link"><LucideIcon Name="link" Size="16" /></WaxIconButton>
+                    <WaxIconButton Title="More"><LucideIcon Name="ellipsis" Size="16" /></WaxIconButton>
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_toolbarCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _sizeCode = """
+        @using LucideBlazor
+        @using WaxComponents.IconButton
+
+        <div class="flex items-center gap-3">
+            <WaxIconButton Size="WaxIconButtonSize.XSmall" Title="Extra small"><LucideIcon Name="plus" Size="13" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Small" Title="Small"><LucideIcon Name="plus" Size="14" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Medium" Title="Medium"><LucideIcon Name="plus" Size="16" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.Large" Title="Large"><LucideIcon Name="plus" Size="18" /></WaxIconButton>
+            <WaxIconButton Size="WaxIconButtonSize.XLarge" Title="Extra large"><LucideIcon Name="plus" Size="20" /></WaxIconButton>
+        </div>
+        """;
+
+    private static string _stateCode = """
+        @using LucideBlazor
+        @using WaxComponents.IconButton
+
+        <div class="flex items-center gap-3">
+            <WaxIconButton Title="Default"><LucideIcon Name="bell" Size="16" /></WaxIconButton>
+            <WaxIconButton Active="true" Title="Active"><LucideIcon Name="heart" Size="16" /></WaxIconButton>
+            <WaxIconButton Disabled="true" Title="Disabled"><LucideIcon Name="settings" Size="16" /></WaxIconButton>
+        </div>
+        """;
+
+    private static string _toolbarCode = """
+        @using LucideBlazor
+        @using WaxComponents.IconButton
+
+        <div class="inline-flex items-center gap-1 rounded-2xl border border-border bg-card p-1.5">
+            <WaxIconButton Active="_bold" OnClick="ToggleBold" Title="Bold"><LucideIcon Name="bold" Size="16" /></WaxIconButton>
+            <WaxIconButton Active="_italic" OnClick="ToggleItalic" Title="Italic"><LucideIcon Name="italic" Size="16" /></WaxIconButton>
+            <WaxIconButton Active="_underlined" OnClick="ToggleUnderlined" Title="Underline"><LucideIcon Name="underline" Size="16" /></WaxIconButton>
+            <span class="mx-1 h-6 w-px bg-border"></span>
+            <WaxIconButton Title="Link"><LucideIcon Name="link" Size="16" /></WaxIconButton>
+            <WaxIconButton Title="More"><LucideIcon Name="ellipsis" Size="16" /></WaxIconButton>
+        </div>
+
+        @code {
+            private bool _bold;
+            private bool _italic;
+            private bool _underlined;
+
+            private void ToggleBold() => _bold = !_bold;
+            private void ToggleItalic() => _italic = !_italic;
+            private void ToggleUnderlined() => _underlined = !_underlined;
+        }
+        """;
+}

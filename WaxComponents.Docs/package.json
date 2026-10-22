@@ -1,16 +1,11 @@
 {
   "name": "waxcomponents.docs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Docs site for WaxComponents. Dependencies live in the repo-root npm workspace.",
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css"
+    "build:css": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css",
+    "build:css:min": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css --minify"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@tailwindcss/cli": "^4.3.2",
-    "tailwindcss": "^4.3.2"
-  }
+  "author": "lllggghhhaaaa",
+  "license": "Apache-2.0"
 }

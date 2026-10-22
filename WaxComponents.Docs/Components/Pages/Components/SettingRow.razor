@@ -1,0 +1,119 @@
+@page "/component/setting-row"
+@rendermode InteractiveServer
+@using WaxComponents.SettingRow
+@using WaxComponents.Switch
+@using WaxComponents.Tabs
+
+<PageTitle>Setting Row - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Setting Row</h1>
+    <p class="text-muted-foreground">A full-width toggle row with a title and supporting description.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sizes</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sizeTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _notifications = true;
+    private bool _autoSave;
+
+    private List<WaxTabItem> _basicTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _basicTabs =
+        [
+            new("Preview", Content: @<div class="rounded-3xl border border-border bg-background p-2">
+                <WaxSettingRow Title="Notifications"
+                               Description="Receive updates about your projects."
+                               @bind-Value="_notifications" />
+                <WaxSettingRow Title="Auto-save"
+                               Description="Save changes automatically as you type."
+                               @bind-Value="_autoSave" />
+                <WaxSettingRow Title="Offline mode"
+                               Description="Keeps its own state with Initial."
+                               Initial="true" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static List<WaxTabItem> _sizeTabs =
+    [
+        new("Preview", Content: @<div class="rounded-3xl border border-border bg-background p-2">
+            <WaxSettingRow Title="Small switch" Initial="true" SwitchSize="WaxSwitchSize.Small" />
+            <WaxSettingRow Title="Medium switch" Initial="true" SwitchSize="WaxSwitchSize.Medium" />
+            <WaxSettingRow Title="Normal switch" Initial="true" SwitchSize="WaxSwitchSize.Normal" />
+            <WaxSettingRow Title="Large switch" Initial="true" SwitchSize="WaxSwitchSize.Large" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizeCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _disabledTabs =
+    [
+        new("Preview", Content: @<div class="rounded-3xl border border-border bg-background p-2">
+            <WaxSettingRow Title="Managed by admin"
+                           Description="This option is controlled by your workspace."
+                           Initial="true"
+                           Disabled="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
+    ];
+
+    private static string _basicCode = """
+        @using WaxComponents.SettingRow
+
+        <div class="rounded-3xl border border-border bg-background p-2">
+            <WaxSettingRow Title="Notifications"
+                           Description="Receive updates about your projects."
+                           @bind-Value="_notifications" />
+            <WaxSettingRow Title="Auto-save"
+                           Description="Save changes automatically as you type."
+                           @bind-Value="_autoSave" />
+            <WaxSettingRow Title="Offline mode"
+                           Description="Keeps its own state with Initial."
+                           Initial="true" />
+        </div>
+
+        @code {
+            private bool _notifications = true;
+            private bool _autoSave;
+        }
+        """;
+
+    private static string _sizeCode = """
+        @using WaxComponents.SettingRow
+        @using WaxComponents.Switch
+
+        <div class="rounded-3xl border border-border bg-background p-2">
+            <WaxSettingRow Title="Small switch" Initial="true" SwitchSize="WaxSwitchSize.Small" />
+            <WaxSettingRow Title="Medium switch" Initial="true" SwitchSize="WaxSwitchSize.Medium" />
+            <WaxSettingRow Title="Normal switch" Initial="true" SwitchSize="WaxSwitchSize.Normal" />
+            <WaxSettingRow Title="Large switch" Initial="true" SwitchSize="WaxSwitchSize.Large" />
+        </div>
+        """;
+
+    private static string _disabledCode = """
+        @using WaxComponents.SettingRow
+
+        <WaxSettingRow Title="Managed by admin"
+                       Description="This option is controlled by your workspace."
+                       Initial="true"
+                       Disabled="true" />
+        """;
+}

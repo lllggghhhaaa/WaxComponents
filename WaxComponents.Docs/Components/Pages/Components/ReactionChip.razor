@@ -1,0 +1,119 @@
+@page "/component/reaction-chip"
+@rendermode InteractiveServer
+@using WaxComponents.Chip
+@using WaxComponents.Tabs
+
+<PageTitle>Reaction Chip - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Reaction Chip</h1>
+    <p class="text-muted-foreground">Emoji reactions with a live count and a selected state.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Selected State</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_selectedTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Interactive</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_interactiveTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _thumbsUp;
+    private int _thumbsUpCount = 12;
+
+    private void ToggleThumbsUp(bool value)
+    {
+        _thumbsUp = value;
+        _thumbsUpCount = value ? 13 : 12;
+    }
+
+    private List<WaxTabItem> _basicTabs =
+    [
+        new("Preview", Content: @<div class="flex flex-wrap gap-2">
+            <WaxReactionChip Emoji="👍" Count="12" />
+            <WaxReactionChip Emoji="🎉" Count="4" />
+            <WaxReactionChip Emoji="🔥" Count="8" />
+            <WaxReactionChip Emoji="👀" Count="2" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _selectedTabs =
+    [
+        new("Preview", Content: @<div class="flex flex-wrap gap-2">
+            <WaxReactionChip Emoji="👍" Count="13" Value="true" />
+            <WaxReactionChip Emoji="🎉" Count="4" />
+            <WaxReactionChip Emoji="🔥" Count="9" Value="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_selectedCode</code></pre>, Icon: "code")
+    ];
+
+    private List<WaxTabItem> _interactiveTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _interactiveTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-center gap-2">
+                <WaxReactionChip Emoji="👍" Count="_thumbsUpCount" Value="_thumbsUp" ValueChanged="ToggleThumbsUp" />
+                <WaxReactionChip Emoji="🎉" Count="4" />
+                <WaxReactionChip Emoji="🔥" Count="8" />
+                <span class="ml-2 text-sm text-muted-foreground">
+                    @(_thumbsUp ? "You reacted with 👍" : "Click a reaction to toggle it")
+                </span>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_interactiveCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _basicCode = """
+        @using WaxComponents.Chip
+
+        <div class="flex flex-wrap gap-2">
+            <WaxReactionChip Emoji="👍" Count="12" />
+            <WaxReactionChip Emoji="🎉" Count="4" />
+            <WaxReactionChip Emoji="🔥" Count="8" />
+            <WaxReactionChip Emoji="👀" Count="2" />
+        </div>
+        """;
+
+    private static string _selectedCode = """
+        @using WaxComponents.Chip
+
+        <div class="flex flex-wrap gap-2">
+            <WaxReactionChip Emoji="👍" Count="13" Value="true" />
+            <WaxReactionChip Emoji="🎉" Count="4" />
+            <WaxReactionChip Emoji="🔥" Count="9" Value="true" />
+        </div>
+        """;
+
+    private static string _interactiveCode = """
+        @using WaxComponents.Chip
+
+        <WaxReactionChip Emoji="👍"
+                         Count="_thumbsUpCount"
+                         Value="_thumbsUp"
+                         ValueChanged="ToggleThumbsUp" />
+
+        @code {
+            private bool _thumbsUp;
+            private int _thumbsUpCount = 12;
+
+            private void ToggleThumbsUp(bool value)
+            {
+                _thumbsUp = value;
+                _thumbsUpCount = value ? 13 : 12;
+            }
+        }
+        """;
+}

@@ -1,0 +1,76 @@
+@using WaxComponents.Switch
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<button type="button"
+        class="@CssClass"
+        disabled="@Disabled"
+        style="@Style"
+        @attributes="AdditionalAttributes"
+        @onclick="HandleToggle">
+    <span class="min-w-0 flex-1">
+        <span class="block text-sm font-medium text-foreground">@Title</span>
+        @if (!string.IsNullOrEmpty(Description))
+        {
+            <span class="block text-xs text-muted-foreground">@Description</span>
+        }
+    </span>
+    <span class="shrink-0" aria-hidden="true">
+        <WaxSwitch Value="@IsOn" Interactive="false" Size="@SwitchSize" ShowCheck="@ShowCheck"/>
+    </span>
+</button>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+
+    [Parameter] public string Description { get; set; } = string.Empty;
+
+    /// <summary>Controlled state; leave unbound to make the row keep its own state from Initial.</summary>
+    [Parameter] public bool Value { get; set; }
+
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
+
+    /// <summary>Seed state for the self-managed (uncontrolled) mode.</summary>
+    [Parameter] public bool Initial { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public WaxSwitchSize SwitchSize { get; set; } = WaxSwitchSize.Normal;
+
+    [Parameter] public bool ShowCheck { get; set; } = true;
+
+    private bool IsOn { get; set; }
+
+    private bool Controlled => ValueChanged.HasDelegate;
+
+    protected override void OnInitialized() => IsOn = Initial;
+
+    protected override void OnParametersSet()
+    {
+        if (Controlled)
+        {
+            IsOn = Value;
+        }
+    }
+
+    private async Task HandleToggle()
+    {
+        if (Disabled)
+        {
+            return;
+        }
+
+        IsOn = !IsOn;
+        if (Controlled)
+        {
+            await ValueChanged.InvokeAsync(IsOn);
+        }
+    }
+
+    private string CssClass =>
+        "flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-2 py-2.5 text-left transition-colors hover:bg-muted"
+            .MergeClass(
+                Disabled ? "cursor-default opacity-60" : string.Empty,
+                Class);
+}

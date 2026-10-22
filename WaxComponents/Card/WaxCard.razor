@@ -1,8 +1,22 @@
-﻿@using WaxComponents.Utils
+﻿@using LucideBlazor
+@using WaxComponents.Utils
 
 @inherits WaxComponent
 
 <div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    @if (HasHeader)
+    {
+        <div class="mb-3 flex items-center gap-2 text-primary">
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <LucideIcon Name="@Icon" Size="18"/>
+            }
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <p class="mb-0 mt-0 font-semibold text-foreground">@Title</p>
+            }
+        </div>
+    }
     @ChildContent
 </div>
 
@@ -10,15 +24,32 @@
     [Parameter] public WaxCardVariant Variant { get; set; } = WaxCardVariant.Elevated;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private const string Base = "rounded-3xl p-6 transition-all duration-300";
+    /// <summary>Optional header title; rendered with Icon in a primary-tinted row.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Lucide icon name for the optional header row.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Compact padding (p-5) for dense layouts like settings panels.</summary>
+    [Parameter] public bool Compact { get; set; }
+
+    /// <summary>Hover elevation lift; disable for static containers like dialogs and settings panels.</summary>
+    [Parameter] public bool Hoverable { get; set; } = true;
+
+    private bool HasHeader => !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Icon);
+
+    private const string Base = "rounded-3xl transition-all duration-300";
 
     private string VariantClass => Variant switch
     {
-        WaxCardVariant.Elevated => "bg-card shadow-md shadow-black/8 hover:shadow-xl hover:shadow-black/12 hover:-translate-y-0.5",
+        WaxCardVariant.Elevated => Hoverable
+            ? "bg-card shadow-md shadow-black/8 hover:shadow-xl hover:shadow-black/12 hover:-translate-y-0.5"
+            : "bg-card shadow-md shadow-black/8",
         WaxCardVariant.Filled => "bg-muted",
+        WaxCardVariant.Flat => "bg-card border",
         WaxCardVariant.Outlined => "bg-background border-2 border-border",
         _ => throw new ArgumentOutOfRangeException(nameof(Variant))
     };
 
-    private string CssClass => Base.MergeClass(VariantClass, Class);
+    private string CssClass => Base.MergeClass(Compact ? "p-5" : "p-6", VariantClass, Class);
 }

@@ -1,0 +1,19 @@
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    <p class="mb-0 mt-0 font-mono text-xs font-medium tracking-wider text-primary">@Eyebrow.ToUpperInvariant()</p>
+    <p class="mb-0 mt-2 font-display text-3xl font-semibold sm:text-4xl">@Title</p>
+    <p class="mt-2 max-w-xl leading-relaxed text-muted-foreground">@Description</p>
+</div>
+
+@code {
+    [Parameter] public string Eyebrow { get; set; } = string.Empty;
+
+    [Parameter] public string Title { get; set; } = string.Empty;
+
+    [Parameter] public string Description { get; set; } = string.Empty;
+
+    private string CssClass => "mb-7".MergeClass(Class);
+}

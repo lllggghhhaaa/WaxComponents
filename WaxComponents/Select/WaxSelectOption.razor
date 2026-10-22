@@ -1,0 +1,28 @@
+@implements IDisposable
+
+@code {
+    [CascadingParameter] private IWaxSelectHost? Host { get; set; }
+
+    /// <summary>Raw value parsed into the select's TValue.</summary>
+    [Parameter] public string Value { get; set; } = string.Empty;
+
+    /// <summary>Display name; falls back to Value when omitted.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Lucide icon name shown at the row's left (and in the trigger when selected).</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Secondary text under the label.</summary>
+    [Parameter] public string? Description { get; set; }
+
+    /// <summary>Small pill at the row's right (e.g. "Popular").</summary>
+    [Parameter] public string? Badge { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    internal WaxSelectOptionItem ToItem() => new(Value, Label, Icon, Description, Badge, Disabled);
+
+    protected override void OnInitialized() => Host?.Register(this);
+
+    public void Dispose() => Host?.Unregister(this);
+}

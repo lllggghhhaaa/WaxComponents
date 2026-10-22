@@ -1,0 +1,260 @@
+@page "/component/menu"
+@rendermode InteractiveServer
+@using WaxComponents.Menu
+@using WaxComponents.Tabs
+
+<PageTitle>Menu - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Menu</h1>
+    <p class="text-muted-foreground">Floating context menus with icons, shortcuts, destructive rows, and an optional slider.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Context Menu</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_contextTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Inline Slider</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sliderTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _menuOpen;
+    private bool _volumeMenuOpen;
+    private double _menuX;
+    private double _menuY;
+    private double _volumeX;
+    private double _volumeY;
+    private int _volume = 60;
+    private int _savedVolume = 60;
+    private string? _lastAction;
+
+    private readonly WaxMenuItem[] _items =
+    [
+        new("Copy link", "link", shortcut: "Ctrl+C"),
+        new("Duplicate", "copy", shortcut: "Ctrl+D"),
+        new("Archive", "archive", disabled: true),
+        new("Delete", "trash-2", danger: true),
+    ];
+
+    private readonly WaxMenuItem[] _volumeItems =
+    [
+        new("Mute", "volume-x"),
+        new("Sound settings", "settings"),
+    ];
+
+    private List<WaxTabItem> _contextTabs = [];
+    private List<WaxTabItem> _sliderTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _contextTabs =
+        [
+            new("Preview", Content: @<div class="space-y-3">
+                <button type="button"
+                        class="w-full max-w-sm cursor-context-menu rounded-2xl border border-dashed border-border bg-muted/40 px-4 py-6 text-sm text-muted-foreground"
+                        @onclick="OpenMenu"
+                        @oncontextmenu="OpenMenu"
+                        @oncontextmenu:preventDefault>
+                    Click or right-click to open the menu
+                </button>
+                <p class="text-sm text-muted-foreground">
+                    Last action: <span class="font-medium text-foreground">@(_lastAction ?? "None")</span>
+                </p>
+
+                @if (_menuOpen)
+                {
+                    <WaxMenu X="_menuX"
+                             Y="_menuY"
+                             HeaderLabel="design-team"
+                             HeaderKind="channel"
+                             Items="_items"
+                             ItemClicked="OnItemClicked"
+                             Closed="CloseMenu" />
+                }
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_contextCode</code></pre>, Icon: "code")
+        ];
+
+        _sliderTabs =
+        [
+            new("Preview", Content: @<div class="space-y-3">
+                <button type="button"
+                        class="rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground"
+                        @onclick="OpenVolumeMenu">
+                    Open volume menu
+                </button>
+                <p class="text-sm text-muted-foreground">
+                    Volume: <span class="font-medium text-foreground">@_volume%</span>
+                    <span class="ml-2 text-xs">(saved at @_savedVolume%)</span>
+                </p>
+
+                @if (_volumeMenuOpen)
+                {
+                    <WaxMenu X="_volumeX"
+                             Y="_volumeY"
+                             Items="_volumeItems"
+                             SliderValue="_volume"
+                             SliderMin="0"
+                             SliderMax="100"
+                             SliderLabel="Volume"
+                             SliderChanged="OnVolumeChanged"
+                             SliderCommitted="OnVolumeCommitted"
+                             ItemClicked="OnVolumeItemClicked"
+                             Closed="CloseVolumeMenu" />
+                }
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sliderCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private void OpenMenu(MouseEventArgs e)
+    {
+        _menuX = Math.Min(e.ClientX, 720);
+        _menuY = Math.Min(e.ClientY, 480);
+        _menuOpen = true;
+    }
+
+    private void OnItemClicked(int index)
+    {
+        _lastAction = _items[index].Label;
+        _menuOpen = false;
+    }
+
+    private void CloseMenu() => _menuOpen = false;
+
+    private void OpenVolumeMenu(MouseEventArgs e)
+    {
+        _volumeX = Math.Min(e.ClientX, 720);
+        _volumeY = Math.Min(e.ClientY, 480);
+        _volumeMenuOpen = true;
+    }
+
+    private void OnVolumeChanged(int value) => _volume = value;
+
+    private void OnVolumeCommitted(int value)
+    {
+        _volume = value;
+        _savedVolume = value;
+    }
+
+    private void OnVolumeItemClicked(int index)
+    {
+        if (_volumeItems[index].Label == "Mute")
+        {
+            _volume = 0;
+            _savedVolume = 0;
+        }
+
+        _volumeMenuOpen = false;
+    }
+
+    private void CloseVolumeMenu() => _volumeMenuOpen = false;
+
+    private static string _contextCode = """
+        @using WaxComponents.Menu
+
+        <button type="button"
+                class="rounded-2xl border border-dashed border-border bg-muted/40 px-4 py-6 text-sm"
+                @onclick="OpenMenu"
+                @oncontextmenu="OpenMenu"
+                @oncontextmenu:preventDefault>
+            Click or right-click to open the menu
+        </button>
+
+        @if (_menuOpen)
+        {
+            <WaxMenu X="_menuX"
+                     Y="_menuY"
+                     HeaderLabel="design-team"
+                     HeaderKind="channel"
+                     Items="_items"
+                     ItemClicked="OnItemClicked"
+                     Closed="CloseMenu" />
+        }
+
+        @code {
+            private bool _menuOpen;
+            private double _menuX;
+            private double _menuY;
+
+            private readonly WaxMenuItem[] _items =
+            [
+                new("Copy link", "link", shortcut: "Ctrl+C"),
+                new("Duplicate", "copy", shortcut: "Ctrl+D"),
+                new("Archive", "archive", disabled: true),
+                new("Delete", "trash-2", danger: true),
+            ];
+
+            private void OpenMenu(MouseEventArgs e)
+            {
+                _menuX = e.ClientX;
+                _menuY = e.ClientY;
+                _menuOpen = true;
+            }
+
+            private void OnItemClicked(int index) => _menuOpen = false;
+            private void CloseMenu() => _menuOpen = false;
+        }
+        """;
+
+    private static string _sliderCode = """
+        @using WaxComponents.Menu
+
+        <button type="button" class="rounded-2xl border border-border px-4 py-2.5 text-sm"
+                @onclick="OpenMenu">
+            Open volume menu
+        </button>
+
+        @if (_menuOpen)
+        {
+            <WaxMenu X="_menuX"
+                     Y="_menuY"
+                     Items="_items"
+                     SliderValue="_volume"
+                     SliderMin="0"
+                     SliderMax="100"
+                     SliderLabel="Volume"
+                     SliderChanged="OnVolumeChanged"
+                     SliderCommitted="OnVolumeCommitted"
+                     ItemClicked="OnItemClicked"
+                     Closed="CloseMenu" />
+        }
+
+        @code {
+            private bool _menuOpen;
+            private double _menuX;
+            private double _menuY;
+            private int _volume = 60;
+            private int _savedVolume = 60;
+
+            private readonly WaxMenuItem[] _items =
+            [
+                new("Mute", "volume-x"),
+                new("Sound settings", "settings"),
+            ];
+
+            private void OpenMenu(MouseEventArgs e)
+            {
+                _menuX = e.ClientX;
+                _menuY = e.ClientY;
+                _menuOpen = true;
+            }
+
+            private void OnVolumeChanged(int value) => _volume = value;
+
+            private void OnVolumeCommitted(int value)
+            {
+                _volume = value;
+                _savedVolume = value;
+            }
+
+            private void OnItemClicked(int index) => _menuOpen = false;
+            private void CloseMenu() => _menuOpen = false;
+        }
+        """;
+}

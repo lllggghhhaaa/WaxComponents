@@ -1,0 +1,84 @@
+@page "/component/heading"
+@rendermode InteractiveServer
+@using WaxComponents.Heading
+@using WaxComponents.Tabs
+
+<PageTitle>Section Heading - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Section Heading</h1>
+    <p class="text-muted-foreground">Eyebrow, title, and description blocks for page sections.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Without Eyebrow</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_plainTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Custom Class</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_classTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _basicTabs =
+    [
+        new("Preview", Content: @<div>
+            <WaxSectionHeading Eyebrow="Components"
+                               Title="Build beautiful interfaces"
+                               Description="Composable Blazor components styled with Tailwind CSS." />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _plainTabs =
+    [
+        new("Preview", Content: @<div>
+            <WaxSectionHeading Title="Recent activity"
+                               Description="The latest changes across your workspace." />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_plainCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _classTabs =
+    [
+        new("Preview", Content: @<div>
+            <WaxSectionHeading Eyebrow="Settings"
+                               Title="Notifications"
+                               Description="Choose how you would like to be notified."
+                               Class="mb-0 rounded-3xl bg-muted/50 p-6" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_classCode</code></pre>, Icon: "code")
+    ];
+
+    private static string _basicCode = """
+        @using WaxComponents.Heading
+
+        <WaxSectionHeading Eyebrow="Components"
+                           Title="Build beautiful interfaces"
+                           Description="Composable Blazor components styled with Tailwind CSS." />
+        """;
+
+    private static string _plainCode = """
+        @using WaxComponents.Heading
+
+        <WaxSectionHeading Title="Recent activity"
+                           Description="The latest changes across your workspace." />
+        """;
+
+    private static string _classCode = """
+        @using WaxComponents.Heading
+
+        <WaxSectionHeading Eyebrow="Settings"
+                           Title="Notifications"
+                           Description="Choose how you would like to be notified."
+                           Class="mb-0 rounded-3xl bg-muted/50 p-6" />
+        """;
+}

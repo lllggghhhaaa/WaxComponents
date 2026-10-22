@@ -4,20 +4,33 @@
 @inherits WaxComponent
 
 <label class="@LabelClassCss" style="@Style" @attributes="AdditionalAttributes">
-    <button
-        type="button"
-        role="switch"
-        aria-checked="@Value.ToString().ToLowerInvariant()"
-        disabled="@Disabled"
-        @onclick="HandleClick"
-        class="@TrackClassCss">
-        <span class="@ThumbClassCss">
-            @if (Value)
-            {
-                <LucideIcon Size="10" Name="check" ClassName="text-primary" StrokeWidth="3" />
-            }
+    @if (Interactive)
+    {
+        <button type="button"
+                role="switch"
+                aria-checked="@Value.ToString().ToLowerInvariant()"
+                disabled="@Disabled"
+                @onclick="HandleClick"
+                class="@TrackClassCss">
+            <span class="@ThumbClassCss">
+                @if (Value && ShowCheck)
+                {
+                    <LucideIcon Size="@CheckSize" Name="check" ClassName="text-primary" StrokeWidth="3" />
+                }
+            </span>
+        </button>
+    }
+    else
+    {
+        <span role="presentation" aria-hidden="true" class="@TrackClassCss">
+            <span class="@ThumbClassCss">
+                @if (Value && ShowCheck)
+                {
+                    <LucideIcon Size="@CheckSize" Name="check" ClassName="text-primary" StrokeWidth="3" />
+                }
+            </span>
         </span>
-    </button>
+    }
     @if (!string.IsNullOrEmpty(Label))
     {
         <span class="text-sm font-medium text-foreground">@Label</span>
@@ -29,7 +42,14 @@
     [Parameter] public EventCallback<bool> ValueChanged { get; set; }
     [Parameter] public string? Label { get; set; }
     [Parameter] public bool Disabled { get; set; }
-    
+    [Parameter] public WaxSwitchSize Size { get; set; } = WaxSwitchSize.Large;
+
+    /// <summary>False renders a pure display switch (no button element, no click handling) for rows that own the interaction.</summary>
+    [Parameter] public bool Interactive { get; set; } = true;
+
+    /// <summary>Renders the check glyph inside the thumb while on (pass false for minimal toggles).</summary>
+    [Parameter] public bool ShowCheck { get; set; } = true;
+
     [Parameter] public string TrackClass { get; set; } = string.Empty;
 
     [Parameter] public string ThumbClass { get; set; } = string.Empty;
@@ -45,20 +65,51 @@
     private string LabelClassCss =>
         "inline-flex items-center gap-3"
             .MergeClass(
-                Disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer",
+                Interactive && Disabled ? "cursor-not-allowed opacity-40" : Interactive ? "cursor-pointer" : string.Empty,
                 Class);
 
     private string TrackClassCss =>
-        "relative w-14 h-7 rounded-full transition-all duration-300 flex-shrink-0"
+        "relative flex-shrink-0 rounded-full transition-all duration-300"
             .MergeClass(
+                TrackSize,
                 Value ? "bg-primary" : "bg-switch-background",
-                Disabled ? "pointer-events-none" : string.Empty,
+                Interactive && Disabled ? "pointer-events-none" : string.Empty,
                 TrackClass);
 
     private string ThumbClassCss =>
-        "absolute top-1 w-5 h-5 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center"
-            .MergeClass(
-                Value ? "left-8 bg-primary-foreground" : "left-1 bg-background",
-                ThumbClass);
+        "absolute flex items-center justify-center rounded-full bg-background shadow-sm transition-all duration-300"
+            .MergeClass(ThumbSize, ThumbPosition, ThumbClass);
 
+    private string TrackSize => Size switch
+    {
+        WaxSwitchSize.Small => "w-9 h-5",
+        WaxSwitchSize.Medium => "w-10 h-6",
+        WaxSwitchSize.Normal => "w-12 h-7",
+        WaxSwitchSize.Large => "w-14 h-7",
+        _ => throw new ArgumentOutOfRangeException(nameof(Size)),
+    };
+
+    private string ThumbSize => Size switch
+    {
+        WaxSwitchSize.Small => "w-4 h-4",
+        WaxSwitchSize.Medium => "w-5 h-5",
+        WaxSwitchSize.Normal => "w-5 h-5",
+        WaxSwitchSize.Large => "w-5 h-5",
+        _ => throw new ArgumentOutOfRangeException(nameof(Size)),
+    };
+
+    private string ThumbPosition => (Size, Value) switch
+    {
+        (WaxSwitchSize.Small, false) => "top-0.5 left-0.5",
+        (WaxSwitchSize.Small, true) => "top-0.5 left-[18px]",
+        (WaxSwitchSize.Medium, false) => "top-0.5 left-0.5",
+        (WaxSwitchSize.Medium, true) => "top-0.5 left-[18px]",
+        (WaxSwitchSize.Normal, false) => "top-1 left-1",
+        (WaxSwitchSize.Normal, true) => "top-1 left-6",
+        (WaxSwitchSize.Large, false) => "top-1 left-1",
+        (WaxSwitchSize.Large, true) => "top-1 left-8",
+        _ => string.Empty,
+    };
+
+    private int CheckSize => Size == WaxSwitchSize.Small ? 8 : 10;
 }

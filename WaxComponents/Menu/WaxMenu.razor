@@ -1,0 +1,115 @@
+@using LucideBlazor
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+@* ---- Floating positioned context menu ---- *@
+<div class="fixed inset-0 z-[80] cursor-default"
+     @onclick="HandleBackdropClick"
+     @oncontextmenu="HandleBackdropContext"
+     @oncontextmenu:preventDefault></div>
+
+<div class="@PanelClass"
+     style="@($"left:{(int)X}px;top:{(int)Y}px")"
+     @oncontextmenu="(() => { })"
+     @oncontextmenu:preventDefault>
+    @if (HeaderLabel is { Length: > 0 })
+    {
+        <div class="border-b border-border px-3 pb-2 pt-1">
+            <p class="mb-0 mt-0 truncate text-sm font-semibold">@HeaderLabel</p>
+            <p class="mb-0 mt-0 font-mono text-xs capitalize text-muted-foreground">@HeaderKind actions</p>
+        </div>
+    }
+    <div class="flex flex-col py-1">
+        @if (SliderValue is { } menuSlider)
+        {
+            <div class="mx-1 mb-1 flex items-center gap-2.5 rounded-2xl bg-muted/60 px-3 py-2">
+                <LucideIcon Name="volume-2" Size="15" ClassName="shrink-0 text-muted-foreground"/>
+                <input type="range"
+                       min="@SliderMin"
+                       max="@SliderMax"
+                       step="1"
+                       value="@menuSlider"
+                       aria-label="@SliderLabel"
+                       class="min-w-0 flex-1 cursor-pointer accent-primary"
+                       @oninput="OnSliderInput"
+                       @onchange="OnSliderCommit"/>
+                <span class="w-11 shrink-0 text-right font-mono text-xs text-muted-foreground">@($"{menuSlider}%")</span>
+            </div>
+        }
+        @for (var index = 0; index < Items.Count; index++)
+        {
+            var position = index;
+            var item = Items[index];
+            <button type="button"
+                    role="menuitem"
+                    disabled="@item.Disabled"
+                    class="@RowClass(item.Danger, item.Disabled)"
+                    @onclick="() => ItemClicked.InvokeAsync(position)">
+                <LucideIcon Name="@item.Icon" Size="16" ClassName="shrink-0"/>
+                <span class="min-w-0 flex-1 truncate text-left">@item.Label</span>
+                @if (item.Shortcut is { Length: > 0 } shortcut)
+                {
+                    <span class="font-mono text-[10px] text-muted-foreground" aria-hidden="true">@shortcut</span>
+                }
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public double X { get; set; }
+
+    [Parameter] public double Y { get; set; }
+
+    /// <summary>Target display name for the header; omit (null) for a headerless menu.</summary>
+    [Parameter] public string? HeaderLabel { get; set; }
+
+    /// <summary>Menu category ("member", "channel"…) shown small and capitalized next to the header.</summary>
+    [Parameter] public string HeaderKind { get; set; } = "member";
+
+    [Parameter] public IReadOnlyList<WaxMenuItem> Items { get; set; } = [];
+
+    /// <summary>Fires with the row's index; the owning view maps indexes back to its own item models.</summary>
+    [Parameter] public EventCallback<int> ItemClicked { get; set; }
+
+    /// <summary>Optional inline slider row; null hides it.</summary>
+    [Parameter] public int? SliderValue { get; set; }
+
+    [Parameter] public int SliderMin { get; set; }
+
+    [Parameter] public int SliderMax { get; set; } = 200;
+
+    [Parameter] public string SliderLabel { get; set; } = "Adjust";
+
+    /// <summary>Fires while dragging (live application, no persistence).</summary>
+    [Parameter] public EventCallback<int> SliderChanged { get; set; }
+
+    /// <summary>Fires when the drag is released: the durable save moment.</summary>
+    [Parameter] public EventCallback<int> SliderCommitted { get; set; }
+
+    /// <summary>Fires on backdrop click or backdrop right-click.</summary>
+    [Parameter] public EventCallback Closed { get; set; }
+
+    private string PanelClass =>
+        "fixed z-[85] w-56 max-w-80 rounded-3xl border border-border bg-popover p-2 text-popover-foreground shadow-2xl shadow-black/15"
+            .MergeClass(Class);
+
+    private static int ParseSlider(ChangeEventArgs args, int min, int max, int fallback) =>
+        int.TryParse(args.Value?.ToString(), out var value) ? Math.Clamp(value, min, max) : fallback;
+
+    private Task OnSliderInput(ChangeEventArgs args) =>
+        SliderChanged.InvokeAsync(ParseSlider(args, SliderMin, SliderMax, SliderValue ?? SliderMin));
+
+    private Task OnSliderCommit(ChangeEventArgs args) =>
+        SliderCommitted.InvokeAsync(ParseSlider(args, SliderMin, SliderMax, SliderValue ?? SliderMin));
+
+    private Task HandleBackdropClick() => Closed.InvokeAsync();
+
+    private void HandleBackdropContext() => _ = Closed.InvokeAsync();
+
+    private static string RowClass(bool danger, bool disabled) =>
+        "flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-3 py-2 text-left text-sm font-medium transition-colors " +
+        (danger ? "text-destructive hover:bg-destructive/10" : "text-foreground hover:bg-muted") +
+        (disabled ? " opacity-40 pointer-events-none" : string.Empty);
+}

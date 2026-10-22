@@ -1,0 +1,16 @@
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    <p class="mb-0 mt-0 font-display text-xl font-semibold">@Headline</p>
+    <p class="mt-1 mb-0 text-sm text-muted-foreground">@Detail</p>
+</div>
+
+@code {
+    [Parameter] public string Headline { get; set; } = string.Empty;
+
+    [Parameter] public string Detail { get; set; } = string.Empty;
+
+    private string CssClass => "rounded-2xl bg-background p-5 text-center".MergeClass(Class);
+}

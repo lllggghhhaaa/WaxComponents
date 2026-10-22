@@ -1,0 +1,96 @@
+@page "/component/alert"
+@rendermode InteractiveServer
+@using WaxComponents.Alert
+@using WaxComponents.Button
+@using WaxComponents.Tabs
+
+<PageTitle>Alert - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Alert</h1>
+    <p class="text-muted-foreground">Inline messages for feedback, warnings, and status updates.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Severities</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_severityTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">With Actions</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_actionTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Custom Icon</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private static List<WaxTabItem> _severityTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <WaxAlert Severity="WaxAlertSeverity.Destructive" Message="Something went wrong. Please try again." />
+            <WaxAlert Severity="WaxAlertSeverity.Success" Message="Your changes have been saved." />
+            <WaxAlert Severity="WaxAlertSeverity.Info" Message="A new version is available." />
+            <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your session expires in 5 minutes." />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_severityCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _actionTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your session expires in 5 minutes.">
+                <div class="mt-2 flex items-center gap-2">
+                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">Renew session</WaxButton>
+                </div>
+            </WaxAlert>
+            <WaxAlert Severity="WaxAlertSeverity.Destructive" Message="The upload failed.">
+                <div class="mt-2 flex items-center gap-2">
+                    <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">Retry</WaxButton>
+                </div>
+            </WaxAlert>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_actionCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _iconTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <WaxAlert Severity="WaxAlertSeverity.Info" Icon="rocket" Message="Deployment finished in 42 seconds." />
+            <WaxAlert Severity="WaxAlertSeverity.Success" Icon="party-popper" Message="Welcome to the workspace!" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
+    ];
+
+    private static string _severityCode = """
+        @using WaxComponents.Alert
+
+        <div class="space-y-3">
+            <WaxAlert Severity="WaxAlertSeverity.Destructive" Message="Something went wrong. Please try again." />
+            <WaxAlert Severity="WaxAlertSeverity.Success" Message="Your changes have been saved." />
+            <WaxAlert Severity="WaxAlertSeverity.Info" Message="A new version is available." />
+            <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your session expires in 5 minutes." />
+        </div>
+        """;
+
+    private static string _actionCode = """
+        @using WaxComponents.Alert
+        @using WaxComponents.Button
+
+        <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your session expires in 5 minutes.">
+            <div class="mt-2 flex items-center gap-2">
+                <WaxButton Variant="WaxButtonVariant.Text" Size="WaxButtonSize.Small">Renew session</WaxButton>
+            </div>
+        </WaxAlert>
+        """;
+
+    private static string _iconCode = """
+        @using WaxComponents.Alert
+
+        <WaxAlert Severity="WaxAlertSeverity.Info" Icon="rocket" Message="Deployment finished in 42 seconds." />
+        """;
+}

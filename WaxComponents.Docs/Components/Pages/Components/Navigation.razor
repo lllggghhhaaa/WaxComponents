@@ -1,0 +1,168 @@
+@page "/component/navigation"
+@rendermode InteractiveServer
+@using LucideBlazor
+@using WaxComponents.Navigation
+@using WaxComponents.Tabs
+
+<PageTitle>Navigation - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Navigation</h1>
+    <p class="text-muted-foreground">Server rails, channel lists, and sidebar navigation for app shells.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Server Buttons</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_serverTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Channel Buttons</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_channelTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Sidebar</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sidebarTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private int _activeServer;
+    private int _activeChannel;
+
+    private readonly string[] _serverNames = ["Home", "Coffee", "Arcade", "Studio"];
+    private readonly string[] _serverIcons = ["house", "coffee", "gamepad-2", ""];
+    private readonly string[] _channelNames = ["general", "design", "engineering", "random"];
+    private readonly string[] _channelIcons = ["hash", "palette", "code", "sparkles"];
+    private readonly int[] _channelCounts = [0, 0, 12, 0];
+
+    private readonly List<WaxSidebarGroup> _navGroups =
+    [
+        new("Workspace",
+        [
+            new WaxSidebarItem("#", "Overview", "house"),
+            new WaxSidebarItem("#", "Activity", "bell"),
+        ]),
+        new("Projects",
+        [
+            new WaxSidebarItem("#", "Design system", "palette"),
+            new WaxSidebarItem("#", "Documentation", "book-open"),
+            new WaxSidebarItem("#", "Settings", "settings"),
+        ]),
+    ];
+
+    private List<WaxTabItem> _serverTabs = [];
+    private List<WaxTabItem> _channelTabs = [];
+    private List<WaxTabItem> _sidebarTabs = [];
+
+    private void SelectServer(int index) => _activeServer = index;
+
+    private void SelectChannel(int index) => _activeChannel = index;
+
+    protected override void OnInitialized()
+    {
+        _serverTabs =
+        [
+            new("Preview", Content: @<div class="flex items-center gap-3">
+                @for (var i = 0; i < _serverNames.Length; i++)
+                {
+                    var index = i;
+                    <WaxServerButton Title="@_serverNames[index]"
+                                     Active="@(_activeServer == index)"
+                                     OnClick="@(() => SelectServer(index))">
+                        @if (index == 3)
+                        {
+                            <span class="font-display text-sm font-semibold">W</span>
+                        }
+                        else
+                        {
+                            <LucideIcon Name="@_serverIcons[index]" Size="20" />
+                        }
+                    </WaxServerButton>
+                }
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_serverCode</code></pre>, Icon: "code")
+        ];
+
+        _channelTabs =
+        [
+            new("Preview", Content: @<div class="w-full max-w-xs rounded-3xl border border-border bg-card p-2">
+                @for (var i = 0; i < _channelNames.Length; i++)
+                {
+                    var index = i;
+                    <WaxChannelButton Label="@_channelNames[index]"
+                                       Icon="@_channelIcons[index]"
+                                       Count="@_channelCounts[index]"
+                                       ShowDot="@(index == 3)"
+                                       Active="@(_activeChannel == index)"
+                                       OnClick="@(() => SelectChannel(index))" />
+                }
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_channelCode</code></pre>, Icon: "code")
+        ];
+
+        _sidebarTabs =
+        [
+            new("Preview", Content: @<div class="relative h-[380px] w-64 overflow-hidden rounded-3xl border border-border" style="transform: translateZ(0);">
+                <WaxSidebar Groups="_navGroups" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sidebarCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _serverCode = """
+        @using LucideBlazor
+        @using WaxComponents.Navigation
+
+        <div class="flex items-center gap-3">
+            <WaxServerButton Title="Home" Active="true">
+                <LucideIcon Name="home" Size="20" />
+            </WaxServerButton>
+            <WaxServerButton Title="Coffee">
+                <LucideIcon Name="coffee" Size="20" />
+            </WaxServerButton>
+            <WaxServerButton Title="Arcade">
+                <LucideIcon Name="gamepad-2" Size="20" />
+            </WaxServerButton>
+            <WaxServerButton Title="Studio">
+                <span class="font-display text-sm font-semibold">W</span>
+            </WaxServerButton>
+        </div>
+        """;
+
+    private static string _channelCode = """
+        @using WaxComponents.Navigation
+
+        <div class="w-full max-w-xs rounded-3xl border border-border bg-card p-2">
+            <WaxChannelButton Label="general" Icon="hash" Active="true" />
+            <WaxChannelButton Label="design" Icon="palette" />
+            <WaxChannelButton Label="engineering" Icon="code" Count="12" />
+            <WaxChannelButton Label="random" Icon="sparkles" ShowDot="true" />
+        </div>
+        """;
+
+    private static string _sidebarCode = """
+        @using WaxComponents.Navigation
+
+        <WaxSidebar Groups="_groups" />
+
+        @code {
+            private List<WaxSidebarGroup> _groups =
+            [
+                new("Workspace",
+                [
+                    new WaxSidebarItem("/", "Overview", "home"),
+                    new WaxSidebarItem("/activity", "Activity", "bell"),
+                ]),
+                new("Projects",
+                [
+                    new WaxSidebarItem("/design", "Design system", "palette"),
+                    new WaxSidebarItem("/docs", "Documentation", "book-open"),
+                    new WaxSidebarItem("/settings", "Settings", "settings"),
+                ]),
+            ];
+        }
+        """;
+}

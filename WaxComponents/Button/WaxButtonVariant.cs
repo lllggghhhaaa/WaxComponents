@@ -7,4 +7,8 @@ public enum WaxButtonVariant
     Outlined,
     Text,
     Elevated,
+    Destructive,
+    Danger,
+    DangerOutline,
+    Neutral,
 }

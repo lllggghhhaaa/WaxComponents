@@ -1,0 +1,344 @@
+@using LucideBlazor
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+@implements IWaxSelectHost
+
+@typeparam TValue
+
+<div class="@WrapperClass" style="@Style"
+     @onkeydown="OnKeyDown"
+     @onkeydown:preventDefault="@_open"
+     @onkeydown:stopPropagation="@_open">
+    <button type="button"
+            class="@TriggerClass"
+            disabled="@Disabled"
+            aria-haspopup="listbox"
+            aria-expanded="@(_open ? "true" : "false")"
+            aria-controls="@(_open ? ListboxId : null)"
+            aria-label="@Label"
+            aria-activedescendant="@(_open ? ActiveOptionId : null)"
+            @onclick="ToggleOpen"
+            @attributes="AdditionalAttributes">
+        @if (TriggerIcon is { Length: > 0 } triggerIcon)
+        {
+            <LucideIcon Name="@triggerIcon"
+                        Size="16"
+                        ClassName="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        }
+
+        <span class="@CaptionClass">@CaptionText</span>
+
+        <LucideIcon Name="chevron-down"
+                    Size="16"
+                    ClassName="@ChevronClass" />
+    </button>
+
+    @if (_open)
+    {
+        <div class="fixed inset-0 z-[94]" aria-hidden="true" @onclick="Close"></div>
+
+        <div id="@ListboxId"
+             role="listbox"
+             aria-label="@Label"
+             class="@PanelClass">
+            @{
+                var resolvedOptions = ResolvedOptions;
+            }
+            @for (var i = 0; i < resolvedOptions.Count; i++)
+            {
+                var index = i;
+                var option = resolvedOptions[i];
+                <div id="@OptionId(index)"
+                     role="option"
+                     aria-selected="@(IsSelected(option) ? "true" : "false")"
+                     aria-disabled="@(option.Disabled ? "true" : "false")"
+                     class="@RowClass(option, index)"
+                     @onclick="() => SelectOption(option)">
+                    @if (!string.IsNullOrEmpty(option.Icon))
+                    {
+                        <LucideIcon Name="@option.Icon"
+                                    Size="16"
+                                    ClassName="@RowIconClass(option)" />
+                    }
+
+                    <span class="min-w-0 flex-1">
+                        <span class="block truncate font-medium">@option.DisplayLabel</span>
+                        @if (!string.IsNullOrEmpty(option.Description))
+                        {
+                            <span class="block truncate text-xs text-muted-foreground">@option.Description</span>
+                        }
+                    </span>
+
+                    @if (!string.IsNullOrEmpty(option.Badge))
+                    {
+                        <span class="shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                            @option.Badge
+                        </span>
+                    }
+
+                    @if (IsSelected(option))
+                    {
+                        <LucideIcon Name="check" Size="16" ClassName="shrink-0 text-primary" />
+                    }
+                </div>
+            }
+
+            @if (resolvedOptions.Count == 0)
+            {
+                <p class="mb-0 mt-0 px-3 py-2 text-sm text-muted-foreground">@EmptyText</p>
+            }
+        </div>
+    }
+
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    [Parameter] public TValue? Value { get; set; }
+
+    [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
+
+    /// <summary>Accessible name; callers may also pass aria-label via attributes.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Filled = raised input background; Outlined = bordered surface.</summary>
+    [Parameter] public WaxSelectVariant Variant { get; set; } = WaxSelectVariant.Filled;
+
+    /// <summary>Optional leading Lucide icon name.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Caption shown while nothing is selected.</summary>
+    [Parameter] public string Placeholder { get; set; } = "Select…";
+
+    /// <summary>Data-driven options; declarative WaxSelectOption children also work.</summary>
+    [Parameter] public IEnumerable<WaxSelectOptionItem>? Options { get; set; }
+
+    /// <summary>Message when a dropdown opens with zero options.</summary>
+    [Parameter] public string EmptyText { get; set; } = "No options";
+
+    private readonly List<WaxSelectOption> _childOptions = [];
+    private readonly string _id = $"wax-select-{Guid.NewGuid():N}";
+    private bool _open;
+    private int _highlightedIndex;
+
+    private string ListboxId => $"{_id}-listbox";
+
+    private string OptionId(int index) => $"{_id}-option-{index}";
+
+    private string? ActiveOptionId => _highlightedIndex >= 0 ? OptionId(_highlightedIndex) : null;
+
+    private IReadOnlyList<WaxSelectOptionItem> ResolvedOptions =>
+        Options is { } options ? options.ToList() : _childOptions.Select(option => option.ToItem()).ToList();
+
+    private bool IsSelected(WaxSelectOptionItem option) =>
+        EqualityComparer<TValue>.Default.Equals(Value, Parse(option.Value));
+
+    private WaxSelectOptionItem? SelectedOption
+    {
+        get
+        {
+            var resolved = ResolvedOptions;
+            return resolved.FirstOrDefault(IsSelected);
+        }
+    }
+
+    private string CaptionText => SelectedOption?.DisplayLabel ?? Placeholder;
+
+    private bool HasSelection => SelectedOption is not null;
+
+    private string? TriggerIcon => !string.IsNullOrEmpty(Icon) ? Icon : SelectedOption?.Icon;
+
+    private bool TriggerHasIcon => TriggerIcon is not null;
+
+    private string WrapperClass => "relative w-full".MergeClass(Class);
+
+    private string TriggerClass =>
+        "relative flex w-full cursor-pointer items-center rounded-2xl py-2.5 pr-10 text-left text-sm text-foreground outline-none transition-all duration-200"
+            .MergeClass(
+                TriggerHasIcon ? "pl-10" : "pl-3.5",
+                Variant switch
+                {
+                    WaxSelectVariant.Filled =>
+                        "border border-transparent bg-input-background hover:bg-muted/70 focus:border-primary/40 focus:bg-background focus:ring-4 focus:ring-primary/10",
+                    WaxSelectVariant.Outlined =>
+                        "border border-border bg-background hover:border-muted-foreground/40 focus:border-primary focus:ring-4 focus:ring-primary/10",
+                    _ => throw new ArgumentOutOfRangeException(nameof(Variant)),
+                },
+                Disabled ? "cursor-not-allowed opacity-60" : string.Empty);
+
+    private string CaptionClass =>
+        "min-w-0 flex-1 truncate"
+            .MergeClass(HasSelection ? "font-medium" : "font-normal text-muted-foreground");
+
+    private string ChevronClass =>
+        "pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition-transform duration-200"
+            .MergeClass(_open ? "rotate-180" : string.Empty);
+
+    private string PanelClass =>
+        "absolute left-0 right-0 top-full z-[95] mt-2 max-h-72 overflow-y-auto rounded-3xl border border-border bg-popover p-2 text-popover-foreground shadow-2xl shadow-black/15 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150";
+
+    private string RowClass(WaxSelectOptionItem option, int index) =>
+        "flex w-full cursor-pointer select-none items-center gap-3 rounded-2xl px-3 py-2 text-left transition-colors duration-150"
+            .MergeClass(
+                IsSelected(option) ? "bg-primary/10" : index == _highlightedIndex ? "bg-muted" : "hover:bg-muted",
+                option.Disabled ? "pointer-events-none opacity-40" : string.Empty);
+
+    private string RowIconClass(WaxSelectOptionItem option) =>
+        IsSelected(option) ? "shrink-0 text-primary" : "shrink-0 text-muted-foreground";
+
+    private void ToggleOpen()
+    {
+        if (Disabled)
+        {
+            return;
+        }
+
+        if (_open)
+        {
+            Close();
+            return;
+        }
+
+        var resolved = ResolvedOptions;
+        var selectedIndex = -1;
+        for (var i = 0; i < resolved.Count; i++)
+        {
+            if (!IsSelected(resolved[i])) continue;
+            
+            selectedIndex = i;
+            break;
+        }
+
+        _highlightedIndex = selectedIndex >= 0 && !resolved[selectedIndex].Disabled
+            ? selectedIndex
+            : FirstEnabledIndex(resolved);
+        _open = true;
+    }
+
+    private void Close() => _open = false;
+
+    private async Task SelectOption(WaxSelectOptionItem option)
+    {
+        if (option.Disabled)
+        {
+            return;
+        }
+
+        Value = Parse(option.Value);
+        await ValueChanged.InvokeAsync(Value);
+        Close();
+    }
+
+    private void MoveHighlight(int direction)
+    {
+        var resolved = ResolvedOptions;
+        for (var i = _highlightedIndex + direction; i >= 0 && i < resolved.Count; i += direction)
+        {
+            if (resolved[i].Disabled) continue;
+            
+            _highlightedIndex = i;
+            return;
+        }
+    }
+
+    private static int FirstEnabledIndex(IReadOnlyList<WaxSelectOptionItem> options)
+    {
+        for (var i = 0; i < options.Count; i++)
+        {
+            if (!options[i].Disabled)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (Disabled || !_open)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                MoveHighlight(1);
+                break;
+
+            case "ArrowUp":
+                MoveHighlight(-1);
+                break;
+
+            case "Home":
+                var first = FirstEnabledIndex(ResolvedOptions);
+                if (first >= 0)
+                {
+                    _highlightedIndex = first;
+                }
+
+                break;
+
+            case "End":
+                var resolved = ResolvedOptions;
+                for (var i = resolved.Count - 1; i >= 0; i--)
+                {
+                    if (resolved[i].Disabled) continue;
+                    
+                    _highlightedIndex = i;
+                    break;
+                }
+
+                break;
+
+            case "Enter" or " ":
+                var options = ResolvedOptions;
+                if (_highlightedIndex >= 0 && _highlightedIndex < options.Count)
+                {
+                    await SelectOption(options[_highlightedIndex]);
+                }
+
+                break;
+
+            case "Escape":
+            case "Tab":
+                Close();
+                break;
+        }
+    }
+
+    void IWaxSelectHost.Register(WaxSelectOption option)
+    {
+        _childOptions.Add(option);
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    void IWaxSelectHost.Unregister(WaxSelectOption option) => _childOptions.Remove(option);
+
+    private static TValue? Parse(string raw)
+    {
+        var targetType = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+        if (string.IsNullOrEmpty(raw))
+        {
+            return targetType == typeof(string) ? (TValue)(object)string.Empty : default;
+        }
+
+        object? converted = targetType == typeof(string) ? raw
+            : targetType == typeof(Guid) ? Guid.TryParse(raw, out var guid) ? guid : default(Guid?)
+            : targetType == typeof(int) ? int.TryParse(raw, out var i) ? i : default(int?)
+            : targetType == typeof(long) ? long.TryParse(raw, out var l) ? l : default(long?)
+            : targetType == typeof(double) ? double.TryParse(raw, out var d) ? d : default(double?)
+            : targetType == typeof(bool) ? bool.TryParse(raw, out var b) ? b : default(bool?)
+            : default;
+
+        return (TValue?)converted;
+    }
+}

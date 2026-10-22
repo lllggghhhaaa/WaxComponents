@@ -7,8 +7,27 @@
         <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
     </PropertyGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <Exec Command="npm run build:css" />
+    <PropertyGroup>
+        <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../'))</RepoRoot>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Remove="wwwroot\app.css" />
+    </ItemGroup>
+
+    <!-- Tailwind CSS pipeline for the docs app itself. -->
+    <Target Name="NpmInstall" BeforeTargets="BuildTailwind" Condition="!Exists('$(RepoRoot)node_modules/@tailwindcss/cli/package.json')">
+        <Exec Command="npm ci --no-audit --no-fund --loglevel=error" WorkingDirectory="$(RepoRoot)" />
+    </Target>
+
+    <Target Name="BuildTailwind" BeforeTargets="BeforeBuild" DependsOnTargets="NpmInstall"
+            Inputs="app.css;..\WaxComponents\Theme\**\*.css;**\*.razor"
+            Outputs="wwwroot\app.css">
+        <Exec Command="npm run build:css" Condition="'$(Configuration)' != 'Release'" />
+        <Exec Command="npm run build:css:min" Condition="'$(Configuration)' == 'Release'" />
+        <ItemGroup>
+            <Content Include="wwwroot\app.css" CopyToPublishDirectory="PreserveNewest" />
+        </ItemGroup>
     </Target>
 
     <ItemGroup>

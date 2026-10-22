@@ -1,0 +1,56 @@
+@using LucideBlazor
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+<div class="@CssClass" role="@Role" style="@Style" @attributes="AdditionalAttributes">
+    <LucideIcon Name="@IconName" Size="16" ClassName="shrink-0"/>
+    <div class="min-w-0 flex-1">
+        @if (ChildContent is null)
+        {
+            <span class="block">@Message</span>
+        }
+        else
+        {
+            <span class="block">@Message</span>
+            @ChildContent
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public WaxAlertSeverity Severity { get; set; } = WaxAlertSeverity.Destructive;
+
+    /// <summary>Primary message; may be empty when only ChildContent (actions, details) is given.</summary>
+    [Parameter] public string Message { get; set; } = string.Empty;
+
+    /// <summary>Overrides the default severity icon with a custom Lucide icon name.</summary>
+    [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Optional body/actions rendered under the message (e.g. a retry button).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string IconName => Icon ?? Severity switch
+    {
+        WaxAlertSeverity.Destructive => "circle-alert",
+        WaxAlertSeverity.Success => "check",
+        WaxAlertSeverity.Info => "info",
+        WaxAlertSeverity.Warning => "triangle-alert",
+        _ => throw new ArgumentOutOfRangeException(nameof(Severity)),
+    };
+
+    private string Role => Severity is WaxAlertSeverity.Destructive or WaxAlertSeverity.Warning ? "alert" : "status";
+
+    private string CssClass => (Severity switch
+    {
+        WaxAlertSeverity.Destructive =>
+            "flex items-start gap-2 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive",
+        WaxAlertSeverity.Success =>
+            "flex items-start gap-2 rounded-2xl border border-secondary/35 bg-secondary/15 px-4 py-3 text-sm text-secondary",
+        WaxAlertSeverity.Info =>
+            "flex items-start gap-2 rounded-2xl border border-border bg-muted/50 px-4 py-3 text-sm text-foreground",
+        WaxAlertSeverity.Warning =>
+            "flex items-start gap-2 rounded-2xl border border-accent/40 bg-accent/10 px-4 py-3 text-sm text-accent-foreground",
+        _ => throw new ArgumentOutOfRangeException(nameof(Severity)),
+    }).MergeClass(Class);
+}

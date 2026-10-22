@@ -1,0 +1,196 @@
+@page "/component/dialog"
+@rendermode InteractiveServer
+@using WaxComponents.Button
+@using WaxComponents.Dialog
+@using WaxComponents.Tabs
+
+<PageTitle>Dialog - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Dialog</h1>
+    <p class="text-muted-foreground">Modal dialogs for confirmations, forms, and focused tasks.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Rich Content</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_contentTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Error State</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_errorTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _basicOpen;
+    private bool _contentOpen;
+    private bool _errorOpen;
+    private List<WaxTabItem> _basicTabs = [];
+    private List<WaxTabItem> _contentTabs = [];
+    private List<WaxTabItem> _errorTabs = [];
+
+    private void OpenBasic() => _basicOpen = true;
+    private void CloseBasic() => _basicOpen = false;
+    private void OpenContent() => _contentOpen = true;
+    private void CloseContent() => _contentOpen = false;
+    private void OpenError() => _errorOpen = true;
+    private void CloseError() => _errorOpen = false;
+
+    protected override void OnInitialized()
+    {
+        _basicTabs =
+        [
+            new("Preview", Content: @<div>
+                <WaxButton OnClick="OpenBasic">Open dialog</WaxButton>
+
+                <WaxDialog Open="_basicOpen"
+                           Title="Delete project"
+                           Description="This action cannot be undone. The project and all of its data will be permanently removed."
+                           ConfirmText="Delete"
+                           OnClosed="CloseBasic"
+                           OnConfirm="CloseBasic" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+        ];
+
+        _contentTabs =
+        [
+            new("Preview", Content: @<div>
+                <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="OpenContent">Invite teammate</WaxButton>
+
+                <WaxDialog Open="_contentOpen"
+                           Title="Invite teammate"
+                           Description="They will receive an email with a link to join this workspace."
+                           OnClosed="CloseContent">
+                    <ChildContent>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="mb-1 block text-xs font-medium text-muted-foreground">Email address</label>
+                                <input class="w-full rounded-2xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                                       placeholder="name@example.com" />
+                            </div>
+                            <label class="flex items-center gap-2 text-sm text-foreground">
+                                <input type="checkbox" class="accent-primary" />
+                                Give access to billing
+                            </label>
+                        </div>
+                    </ChildContent>
+
+                    <FooterContent>
+                        <div class="mt-4 flex items-center justify-end gap-2">
+                            <WaxButton Variant="WaxButtonVariant.Text" OnClick="CloseContent">Later</WaxButton>
+                            <WaxButton Variant="WaxButtonVariant.Filled" OnClick="CloseContent">Send invite</WaxButton>
+                        </div>
+                    </FooterContent>
+                </WaxDialog>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_contentCode</code></pre>, Icon: "code")
+        ];
+
+        _errorTabs =
+        [
+            new("Preview", Content: @<div>
+                <WaxButton Variant="WaxButtonVariant.Outlined" OnClick="OpenError">Publish changes</WaxButton>
+
+                <WaxDialog Open="_errorOpen"
+                           Title="Publish changes"
+                           Description="Choose where these changes should go live."
+                           Error="You need at least one published channel before you can continue."
+                           ConfirmText="Publish"
+                           ConfirmDisabled="true"
+                           OnClosed="CloseError"
+                           OnConfirm="CloseError" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_errorCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _basicCode = """
+        @using WaxComponents.Button
+        @using WaxComponents.Dialog
+
+        <WaxButton OnClick="OpenDialog">Open dialog</WaxButton>
+
+        <WaxDialog Open="_open"
+                   Title="Delete project"
+                   Description="This action cannot be undone. The project and all of its data will be permanently removed."
+                   ConfirmText="Delete"
+                   OnClosed="CloseDialog"
+                   OnConfirm="CloseDialog" />
+
+        @code {
+            private bool _open;
+
+            private void OpenDialog() => _open = true;
+            private void CloseDialog() => _open = false;
+        }
+        """;
+
+    private static string _contentCode = """
+        @using WaxComponents.Button
+        @using WaxComponents.Dialog
+
+        <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="OpenDialog">Invite teammate</WaxButton>
+
+        <WaxDialog Open="_open"
+                   Title="Invite teammate"
+                   Description="They will receive an email with a link to join this workspace."
+                   OnClosed="CloseDialog">
+            <div class="space-y-3">
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-muted-foreground">Email address</label>
+                    <input class="w-full rounded-2xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none focus:border-primary"
+                           placeholder="name@example.com" />
+                </div>
+                <label class="flex items-center gap-2 text-sm text-foreground">
+                    <input type="checkbox" class="accent-primary" />
+                    Give access to billing
+                </label>
+            </div>
+
+            <FooterContent>
+                <div class="mt-4 flex items-center justify-end gap-2">
+                    <WaxButton Variant="WaxButtonVariant.Text" OnClick="CloseDialog">Later</WaxButton>
+                    <WaxButton Variant="WaxButtonVariant.Filled" OnClick="CloseDialog">Send invite</WaxButton>
+                </div>
+            </FooterContent>
+        </WaxDialog>
+
+        @code {
+            private bool _open;
+
+            private void OpenDialog() => _open = true;
+            private void CloseDialog() => _open = false;
+        }
+        """;
+
+    private static string _errorCode = """
+        @using WaxComponents.Button
+        @using WaxComponents.Dialog
+
+        <WaxButton Variant="WaxButtonVariant.Outlined" OnClick="OpenDialog">Publish changes</WaxButton>
+
+        <WaxDialog Open="_open"
+                   Title="Publish changes"
+                   Description="Choose where these changes should go live."
+                   Error="You need at least one published channel before you can continue."
+                   ConfirmText="Publish"
+                   ConfirmDisabled="true"
+                   OnClosed="CloseDialog"
+                   OnConfirm="CloseDialog" />
+
+        @code {
+            private bool _open;
+
+            private void OpenDialog() => _open = true;
+            private void CloseDialog() => _open = false;
+        }
+        """;
+}

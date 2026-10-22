@@ -5,4 +5,5 @@ public enum WaxCardVariant
     Elevated,
     Filled,
     Outlined,
+    Flat,
 }
