@@ -1,4 +1,5 @@
 ﻿@using LucideBlazor
+@using WaxComponents.Spoiler
 @using WaxComponents.Utils
 
 @inherits WaxComponent
@@ -13,7 +14,16 @@
             }
             @if (!string.IsNullOrEmpty(Title))
             {
-                <p class="mb-0 mt-0 font-semibold text-foreground">@Title</p>
+                <p class="mb-0 mt-0 font-semibold text-foreground">
+                    @if (Spoiler)
+                    {
+                        <WaxSpoiler Inline>@Title</WaxSpoiler>
+                    }
+                    else
+                    {
+                        @Title
+                    }
+                </p>
             }
         </div>
     }
@@ -29,6 +39,9 @@
 
     /// <summary>Lucide icon name for the optional header row.</summary>
     [Parameter] public string? Icon { get; set; }
+
+    /// <summary>Hides the header title behind a blur + gradient veil, revealed on click.</summary>
+    [Parameter] public bool Spoiler { get; set; }
 
     /// <summary>Compact padding (p-5) for dense layouts like settings panels.</summary>
     [Parameter] public bool Compact { get; set; }

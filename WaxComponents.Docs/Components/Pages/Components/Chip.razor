@@ -30,6 +30,11 @@
         <h3 class="font-semibold text-foreground mb-1">With Icons</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -45,6 +50,16 @@
             <WaxChip Icon="settings">Settings</WaxChip>
         </div>, Icon: "monitor-dot"),
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div class="flex flex-wrap gap-2">
+            <WaxChip Spoiler="true">secret-channel</WaxChip>
+            <WaxChip Icon="key-round" Spoiler="true">invite-code-99dx</WaxChip>
+            <WaxChip Spoiler="true">confidential</WaxChip>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
     ];
 
     private List<string> _filterChips = ["Coffee", "Tea", "Juice", "Milk"];
@@ -77,6 +92,16 @@
     private static string _inputCode = "@using WaxComponents.Chip\n\n@foreach (var chip in _inputChipList)\n{\n    <WaxChip Variant=\"WaxChipVariant.Input\" Value=\"true\" OnRemove=\"@(_ => RemoveChip(chip))\">\n        @chip\n    </WaxChip>\n}\n@if (_inputChipList.Count < _inputChips.Count)\n{\n    <button class=\"text-xs text-primary underline underline-offset-2 cursor-pointer bg-transparent border-none\"\n            @onclick=\"ResetInputChips\">\n        Reset\n    </button>\n}\n\n@code {\n    private List<string> _inputChips = [\"C#\", \".NET\", \"Tailwind\", \"Blazor\"];\n    private List<string> _inputChipList = [\"C#\", \".NET\", \"Tailwind\", \"Blazor\"];\n\n    private void RemoveChip(string chip) => _inputChipList.Remove(chip);\n    private void ResetInputChips() => _inputChipList = _inputChips.ToList();\n}";
 
     private static string _iconCode = "@using WaxComponents.Chip\n\n<div class=\"flex flex-wrap gap-2\">\n    <WaxChip Icon=\"coffee\">Coffee</WaxChip>\n    <WaxChip Icon=\"leaf\">Nature</WaxChip>\n    <WaxChip Icon=\"bell\">Alerts</WaxChip>\n    <WaxChip Icon=\"settings\">Settings</WaxChip>\n</div>";
+
+    private static string _spoilerCode = """
+        @using WaxComponents.Chip
+
+        <div class="flex flex-wrap gap-2">
+            <WaxChip Spoiler="true">secret-channel</WaxChip>
+            <WaxChip Icon="key-round" Spoiler="true">invite-code-99dx</WaxChip>
+        </div>
+        """;
+
 
     protected override void OnInitialized()
     {

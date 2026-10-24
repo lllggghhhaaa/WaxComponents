@@ -26,6 +26,11 @@
         <h3 class="font-semibold text-foreground mb-1">Custom Icon</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_iconTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -66,6 +71,15 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_iconCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your temporary password is wax-7f3k-99dx." Spoiler="true" />
+            <WaxAlert Severity="WaxAlertSeverity.Info" Message="The migration finished at 03:14 with 0 errors." Spoiler="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
+    ];
+
     private static string _severityCode = """
         @using WaxComponents.Alert
 
@@ -92,5 +106,12 @@
         @using WaxComponents.Alert
 
         <WaxAlert Severity="WaxAlertSeverity.Info" Icon="rocket" Message="Deployment finished in 42 seconds." />
+        """;
+
+    private static string _spoilerCode = """
+        @using WaxComponents.Alert
+
+        <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your temporary password is wax-7f3k-99dx." Spoiler="true" />
+        <WaxAlert Severity="WaxAlertSeverity.Info" Message="The migration finished at 03:14 with 0 errors." Spoiler="true" />
         """;
 }

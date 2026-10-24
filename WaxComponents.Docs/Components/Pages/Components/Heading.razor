@@ -25,6 +25,11 @@
         <h3 class="font-semibold text-foreground mb-1">Custom Class</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_classTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -58,6 +63,17 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_classCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div>
+            <WaxSectionHeading Eyebrow="Confidential"
+                               Title="Q4 revenue forecast"
+                               Description="Internal projection: 2.4M ARR by December."
+                               Spoiler="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
+    ];
+
     private static string _basicCode = """
         @using WaxComponents.Heading
 
@@ -80,5 +96,14 @@
                            Title="Notifications"
                            Description="Choose how you would like to be notified."
                            Class="mb-0 rounded-3xl bg-muted/50 p-6" />
+        """;
+
+    private static string _spoilerCode = """
+        @using WaxComponents.Heading
+
+        <WaxSectionHeading Eyebrow="Confidential"
+                           Title="Q4 revenue forecast"
+                           Description="Internal projection: 2.4M ARR by December."
+                           Spoiler="true" />
         """;
 }

@@ -22,6 +22,11 @@
         <h3 class="font-semibold text-foreground mb-1">In a Card</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_cardTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -50,6 +55,16 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_cardCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <WaxEmptyState Headline="Nothing to see here"
+                           Detail="The rest of this message is classified."
+                           Spoiler="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
+    ];
+
     private static string _basicCode = """
         @using WaxComponents.EmptyState
 
@@ -72,5 +87,13 @@
             <WaxEmptyState Headline="Your inbox is empty"
                            Detail="New notifications will appear here." />
         </WaxCard>
+        """;
+
+    private static string _spoilerCode = """
+        @using WaxComponents.EmptyState
+
+        <WaxEmptyState Headline="Nothing to see here"
+                       Detail="The rest of this message is classified."
+                       Spoiler="true" />
         """;
 }

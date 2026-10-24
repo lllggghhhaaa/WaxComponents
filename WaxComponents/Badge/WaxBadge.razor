@@ -1,15 +1,26 @@
-﻿@using WaxComponents.Theme
+﻿@using WaxComponents.Spoiler
+@using WaxComponents.Theme
 @using WaxComponents.Utils
 
 @inherits WaxComponent
 
 <span class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
-    @ChildContent
+    @if (Spoiler)
+    {
+        <WaxSpoiler Inline>@ChildContent</WaxSpoiler>
+    }
+    else
+    {
+        @ChildContent
+    }
 </span>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public WaxColor Color { get; set; } = WaxColor.Primary;
+
+    /// <summary>Hides the badge text behind a blur + gradient veil, revealed on click.</summary>
+    [Parameter] public bool Spoiler { get; set; }
 
     private string CssClass =>
         "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"

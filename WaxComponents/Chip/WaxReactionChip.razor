@@ -1,3 +1,5 @@
+@using LucideBlazor
+@using WaxComponents.Spoiler
 @using WaxComponents.Utils
 
 @inherits WaxComponent
@@ -8,7 +10,19 @@
         @attributes="AdditionalAttributes"
         @onclick="Toggle">
     <span>@Emoji</span>
-    <span class="font-mono">@Count</span>
+    @if (Spoiler)
+    {
+        <span class="@SpoilerWrapperClass">
+            <span class="@SpoilerContentClass">@Count</span>
+            <span class="@SpoilerVeilClass" aria-hidden="true">
+                <LucideIcon Name="eye" Size="11" ClassName="@WaxSpoilerStyles.Hint"/>
+            </span>
+        </span>
+    }
+    else
+    {
+        <span class="font-mono">@Count</span>
+    }
 </button>
 
 @code {
@@ -18,6 +32,11 @@
     [Parameter] public EventCallback<bool> ValueChanged { get; set; }
     [Parameter] public EventCallback<bool> OnToggle { get; set; }
 
+    /// <summary>Hides the reaction count behind a blur + gradient veil. The first click reveals it instead of reacting.</summary>
+    [Parameter] public bool Spoiler { get; set; }
+
+    private bool _spoilerRevealed;
+
     private const string Base =
         "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-all duration-200 active:scale-95";
 
@@ -25,10 +44,29 @@
         ? "border-primary/30 bg-primary/10 text-primary hover:border-primary/40"
         : "border-border bg-background text-muted-foreground hover:border-primary/30 hover:text-foreground";
 
+    private string SpoilerWrapperClass => WaxSpoilerStyles.Wrapper
+        .MergeClass(
+            "inline-block",
+            _spoilerRevealed ? string.Empty : WaxSpoilerStyles.Hidden);
+
+    private string SpoilerContentClass => "inline font-mono"
+        .MergeClass(
+            WaxSpoilerStyles.Content,
+            _spoilerRevealed ? string.Empty : WaxSpoilerStyles.ContentBlurred);
+
+    private string SpoilerVeilClass => WaxSpoilerStyles.Veil
+        .MergeClass(_spoilerRevealed ? WaxSpoilerStyles.VeilHidden : WaxSpoilerStyles.VeilVisible);
+
     private string CssClass => Base.MergeClass(ValueClass, Class);
 
     private async Task Toggle()
     {
+        if (Spoiler && !_spoilerRevealed)
+        {
+            _spoilerRevealed = true;
+            return;
+        }
+
         Value = !Value;
 
         await ValueChanged.InvokeAsync(Value);

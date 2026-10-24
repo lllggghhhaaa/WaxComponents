@@ -2,8 +2,6 @@
 @import 'tw-animate-css';
 @import "./Theme/tokens.css";
 
-/* Scan ONLY this component library's own sources.
-   Consuming apps must run their own Tailwind build for their own classes. */
 @source "./**/*.razor";
 @source "./**/*.cs";
 

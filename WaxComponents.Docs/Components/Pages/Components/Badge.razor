@@ -21,6 +21,11 @@
         <h3 class="font-semibold text-foreground mb-1">Usage Examples</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_usageTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -58,7 +63,32 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_usageCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">API key</span>
+                <WaxBadge Color="WaxColor.Muted" Spoiler="true">wax-2k9d-88fa</WaxBadge>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">Version</span>
+                <WaxBadge Color="WaxColor.Accent" Spoiler="true">v0.9.5-secret</WaxBadge>
+            </div>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
+    ];
+
     private static string _colorsCode = "@using WaxComponents.Badge\n\n<WaxBadge Color=\"WaxColor.Primary\">Primary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Secondary\">Secondary</WaxBadge>\n<WaxBadge Color=\"WaxColor.Accent\">Accent</WaxBadge>\n<WaxBadge Color=\"WaxColor.Muted\">Muted</WaxBadge>";
 
     private static string _usageCode = "@using WaxComponents.Badge\n\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Inbox</span>\n    <WaxBadge Color=\"WaxColor.Primary\">12</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Status</span>\n    <WaxBadge Color=\"WaxColor.Secondary\">Active</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">Version</span>\n    <WaxBadge Color=\"WaxColor.Muted\">v1.0.0</WaxBadge>\n</div>\n<div class=\"flex items-center gap-3\">\n    <span class=\"text-sm text-foreground\">New</span>\n    <WaxBadge Color=\"WaxColor.Accent\">Feature</WaxBadge>\n</div>";
+
+    private static string _spoilerCode = """
+        @using WaxComponents.Badge
+        @using WaxComponents.Theme
+
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-foreground">API key</span>
+            <WaxBadge Color="WaxColor.Muted" Spoiler="true">wax-2k9d-88fa</WaxBadge>
+        </div>
+        """;
 }

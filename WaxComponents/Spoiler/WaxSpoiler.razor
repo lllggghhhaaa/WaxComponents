@@ -1,0 +1,95 @@
+@using LucideBlazor
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+
+@if (Inline)
+{
+    <span class="@CssClass"
+          style="@Style"
+          role="button"
+          tabindex="0"
+          aria-pressed="@IsRevealed"
+          @onclick="Toggle"
+          @onkeydown="OnKeyDown"
+          @attributes="AdditionalAttributes">
+        <span class="@ContentClass">@ChildContent</span>
+        <span class="@VeilClass" aria-hidden="true">
+            <LucideIcon Name="eye" Size="12" ClassName="@WaxSpoilerStyles.Hint"/>
+        </span>
+    </span>
+}
+else
+{
+    <div class="@CssClass"
+         style="@Style"
+         role="button"
+         tabindex="0"
+         aria-pressed="@IsRevealed"
+         @onclick="Toggle"
+         @onkeydown="OnKeyDown"
+         @attributes="AdditionalAttributes">
+        <span class="@ContentClass">@ChildContent</span>
+        <span class="@VeilClass" aria-hidden="true">
+            <LucideIcon Name="eye" Size="12" ClassName="@WaxSpoilerStyles.Hint"/>
+        </span>
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Inline (inline-block span) variant, for use inside text, badges, chips and headings.</summary>
+    [Parameter] public bool Inline { get; set; }
+
+    /// <summary>Controlled revealed state; leave unbound to let the spoiler manage itself.</summary>
+    [Parameter] public bool Revealed { get; set; }
+
+    [Parameter] public EventCallback<bool> RevealedChanged { get; set; }
+
+    private bool IsRevealed { get; set; }
+
+    private bool Controlled => RevealedChanged.HasDelegate;
+
+    protected override void OnInitialized() => IsRevealed = Revealed;
+
+    protected override void OnParametersSet()
+    {
+        if (Controlled)
+        {
+            IsRevealed = Revealed;
+        }
+    }
+
+    private async Task Toggle()
+    {
+        IsRevealed = !IsRevealed;
+
+        if (Controlled)
+        {
+            await RevealedChanged.InvokeAsync(IsRevealed);
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter" or " ")
+        {
+            await Toggle();
+        }
+    }
+
+    private string CssClass => WaxSpoilerStyles.Wrapper
+        .MergeClass(
+            Inline ? "inline-block" : "block",
+            IsRevealed ? string.Empty : WaxSpoilerStyles.Hidden,
+            Class);
+
+    private string ContentClass => (Inline ? "inline" : "block")
+        .MergeClass(
+            WaxSpoilerStyles.Content,
+            IsRevealed ? string.Empty : WaxSpoilerStyles.ContentBlurred);
+
+    private string VeilClass => WaxSpoilerStyles.Veil
+        .MergeClass(IsRevealed ? WaxSpoilerStyles.VeilHidden : WaxSpoilerStyles.VeilVisible);
+}

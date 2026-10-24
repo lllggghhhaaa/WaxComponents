@@ -1,3 +1,5 @@
+@using LucideBlazor
+@using WaxComponents.Spoiler
 @using WaxComponents.Switch
 @using WaxComponents.Utils
 
@@ -10,10 +12,28 @@
         @attributes="AdditionalAttributes"
         @onclick="HandleToggle">
     <span class="min-w-0 flex-1">
-        <span class="block text-sm font-medium text-foreground">@Title</span>
-        @if (!string.IsNullOrEmpty(Description))
+        @if (Spoiler)
         {
-            <span class="block text-xs text-muted-foreground">@Description</span>
+            <span class="@SpoilerWrapperClass">
+                <span class="@SpoilerContentClass">
+                    <span class="block text-sm font-medium text-foreground">@Title</span>
+                    @if (!string.IsNullOrEmpty(Description))
+                    {
+                        <span class="block text-xs text-muted-foreground">@Description</span>
+                    }
+                </span>
+                <span class="@SpoilerVeilClass" aria-hidden="true">
+                    <LucideIcon Name="eye" Size="12" ClassName="@WaxSpoilerStyles.Hint"/>
+                </span>
+            </span>
+        }
+        else
+        {
+            <span class="block text-sm font-medium text-foreground">@Title</span>
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <span class="block text-xs text-muted-foreground">@Description</span>
+            }
         }
     </span>
     <span class="shrink-0" aria-hidden="true">
@@ -25,6 +45,9 @@
     [Parameter] public string Title { get; set; } = string.Empty;
 
     [Parameter] public string Description { get; set; } = string.Empty;
+
+    /// <summary>Hides title and description behind a blur + gradient veil. The first click reveals them instead of toggling.</summary>
+    [Parameter] public bool Spoiler { get; set; }
 
     /// <summary>Controlled state; leave unbound to make the row keep its own state from Initial.</summary>
     [Parameter] public bool Value { get; set; }
@@ -41,6 +64,8 @@
     [Parameter] public bool ShowCheck { get; set; } = true;
 
     private bool IsOn { get; set; }
+
+    private bool _spoilerRevealed;
 
     private bool Controlled => ValueChanged.HasDelegate;
 
@@ -61,12 +86,29 @@
             return;
         }
 
+        if (Spoiler && !_spoilerRevealed)
+        {
+            _spoilerRevealed = true;
+            return;
+        }
+
         IsOn = !IsOn;
         if (Controlled)
         {
             await ValueChanged.InvokeAsync(IsOn);
         }
     }
+
+    private string SpoilerWrapperClass => WaxSpoilerStyles.Wrapper
+        .MergeClass(_spoilerRevealed ? string.Empty : WaxSpoilerStyles.Hidden);
+
+    private string SpoilerContentClass => "block"
+        .MergeClass(
+            WaxSpoilerStyles.Content,
+            _spoilerRevealed ? string.Empty : WaxSpoilerStyles.ContentBlurred);
+
+    private string SpoilerVeilClass => WaxSpoilerStyles.Veil
+        .MergeClass(_spoilerRevealed ? WaxSpoilerStyles.VeilHidden : WaxSpoilerStyles.VeilVisible);
 
     private string CssClass =>
         "flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-2 py-2.5 text-left transition-colors hover:bg-muted"

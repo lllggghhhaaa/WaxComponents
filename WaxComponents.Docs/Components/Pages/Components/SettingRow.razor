@@ -26,6 +26,11 @@
         <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Spoiler</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_spoilerTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
@@ -75,6 +80,20 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
     ];
 
+    private static List<WaxTabItem> _spoilerTabs =
+    [
+        new("Preview", Content: @<div class="rounded-3xl border border-border bg-background p-2">
+            <WaxSettingRow Title="Anonymous analytics"
+                           Description="Usage events are collected without user identifiers."
+                           Initial="true"
+                           Spoiler="true" />
+            <WaxSettingRow Title="Beta features"
+                           Description="Unreleased experiments you have been invited to."
+                           Spoiler="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_spoilerCode</code></pre>, Icon: "code")
+    ];
+
     private static string _basicCode = """
         @using WaxComponents.SettingRow
 
@@ -115,5 +134,14 @@
                        Description="This option is controlled by your workspace."
                        Initial="true"
                        Disabled="true" />
+        """;
+
+    private static string _spoilerCode = """
+        @using WaxComponents.SettingRow
+
+        <WaxSettingRow Title="Anonymous analytics"
+                       Description="Usage events are collected without user identifiers."
+                       Initial="true"
+                       Spoiler="true" />
         """;
 }

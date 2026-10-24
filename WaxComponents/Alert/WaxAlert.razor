@@ -1,4 +1,5 @@
 @using LucideBlazor
+@using WaxComponents.Spoiler
 @using WaxComponents.Utils
 
 @inherits WaxComponent
@@ -6,9 +7,12 @@
 <div class="@CssClass" role="@Role" style="@Style" @attributes="AdditionalAttributes">
     <LucideIcon Name="@IconName" Size="16" ClassName="shrink-0"/>
     <div class="min-w-0 flex-1">
-        @if (ChildContent is null)
+        @if (Spoiler)
         {
-            <span class="block">@Message</span>
+            <WaxSpoiler>
+                <span class="block">@Message</span>
+                @ChildContent
+            </WaxSpoiler>
         }
         else
         {
@@ -29,6 +33,9 @@
 
     /// <summary>Optional body/actions rendered under the message (e.g. a retry button).</summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Hides the message (and ChildContent) behind a blur + gradient veil, revealed on click.</summary>
+    [Parameter] public bool Spoiler { get; set; }
 
     private string IconName => Icon ?? Severity switch
     {
