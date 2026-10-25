@@ -96,6 +96,15 @@
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_statesCode</code></pre>, Icon: "code")
     ];
 
+    private static List<(WaxButtonVariant variant, string name)> _variants =
+    [
+        (WaxButtonVariant.Filled, "Filled"),
+        (WaxButtonVariant.Tonal, "Tonal"),
+        (WaxButtonVariant.Outlined, "Outlined"),
+        (WaxButtonVariant.Text, "Text"),
+        (WaxButtonVariant.Elevated, "Elevated"),
+    ];
+
     private static List<WaxTabItem> _matrixTabs =
     [
         new("Preview", Content: @<div class="overflow-x-auto">
@@ -122,15 +131,6 @@
             </table>
         </div>, Icon: "monitor-dot"),
         new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_matrixCode</code></pre>, Icon: "code")
-    ];
-
-    private static List<(WaxButtonVariant variant, string name)> _variants =
-    [
-        (WaxButtonVariant.Filled, "Filled"),
-        (WaxButtonVariant.Tonal, "Tonal"),
-        (WaxButtonVariant.Outlined, "Outlined"),
-        (WaxButtonVariant.Text, "Text"),
-        (WaxButtonVariant.Elevated, "Elevated"),
     ];
 
     private static string _variantsCode = "@using WaxComponents.Button\n\n<div class=\"flex items-center gap-3 flex-wrap\">\n    <WaxButton Variant=\"WaxButtonVariant.Filled\">Filled</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Tonal\">Tonal</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Outlined\">Outlined</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Text\">Text</WaxButton>\n    <WaxButton Variant=\"WaxButtonVariant.Elevated\">Elevated</WaxButton>\n</div>";

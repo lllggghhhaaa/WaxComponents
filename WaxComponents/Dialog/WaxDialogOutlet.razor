@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Components.Web
+@implements IDisposable
+@inject IWaxDialogService Dialogs
+
+@* Renders the dialogs opened through IWaxDialogService. Place once in the
+   interactive layout/page; dialogs stack bottom-most first. *@
+
+@foreach (var dialog in Dialogs.OpenDialogs)
+{
+    var current = dialog;
+
+    if (current.Options.UseShell)
+    {
+        <WaxDialog Open="true"
+                   Title="@current.Options.Title"
+                   Description="@current.Options.Description"
+                   DescriptionContent="@current.Options.DescriptionContent"
+                   Class="@current.Options.Class"
+                   BackdropClass="@current.Options.BackdropClass"
+                   AlignTop="@current.Options.AlignTop"
+                   CloseOnBackdrop="current.Options.CloseOnBackdrop"
+                   CloseOnEscape="current.Options.CloseOnEscape"
+                   AutoFocus="true"
+                   CancelText="@current.Options.CancelText"
+                   ConfirmText="@current.Options.ConfirmText"
+                   ConfirmVariant="@current.Options.ConfirmVariant"
+                   ConfirmDisabled="@current.Options.ConfirmDisabled"
+                   OnClosed="@(() => current.Cancel())"
+                   OnConfirm="@(() => current.ConfirmAsync())"
+                   FooterContent="@current.Options.FooterContent">
+            @current.Body
+        </WaxDialog>
+    }
+    else
+    {
+        @current.Body
+    }
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        Dialogs.Changed += OnChanged;
+    }
+
+    private void OnChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Dialogs.Changed -= OnChanged;
+}

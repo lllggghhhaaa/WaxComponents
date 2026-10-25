@@ -6,8 +6,11 @@
 
 @if (Open)
 {
-    <div class="fixed inset-0 z-[75] flex items-center justify-center bg-foreground/45 p-4"
-         @onclick="HandleBackdropClick">
+    <div class="@OverlayCss"
+         tabindex="-1"
+         @ref="_overlay"
+         @onclick="HandleBackdropClick"
+         @onkeydown="HandleKeyDown">
         <div @onclick:stopPropagation="true">
             <WaxCard Variant="WaxCardVariant.Elevated" Hoverable="false" Class="@CardCss">
                 @if (!string.IsNullOrEmpty(Title))
@@ -81,11 +84,28 @@
 
     [Parameter] public EventCallback OnConfirm { get; set; }
 
+    /// <summary>Extra classes on the backdrop overlay (extra blur, tint, layering).</summary>
+    [Parameter] public string BackdropClass { get; set; } = string.Empty;
+
+    /// <summary>Whether clicking the backdrop closes the dialog (default true).</summary>
+    [Parameter] public bool CloseOnBackdrop { get; set; } = true;
+
+    /// <summary>Cancels via the Escape key while the overlay holds focus.</summary>
+    [Parameter] public bool CloseOnEscape { get; set; }
+
+    /// <summary>Moves keyboard focus to the overlay when the dialog opens.</summary>
+    [Parameter] public bool AutoFocus { get; set; }
+
+    /// <summary>Anchors the card near the top instead of centering (long content).</summary>
+    [Parameter] public bool AlignTop { get; set; }
+
     /// <summary>Dialog body between the description and the error/footer.</summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>Replaces the default cancel/confirm footer entirely.</summary>
     [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    private ElementReference _overlay;
 
     private bool HasCancelButton => !string.IsNullOrEmpty(CancelText) && OnClosed.HasDelegate;
 
@@ -95,13 +115,42 @@
 
     private bool HasBackdropClose => OnClosed.HasDelegate;
 
+    private string OverlayCss =>
+        ("fixed inset-0 z-[75] flex p-4 bg-foreground/45 "
+            + (AlignTop ? "items-start justify-center pt-[10vh] " : "items-center justify-center ")
+            + BackdropClass).TrimEnd();
+
     private string CardCss =>
         "w-[min(440px,calc(100vw-32px))] max-h-[min(640px,calc(100vh-64px))] overflow-y-auto"
             .MergeClass(Class);
 
-    private Task HandleBackdropClick() => HasBackdropClose ? OnClosed.InvokeAsync() : Task.CompletedTask;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // AutoFocus runs on every render while open so a re-opened dialog (or one
+        // whose outlet re-rendered) still steals focus from the page behind it.
+        if (Open && AutoFocus)
+        {
+            try
+            {
+                await _overlay.FocusAsync();
+            }
+            catch (ObjectDisposedException)
+            {
+                // The dialog was torn down between render and focus.
+            }
+        }
+    }
+
+    private Task HandleBackdropClick() => CloseOnBackdrop && HasBackdropClose
+        ? OnClosed.InvokeAsync()
+        : Task.CompletedTask;
 
     private Task HandleCancelClick() => OnClosed.InvokeAsync();
 
     private Task HandleConfirmClick() => ConfirmDisabled ? Task.CompletedTask : OnConfirm.InvokeAsync();
+
+    private Task HandleKeyDown(KeyboardEventArgs args) =>
+        CloseOnEscape && args.Key == "Escape" && OnClosed.HasDelegate
+            ? OnClosed.InvokeAsync()
+            : Task.CompletedTask;
 }

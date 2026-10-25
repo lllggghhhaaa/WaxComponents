@@ -1,4 +1,4 @@
-﻿/* Wax theme module.
+/* Wax theme module.
  *
  * Theme model: "light", "dark" or "system". The C# ThemeService (Services/Theme)
  * stores the user *preference*; this module resolves it against the OS preference
@@ -6,50 +6,52 @@
  * `html.theme-dark`, see Theme/tokens.css) behaves identically in explicit-dark
  * and system modes.
  *
- * NOTE: the constants below are duplicated in ThemePreloader.razor (which must
- * run inline, before any module import) — keep them in sync.
+ * NOTE: the constants below are duplicated in themePreloader.ts (the inline
+ * <head> preloader — keep them in sync.
  */
+
 const STORAGE_KEY = "theme";
 const THEME_PREFIX = "theme-";
+
+/** Concrete scheme applied to the document: "light" or "dark". */
+type ResolvedTheme = "light" | "dark";
 
 const media = window.matchMedia("(prefers-color-scheme: dark)");
 const root = document.documentElement;
 
-function removeThemeClasses() {
+function removeThemeClasses(): void {
     [...root.classList]
         .filter(c => c.startsWith(THEME_PREFIX))
         .forEach(c => root.classList.remove(c));
 }
 
-function resolveTheme(theme) {
+function resolveTheme(theme: string | null): ResolvedTheme {
     if (!theme || theme.toLowerCase() === "system")
         return media.matches ? "dark" : "light";
 
-    return theme.toLowerCase();
+    return theme.toLowerCase() === "dark" ? "dark" : "light";
 }
 
-function applyClasses(resolved) {
+function applyClasses(resolved: ResolvedTheme): void {
     removeThemeClasses();
 
-    root.classList.add(resolved === "dark"
-        ? `${THEME_PREFIX}dark`
-        : `${THEME_PREFIX}light`);
+    root.classList.add(`${THEME_PREFIX}${resolved}`);
 }
 
-export function getTheme() {
+export function getTheme(): string | null {
     return localStorage.getItem(STORAGE_KEY);
 }
 
-export function setTheme(theme) {
+export function setTheme(theme: string): void {
     localStorage.setItem(STORAGE_KEY, theme);
     applyClasses(resolveTheme(theme));
 }
 
-export function getSystemTheme() {
+export function getSystemTheme(): ResolvedTheme {
     return media.matches ? "dark" : "light";
 }
 
-export function applyTheme(theme) {
+export function applyTheme(theme: string): void {
     applyClasses(resolveTheme(theme));
 }
 

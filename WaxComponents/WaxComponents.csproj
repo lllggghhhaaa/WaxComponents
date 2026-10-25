@@ -12,7 +12,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>blazor</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageVersion>0.9.6</PackageVersion>
+        <PackageVersion>0.9.7</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,10 +26,12 @@
     <ItemGroup>
         <Content Remove="wwwroot\app.css" />
         <Content Remove="wwwroot\tokens.css" />
+        <Content Remove="wwwroot\js\theme.js" />
     </ItemGroup>
 
-    <!-- Tailwind CSS pipeline. Scans ONLY this project's sources (see app.css). -->
-    <Target Name="NpmInstall" BeforeTargets="BuildTailwind" Condition="!Exists('$(RepoRoot)node_modules/@tailwindcss/cli/package.json')">
+    <!-- Shared npm pipeline bootstrap (Tailwind CSS + TypeScript/esbuild). -->
+    <Target Name="NpmInstall" BeforeTargets="BuildTailwind;BuildScripts"
+            Condition="!Exists('$(RepoRoot)node_modules/@tailwindcss/cli/package.json') Or !Exists('$(RepoRoot)node_modules/typescript/package.json') Or !Exists('$(RepoRoot)node_modules/esbuild/package.json')">
         <Exec Command="npm ci --no-audit --no-fund --loglevel=error" WorkingDirectory="$(RepoRoot)" />
     </Target>
 
@@ -45,13 +47,30 @@
         </ItemGroup>
     </Target>
 
+    <!-- TypeScript pipeline. Sources in Scripts/, compiled by esbuild: theme.js (ES module
+         used by ThemeService) and ThemePreloaderScript.generated.cs (inline <head> script
+         const rendered by ThemePreloader.razor, kept inline to avoid a theme flash). -->
+    <Target Name="BuildScripts" BeforeTargets="BeforeBuild" DependsOnTargets="NpmInstall"
+            Inputs="Scripts\**\*.ts;Scripts\*.mjs;tsconfig.json"
+            Outputs="wwwroot\js\theme.js;Services\Theme\ThemePreloaderScript.generated.cs">
+        <Exec Command="npm run build:js" Condition="'$(Configuration)' != 'Release'" />
+        <Exec Command="npm run build:js:min" Condition="'$(Configuration)' == 'Release'" />
+        <ItemGroup>
+            <Content Include="wwwroot\js\theme.js" CopyToPublishDirectory="PreserveNewest" />
+            <!-- Remove+Include so an evaluation-time glob of the generated file is not compiled twice. -->
+            <Compile Remove="Services\Theme\ThemePreloaderScript.generated.cs" />
+            <Compile Include="Services\Theme\ThemePreloaderScript.generated.cs" />
+        </ItemGroup>
+    </Target>
+
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="LucideBlazor" Version="1.0.6" />
+        <PackageReference Include="LucideBlazor" Version="1.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.1.26425.128" />
     </ItemGroup>
+
 
 </Project>

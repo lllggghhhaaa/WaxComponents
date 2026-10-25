@@ -66,8 +66,6 @@
 
     private static string _disabledCode = "@using WaxComponents.Radio\n\n<WaxRadio @bind-Value=\"_selectedWithDisabled\" Orientation=\"WaxRadioOrientation.Vertical\" Options=\"_optionsWithDisabled\" />\n\n@code {\n    private List<WaxRadio.RadioOption> _optionsWithDisabled =\n    [\n        new(\"Free\", \"free\", \"Basic features\"),\n        new(\"Pro\", \"pro\", \"Advanced features\"),\n        new(\"Enterprise\", \"enterprise\", \"Custom solutions\", Disabled: true)\n    ];\n}";
 
-    private static string _selectionCode = "@using WaxComponents.Radio\n@using WaxComponents.Badge\n\n<p class=\"text-sm text-muted-foreground\">Current selection: <WaxBadge Color=\"WaxColor.Primary\">@_selectedVertical</WaxBadge></p>\n\n@code {\n    private string _selectedVertical = \"standard\";\n}";
-
     protected override void OnInitialized()
     {
         _verticalTabs =

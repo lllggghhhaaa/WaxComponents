@@ -1,10 +1,13 @@
 {
   "name": "waxcomponents",
-  "version": "0.9.4",
+  "version": "0.9.7",
   "description": "Blazor component library (Wax). Dependencies live in the repo-root npm workspace.",
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css",
-    "build:css:min": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css --minify"
+    "build:css:min": "npx @tailwindcss/cli -i app.css -o wwwroot/app.css --minify",
+    "typecheck:js": "npx tsc -p .",
+    "build:js": "npm run typecheck:js && node Scripts/build.mjs debug",
+    "build:js:min": "npm run typecheck:js && node Scripts/build.mjs release"
   },
   "keywords": [
     "blazor"

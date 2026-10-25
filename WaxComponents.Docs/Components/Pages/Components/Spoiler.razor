@@ -1,0 +1,174 @@
+@page "/component/spoiler"
+@rendermode InteractiveServer
+@using WaxComponents.Alert
+@using WaxComponents.Badge
+@using WaxComponents.Card
+@using WaxComponents.Chip
+@using WaxComponents.EmptyState
+@using WaxComponents.SettingRow
+@using WaxComponents.Spoiler
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Spoiler - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Spoiler</h1>
+    <p class="text-muted-foreground">Hide sensitive information behind a blur and gradient veil, revealed on click.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Inline</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_inlineTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Controlled</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_controlledTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">On Other Components</h3>
+        <p class="text-sm text-muted-foreground mb-4">Components that display information accept a <code class="bg-muted px-1 rounded">Spoiler</code> parameter.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_integrationTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _apiKeyRevealed;
+
+    private static List<WaxTabItem> _basicTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <WaxSpoiler>
+                <p class="mb-0 text-sm text-foreground">The release date is October 24th. Don't tell anyone.</p>
+            </WaxSpoiler>
+            <WaxSpoiler>
+                <p class="mb-0 font-mono text-sm text-foreground">sk-live-wax-9f2b41c7a08e4d3f9b6c2e1a8d7f0c5b</p>
+            </WaxSpoiler>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+    ];
+
+    private static List<WaxTabItem> _inlineTabs =
+    [
+        new("Preview", Content: @<div class="space-y-3">
+            <p class="mb-0 text-sm text-foreground">
+                The password is
+                <WaxSpoiler Inline><span class="font-mono font-semibold">wax-hunter-42</span></WaxSpoiler>
+                — click to reveal it.
+            </p>
+            <p class="mb-0 text-sm text-muted-foreground">
+                Server:
+                <WaxSpoiler Inline><span class="font-mono">prod-eu-west-1</span></WaxSpoiler>
+            </p>
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_inlineCode</code></pre>, Icon: "code")
+    ];
+
+    private List<WaxTabItem> _controlledTabs = [];
+
+    private static List<WaxTabItem> _integrationTabs =
+    [
+        new("Preview", Content: @<div class="space-y-4">
+            <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your temporary password is wax-7f3k-99dx." Spoiler="true" />
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-foreground">API key</span>
+                <WaxBadge Color="WaxColor.Muted" Spoiler="true">wax-2k9d-88fa</WaxBadge>
+            </div>
+            <div class="flex items-center gap-2">
+                <WaxChip Spoiler="true">secret-channel</WaxChip>
+                <WaxReactionChip Emoji="🔥" Count="128" Spoiler="true" />
+            </div>
+            <div class="rounded-3xl border border-border bg-background p-2">
+                <WaxSettingRow Title="Anonymous analytics"
+                               Description="Usage events are collected without user identifiers."
+                               Initial="true"
+                               Spoiler="true" />
+            </div>
+            <WaxCard Title="Project Apollo" Icon="lock" Spoiler="true">
+                <p class="mb-0 text-sm text-muted-foreground">Card body stays visible; only the title is hidden.</p>
+            </WaxCard>
+            <WaxEmptyState Headline="Nothing to see here" Detail="The rest of this message is classified." Spoiler="true" />
+        </div>, Icon: "monitor-dot"),
+        new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_integrationCode</code></pre>, Icon: "code")
+    ];
+
+    private static string _basicCode = """
+        @using WaxComponents.Spoiler
+
+        <WaxSpoiler>
+            <p>The release date is October 24th. Don't tell anyone.</p>
+        </WaxSpoiler>
+        """;
+
+    protected override void OnInitialized()
+    {
+        _controlledTabs =
+        [
+            new("Preview", Content: @<div class="space-y-3">
+                <WaxSpoiler @bind-Revealed="_apiKeyRevealed">
+                    <p class="mb-0 font-mono text-sm text-foreground">sk-live-wax-9f2b41c7a08e4d3f9b6c2e1a8d7f0c5b</p>
+                </WaxSpoiler>
+                <p class="mb-0 text-xs text-muted-foreground">Revealed: @_apiKeyRevealed</p>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_controlledCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private static string _inlineCode = """
+        @using WaxComponents.Spoiler
+
+        <p>
+            The password is
+            <WaxSpoiler Inline><span class="font-mono font-semibold">wax-hunter-42</span></WaxSpoiler>
+            — click to reveal it.
+        </p>
+        """;
+
+    private static string _controlledCode = """
+        @using WaxComponents.Spoiler
+
+        <WaxSpoiler @bind-Revealed="_apiKeyRevealed">
+            <p class="font-mono">sk-live-wax-9f2b41c7a08e4d3f9b6c2e1a8d7f0c5b</p>
+        </WaxSpoiler>
+
+        @code {
+            private bool _apiKeyRevealed;
+        }
+        """;
+
+    private static string _integrationCode = """
+        @using WaxComponents.Alert
+        @using WaxComponents.Badge
+        @using WaxComponents.Card
+        @using WaxComponents.Chip
+        @using WaxComponents.EmptyState
+        @using WaxComponents.SettingRow
+        @using WaxComponents.Theme
+
+        <WaxAlert Severity="WaxAlertSeverity.Warning" Message="Your temporary password is wax-7f3k-99dx." Spoiler="true" />
+
+        <WaxBadge Color="WaxColor.Muted" Spoiler="true">wax-2k9d-88fa</WaxBadge>
+
+        <WaxChip Spoiler="true">secret-channel</WaxChip>
+        <WaxReactionChip Emoji="🔥" Count="128" Spoiler="true" />
+
+        <WaxSettingRow Title="Anonymous analytics"
+                       Description="Usage events are collected without user identifiers."
+                       Initial="true"
+                       Spoiler="true" />
+
+        <WaxCard Title="Project Apollo" Icon="lock" Spoiler="true">
+            <p>Card body stays visible; only the title is hidden.</p>
+        </WaxCard>
+
+        <WaxEmptyState Headline="Nothing to see here" Detail="The rest of this message is classified." Spoiler="true" />
+        """;
+}

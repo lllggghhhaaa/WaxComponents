@@ -1,0 +1,63 @@
+@using WaxComponents.Button
+@using WaxComponents.TextField
+
+<div @onkeydown="HandleKeyDown">
+    <WaxDialog Open="true"
+               Title="@Request.Title"
+               Description="@Request.Description"
+               Error="@_error"
+               ConfirmText="@(Request.ConfirmText ?? "Confirm")"
+               CancelText="@(Request.CancelText ?? "Cancel")"
+               ConfirmVariant="@ConfirmVariant"
+               OnClosed="HandleCancel"
+               OnConfirm="HandleConfirm"
+               Class="@Request.Class">
+        <WaxTextField Label="@Request.Label"
+                      Placeholder="@Request.Placeholder"
+                      @bind-Value="_value"
+                      Variant="WaxFieldVariant.Filled"
+                      Class="mb-0"
+                      type="@Request.InputType"
+                      inputmode="@Request.Inputmode"
+                      maxlength="@MaxLengthText"
+                      autocomplete="@Request.Autocomplete"/>
+    </WaxDialog>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public WaxDialogContext<string?> Context { get; set; } = null!;
+
+    [Parameter, EditorRequired] public WaxPromptRequest Request { get; set; } = null!;
+
+    private string _value = string.Empty;
+    private string? _error;
+
+    protected override void OnInitialized() => _value = Request.Initial;
+
+    private string? MaxLengthText => Request.MaxLength?.ToString();
+
+    private WaxButtonVariant ConfirmVariant => Request.Danger
+        ? WaxButtonVariant.Danger
+        : WaxButtonVariant.Filled;
+
+    private void HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+            HandleConfirm();
+    }
+
+    private void HandleCancel() => Context.Cancel();
+
+    private void HandleConfirm()
+    {
+        var value = _value.Trim();
+        var error = Request.Validator?.Invoke(value);
+        if (error is not null)
+        {
+            _error = error;
+            return;
+        }
+
+        Context.Close(value);
+    }
+}
