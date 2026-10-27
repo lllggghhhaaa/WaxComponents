@@ -12,7 +12,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>blazor</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageVersion>0.9.8</PackageVersion>
+        <PackageVersion>0.9.9</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

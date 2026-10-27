@@ -1,0 +1,256 @@
+@page "/component/qr-code"
+@rendermode InteractiveServer
+@using WaxComponents.QrCode
+@using WaxComponents.Slider
+@using WaxComponents.Tabs
+@using WaxComponents.TextField
+
+<PageTitle>QR Code - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">QR Code</h1>
+    <p class="text-muted-foreground">Inline SVG QR codes rendered from a pure C# encoder (byte mode, versions 1–40): theme-aware colors, module and eye shapes, quiet zone control, and a centered logo with module excavation. The default fill follows the theme foreground token, so the symbol stays scannable in light and dark mode.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Module Shapes</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_shapesTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Error Correction</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_ecTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Colors</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_colorsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Logo</h3>
+        <p class="mb-4 text-sm text-muted-foreground">The center modules under the logo are excavated (structural patterns stay). Prefer Quartile or High error correction with a logo: Medium sits right at the correction budget for small symbols.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_logoTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Size &amp; Quiet Zone</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_sizeTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Live Value</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_liveTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private string _liveText = "https://waxcomponents.dev";
+    private int _logoPercent = 20;
+
+    private List<WaxTabItem> _shapesTabs = [];
+    private List<WaxTabItem> _ecTabs = [];
+    private List<WaxTabItem> _colorsTabs = [];
+    private List<WaxTabItem> _logoTabs = [];
+    private List<WaxTabItem> _sizeTabs = [];
+    private List<WaxTabItem> _liveTabs = [];
+
+    private const string _shapesCode = """
+@using WaxComponents.QrCode
+
+<div class="flex flex-wrap items-start gap-8">
+    <WaxQrCode Value="https://waxcomponents.dev" />
+    <WaxQrCode Value="https://waxcomponents.dev" ModuleShape="WaxQrCodeModuleShape.Square" EyeShape="WaxQrCodeEyeShape.Square" />
+    <WaxQrCode Value="https://waxcomponents.dev" ModuleShape="WaxQrCodeModuleShape.Dot" />
+</div>
+""";
+
+    private const string _ecCode = """
+@using WaxComponents.QrCode
+
+<!-- Higher levels restore more damage (or logo coverage) but store less data -->
+<div class="flex flex-wrap items-start gap-8">
+    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Low" />
+    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Medium" />
+    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.High" />
+</div>
+""";
+
+    private const string _colorsCode = """
+@using WaxComponents.QrCode
+
+<div class="flex flex-wrap items-start gap-8">
+    <!-- Default: theme foreground on a transparent background -->
+    <WaxQrCode Value="https://waxcomponents.dev" />
+
+    <!-- Custom ink on the surface -->
+    <WaxQrCode Value="https://waxcomponents.dev" Foreground="#C4522A" />
+
+    <!-- Plate behind the quiet zone -->
+    <WaxQrCode Value="https://waxcomponents.dev" Foreground="#2D1B0E" Background="#F5E8D8" />
+</div>
+""";
+
+    private const string _logoCode = """
+@using WaxComponents.QrCode
+
+<div class="flex flex-wrap items-start gap-8">
+    <!-- Plain logo over excavated modules; Quartile keeps it comfortably scannable -->
+    <WaxQrCode Value="https://waxcomponents.dev" LogoSrc="/wax-logo.svg"
+               ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+
+    <!-- Rounded logo on a plate; Quartile or High keeps a logo comfortably scannable -->
+    <WaxQrCode Value="https://waxcomponents.dev" LogoSrc="/wax-logo.svg"
+               LogoBackground="#FEF0DC" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+
+    <!-- Larger logo (clamped to 30%) with maximum error correction -->
+    <WaxQrCode Value="https://waxcomponents.dev" LogoSrc="/wax-logo.svg"
+               LogoSizePercent="28" LogoRounded="false" ErrorCorrection="WaxQrCodeErrorCorrection.High" />
+</div>
+""";
+
+    private const string _sizeCode = """
+@using WaxComponents.QrCode
+
+<div class="flex flex-wrap items-end gap-8">
+    <WaxQrCode Value="https://waxcomponents.dev" Size="96" />
+    <WaxQrCode Value="https://waxcomponents.dev" Size="160" />
+
+    <!-- Tight quiet zone (scanners may need the default of 4) -->
+    <WaxQrCode Value="https://waxcomponents.dev" Size="160" QuietZone="1" />
+</div>
+""";
+
+    private const string _liveCode = """
+@using WaxComponents.QrCode
+@using WaxComponents.Slider
+@using WaxComponents.TextField
+
+<div class="flex flex-wrap items-start gap-10">
+    <WaxQrCode Value="@_text" Size="180" LogoSrc="/wax-logo.svg" LogoSizePercent="@_logoPercent"
+               LogoBackground="#FEF0DC" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+    <div class="w-72 space-y-5">
+        <WaxTextField Label="Content" @bind-Value="_text" Variant="WaxFieldVariant.Outlined" />
+        <WaxSlider Label="Logo size" Min="10" Max="30" Step="1"
+                   Value="@_logoPercent" ValueChanged="v => _logoPercent = (int)v" />
+    </div>
+</div>
+
+@code {
+    private string _text = "https://waxcomponents.dev";
+    private int _logoPercent = 20;
+}
+""";
+
+    protected override void OnInitialized()
+    {
+        _shapesTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Rounded (default)</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Square</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ModuleShape="WaxQrCodeModuleShape.Square" EyeShape="WaxQrCodeEyeShape.Square" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Dot</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ModuleShape="WaxQrCodeModuleShape.Dot" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_shapesCode</code></pre>, Icon: "code")
+        ];
+
+        _ecTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Low ~7%</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Low" Size="140" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Medium ~15%</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Medium" Size="140" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Quartile ~25%</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" Size="140" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">High ~30%</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" ErrorCorrection="WaxQrCodeErrorCorrection.High" Size="140" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_ecCode</code></pre>, Icon: "code")
+        ];
+
+        _colorsTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Theme default</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="140" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Custom ink</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="140" Foreground="#C4522A" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">On a plate</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="140" Foreground="#2D1B0E" Background="#F5E8D8" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_colorsCode</code></pre>, Icon: "code")
+        ];
+
+        _logoTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Plain</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="160" LogoSrc="/wax-logo.svg"
+                               ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Rounded + plate</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="160" LogoSrc="/wax-logo.svg"
+                               LogoBackground="#FEF0DC" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">28%, square, high EC</p>
+                    <WaxQrCode Value="https://waxcomponents.dev" Size="160" LogoSrc="/wax-logo.svg"
+                               LogoSizePercent="28" LogoRounded="false" ErrorCorrection="WaxQrCodeErrorCorrection.High" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_logoCode</code></pre>, Icon: "code")
+        ];
+
+        _sizeTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-end gap-8">
+                <WaxQrCode Value="https://waxcomponents.dev" Size="96" />
+                <WaxQrCode Value="https://waxcomponents.dev" Size="160" />
+                <WaxQrCode Value="https://waxcomponents.dev" Size="160" QuietZone="1" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_sizeCode</code></pre>, Icon: "code")
+        ];
+
+        _liveTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-10">
+                <WaxQrCode Value="@_liveText" Size="180" LogoSrc="/wax-logo.svg" LogoSizePercent="@_logoPercent"
+                           LogoBackground="#FEF0DC" ErrorCorrection="WaxQrCodeErrorCorrection.Quartile" />
+                <div class="w-72 space-y-5">
+                    <WaxTextField Label="Content" @bind-Value="_liveText" Variant="WaxFieldVariant.Outlined" />
+                    <WaxSlider Label="Logo size" Min="10" Max="30" Step="1" ShowValue="true"
+                               Value="@_logoPercent" ValueChanged="v => _logoPercent = (int)v" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_liveCode</code></pre>, Icon: "code")
+        ];
+    }
+}

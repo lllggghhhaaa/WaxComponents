@@ -1,0 +1,151 @@
+@using System.Globalization
+@using WaxComponents.Utils
+@inherits WaxComponent
+
+@if (_geometry is not null)
+{
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="@SvgClass"
+         style="@Style"
+         role="img"
+         aria-label="@Label"
+         viewBox="0 0 @_viewBox @_viewBox"
+         width="@Size"
+         shape-rendering="@(ModuleShape == WaxQrCodeModuleShape.Square ? "crispEdges" : "geometricPrecision")"
+         @attributes="AdditionalAttributes">
+        @if (Background is { Length: > 0 })
+        {
+            <rect x="0" y="0" width="@_viewBox" height="@_viewBox" fill="@Background" />
+        }
+
+        <g transform="@($"translate({_quiet}, {_quiet})")">
+            <path d="@_geometry.ModulePath" fill="@EffectiveForeground" />
+            <path d="@_geometry.EyePath" fill="@EffectiveForeground" fill-rule="evenodd" />
+
+            @if (_geometry.HasLogo)
+            {
+                @if (LogoRounded)
+                {
+                    <clipPath id="@_clipId">
+                        <rect x="@F(_geometry.LogoX)" y="@F(_geometry.LogoY)"
+                              width="@F(_geometry.LogoSize)" height="@F(_geometry.LogoSize)"
+                              rx="@F(_geometry.LogoSize * 0.18)" />
+                    </clipPath>
+                    <g clip-path="@($"url(#{_clipId})")">
+                        @if (LogoBackground is { Length: > 0 })
+                        {
+                            <rect x="@F(_geometry.LogoX)" y="@F(_geometry.LogoY)"
+                                  width="@F(_geometry.LogoSize)" height="@F(_geometry.LogoSize)"
+                                  rx="@F(_geometry.LogoSize * 0.18)" fill="@LogoBackground" />
+                        }
+                        <image href="@LogoSrc" x="@F(_geometry.LogoX)" y="@F(_geometry.LogoY)"
+                               width="@F(_geometry.LogoSize)" height="@F(_geometry.LogoSize)"
+                               preserveAspectRatio="xMidYMid meet" />
+                    </g>
+                }
+                else
+                {
+                    @if (LogoBackground is { Length: > 0 })
+                    {
+                        <rect x="@F(_geometry.LogoX)" y="@F(_geometry.LogoY)"
+                              width="@F(_geometry.LogoSize)" height="@F(_geometry.LogoSize)"
+                              fill="@LogoBackground" />
+                    }
+                    <image href="@LogoSrc" x="@F(_geometry.LogoX)" y="@F(_geometry.LogoY)"
+                           width="@F(_geometry.LogoSize)" height="@F(_geometry.LogoSize)"
+                           preserveAspectRatio="xMidYMid meet" />
+                }
+            }
+        </g>
+    </svg>
+}
+
+@code {
+    private QrMatrix? _matrix;
+    private WaxQrCodeGeometry? _geometry;
+    private string? _signature;
+    private readonly string _clipId = $"waxqr-{Guid.NewGuid().ToString("N")[..8]}";
+
+    /// <summary>Text to encode (UTF-8, byte mode). Empty or null renders nothing.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Error-correction level; higher levels restore more damage or covered modules but store less text. Quartile or High is recommended when showing a logo.</summary>
+    [Parameter] public WaxQrCodeErrorCorrection ErrorCorrection { get; set; } = WaxQrCodeErrorCorrection.Medium;
+
+    /// <summary>Corner style of the modules. Rounded matches the library's soft look; Square is the classic form.</summary>
+    [Parameter] public WaxQrCodeModuleShape ModuleShape { get; set; } = WaxQrCodeModuleShape.Rounded;
+
+    /// <summary>Corner style of the three finder eyes.</summary>
+    [Parameter] public WaxQrCodeEyeShape EyeShape { get; set; } = WaxQrCodeEyeShape.Rounded;
+
+    /// <summary>Rendered width in pixels; override responsively with Class (the height keeps the code's ratio).</summary>
+    [Parameter] public int Size { get; set; } = 200;
+
+    /// <summary>Light border around the symbol, in modules (spec default 4; scanners need it).</summary>
+    [Parameter] public int QuietZone { get; set; } = 4;
+
+    /// <summary>Module color as any CSS color; defaults to the theme foreground token.</summary>
+    [Parameter] public string? Foreground { get; set; }
+
+    /// <summary>Background color; defaults to transparent so the surface shows through the quiet zone.</summary>
+    [Parameter] public string? Background { get; set; }
+
+    /// <summary>Logo image URL or data URI drawn in the center; empty renders no logo. Data modules under the logo are excavated, so pair it with Quartile or High error correction to keep the symbol reliably scannable.</summary>
+    [Parameter] public string? LogoSrc { get; set; }
+
+    /// <summary>Logo edge as a percentage of the code (clamped to 10–30% so the code stays scannable).</summary>
+    [Parameter] public int LogoSizePercent { get; set; } = 20;
+
+    /// <summary>Rounds the logo corners; pairs well with a LogoBackground plate.</summary>
+    [Parameter] public bool LogoRounded { get; set; } = true;
+
+    /// <summary>Optional plate behind the logo, useful for transparent logos on busy backgrounds.</summary>
+    [Parameter] public string? LogoBackground { get; set; }
+
+    /// <summary>Accessible description announced by screen readers.</summary>
+    [Parameter] public string Label { get; set; } = "QR code";
+
+    private int _quiet;
+
+    private double _viewBox;
+
+    private bool HasLogo => !string.IsNullOrWhiteSpace(LogoSrc);
+
+    private string EffectiveForeground => string.IsNullOrWhiteSpace(Foreground) ? "var(--color-foreground)" : Foreground;
+
+    private string SvgClass => WaxQrCodeStyles.Svg.MergeClass(Class);
+
+    private static string F(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
+
+    protected override void OnParametersSet()
+    {
+        _quiet = Math.Clamp(QuietZone, 0, 10);
+        var logoPercent = HasLogo ? Math.Clamp(LogoSizePercent, 10, 30) : (int?)null;
+
+        var signature = $"{Value}\u0001{(int)ErrorCorrection}\u0001{(int)ModuleShape}\u0001{(int)EyeShape}\u0001{_quiet}\u0001{LogoSrc}\u0001{logoPercent}";
+        if (signature == _signature)
+        {
+            return;
+        }
+
+        _signature = signature;
+        _geometry = null;
+        _matrix = null;
+
+        if (string.IsNullOrWhiteSpace(Value))
+        {
+            return;
+        }
+
+        try
+        {
+            _matrix = WaxQrCodeEncoder.Encode(Value, ErrorCorrection);
+            _geometry = WaxQrCodeRenderer.Render(_matrix, ModuleShape, EyeShape, logoPercent);
+            _viewBox = _matrix.Size + 2 * _quiet;
+        }
+        catch (ArgumentException)
+        {
+            // Text exceeds the byte-mode capacity of version 40; render nothing rather than crash.
+        }
+    }
+}

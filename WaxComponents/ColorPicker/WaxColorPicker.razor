@@ -770,27 +770,17 @@
 
     private async Task CopyCurrentColorAsync()
     {
-        if (_jsInterop is null)
-        {
-            return;
-        }
+        if (_jsInterop is null) return;
 
         var copied = await _jsInterop.InvokeAsync<bool>("copyText", FormattedValue);
-        if (!copied)
-        {
-            return;
-        }
+        if (!copied) return;
 
         _copied = true;
         var generation = ++_copyGeneration;
-        StateHasChanged();
         _ = Task.Run(async () =>
         {
             await Task.Delay(CopiedIndicatorMilliseconds);
-            if (generation != _copyGeneration)
-            {
-                return;
-            }
+            if (generation != _copyGeneration) return;
 
             try
             {
@@ -805,10 +795,7 @@
 
     private async Task PickWithEyedropperAsync()
     {
-        if (_jsInterop is null)
-        {
-            return;
-        }
+        if (_jsInterop is null) return;
 
         var result = await _jsInterop.InvokeAsync<EyedropperResult>("pickColorWithEyedropper");
         if (!result.Supported)
@@ -817,10 +804,7 @@
             return;
         }
 
-        if (result.Color is null)
-        {
-            return;
-        }
+        if (result.Color is null) return;
 
         await ApplyHexAsync(result.Color, EmitMode.Commit);
     }
@@ -829,10 +813,7 @@
 
     private async Task ToggleOpenAsync()
     {
-        if (Disabled)
-        {
-            return;
-        }
+        if (Disabled) return;
 
         await SetOpenAsync(!IsOpen);
     }
@@ -864,10 +845,7 @@
 
     private void OnPanelKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key != "Escape")
-        {
-            return;
-        }
+        if (e.Key != "Escape") return;
 
         if (_formatMenuOpen)
         {
