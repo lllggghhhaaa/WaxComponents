@@ -1,66 +1,73 @@
 @using WaxComponents.Card
 @using WaxComponents.Button
 @using WaxComponents.Utils
-
+@using Microsoft.JSInterop
 @inherits WaxComponent
+@implements IAsyncDisposable
+@inject IJSRuntime Js
 
-@if (Open)
-{
-    <div class="@OverlayCss"
-         tabindex="-1"
-         @ref="_overlay"
-         @onclick="HandleBackdropClick"
-         @onkeydown="HandleKeyDown">
-        <div @onclick:stopPropagation="true">
-            <WaxCard Variant="WaxCardVariant.Elevated" Hoverable="false" Class="@CardCss">
-                @if (!string.IsNullOrEmpty(Title))
-                {
-                    <h3 class="mb-1.5 mt-0 text-lg">@Title</h3>
-                }
-                @if (DescriptionContent is not null)
-                {
-                    <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@DescriptionContent</p>
-                }
-                else if (!string.IsNullOrEmpty(Description))
-                {
-                    <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@Description</p>
-                }
+@* Native <dialog>-based dialog. Open shows it with showModal() (default) or show()
+   (Modal="false"); the JS module bridges cancel/close/backdrop back here so the
+   Open parameter stays the single source of truth for what is on screen. *@
+<dialog @ref="_dialog"
+        class="@DialogCss"
+        style="@Style"
+        @attributes="AdditionalAttributes">
+    <WaxCard Variant="WaxCardVariant.Elevated" Hoverable="false">
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <h3 class="mb-1.5 mt-0 text-lg">@Title</h3>
+        }
+        @if (DescriptionContent is not null)
+        {
+            <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@DescriptionContent</p>
+        }
+        else if (!string.IsNullOrEmpty(Description))
+        {
+            <p class="mb-3 mt-0 text-[13px] text-muted-foreground">@Description</p>
+        }
 
-                @ChildContent
+        @ChildContent
 
-                @if (!string.IsNullOrEmpty(Error))
-                {
-                    <p class="mb-2.5 mt-0 text-[13px] text-destructive">@Error</p>
-                }
+        @if (!string.IsNullOrEmpty(Error))
+        {
+            <p class="mb-2.5 mt-0 text-[13px] text-destructive">@Error</p>
+        }
 
-                @if (FooterContent is not null)
+        @if (FooterContent is not null)
+        {
+            @FooterContent
+        }
+        else if (HasFooterButtons)
+        {
+            <div class="mt-3.5 flex items-center justify-end gap-2.5">
+                @if (HasCancelButton)
                 {
-                    @FooterContent
+                    <WaxButton Variant="WaxButtonVariant.Text" OnClick="HandleCancelClick">
+                        <ChildContent>@CancelText</ChildContent>
+                    </WaxButton>
                 }
-                else if (HasFooterButtons)
+                @if (HasConfirmButton)
                 {
-                    <div class="mt-3.5 flex items-center justify-end gap-2.5">
-                        @if (HasCancelButton)
-                        {
-                            <WaxButton Variant="WaxButtonVariant.Text" OnClick="HandleCancelClick">
-                                <ChildContent>@CancelText</ChildContent>
-                            </WaxButton>
-                        }
-                        @if (HasConfirmButton)
-                        {
-                            <WaxButton Variant="@ConfirmVariant" Disabled="@ConfirmDisabled" OnClick="HandleConfirmClick">
-                                <ChildContent>@ConfirmText</ChildContent>
-                            </WaxButton>
-                        }
-                    </div>
+                    <WaxButton Variant="@ConfirmVariant" Disabled="@ConfirmDisabled" OnClick="HandleConfirmClick">
+                        <ChildContent>@ConfirmText</ChildContent>
+                    </WaxButton>
                 }
-            </WaxCard>
-        </div>
-    </div>
-}
+            </div>
+        }
+    </WaxCard>
+</dialog>
 
 @code {
     [Parameter] public bool Open { get; set; }
+
+    /// <summary>
+    /// Modal by default: showModal() renders in the top layer with the native
+    /// ::backdrop, focus trap and Escape handling. Modal="false" shows a non-modal
+    /// floating dialog (show()) — the page stays interactive, there is no backdrop
+    /// and CloseOnBackdrop is ignored.
+    /// </summary>
+    [Parameter] public bool Modal { get; set; } = true;
 
     [Parameter] public string Title { get; set; } = string.Empty;
 
@@ -84,17 +91,17 @@
 
     [Parameter] public EventCallback OnConfirm { get; set; }
 
-    /// <summary>Extra classes on the backdrop overlay (extra blur, tint, layering).</summary>
+    /// <summary>
+    /// Extra classes for the ::backdrop pseudo-element (tint, blur) — prefix utilities
+    /// with <c>backdrop:</c>. Only applies to modal dialogs.
+    /// </summary>
     [Parameter] public string BackdropClass { get; set; } = string.Empty;
 
-    /// <summary>Whether clicking the backdrop closes the dialog (default true).</summary>
+    /// <summary>Whether clicking the backdrop closes the dialog (default true; modal only).</summary>
     [Parameter] public bool CloseOnBackdrop { get; set; } = true;
 
-    /// <summary>Cancels via the Escape key while the overlay holds focus.</summary>
+    /// <summary>Whether the Escape key closes the dialog (default false).</summary>
     [Parameter] public bool CloseOnEscape { get; set; }
-
-    /// <summary>Moves keyboard focus to the overlay when the dialog opens.</summary>
-    [Parameter] public bool AutoFocus { get; set; }
 
     /// <summary>Anchors the card near the top instead of centering (long content).</summary>
     [Parameter] public bool AlignTop { get; set; }
@@ -105,7 +112,17 @@
     /// <summary>Replaces the default cancel/confirm footer entirely.</summary>
     [Parameter] public RenderFragment? FooterContent { get; set; }
 
-    private ElementReference _overlay;
+    private ElementReference _dialog;
+
+    private WaxDialogJs? _jsInterop;
+
+    private DotNetObjectReference<WaxDialog>? _selfRef;
+
+    // Whether the element is currently shown in JS, reconciled against Open on every
+    // render so parameter flips and externally fired close events converge.
+    private bool _shown;
+
+    private bool _hidePending;
 
     private bool HasCancelButton => !string.IsNullOrEmpty(CancelText) && OnClosed.HasDelegate;
 
@@ -115,42 +132,89 @@
 
     private bool HasBackdropClose => OnClosed.HasDelegate;
 
-    private string OverlayCss =>
-        ("fixed inset-0 z-[75] flex p-4 bg-foreground/45 "
-            + (AlignTop ? "items-start justify-center pt-[10vh] " : "items-center justify-center ")
-            + BackdropClass).TrimEnd();
-
-    private string CardCss =>
-        "w-[min(440px,calc(100vw-32px))] max-h-[min(640px,calc(100vh-64px))] overflow-y-auto"
-            .MergeClass(Class);
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private string DialogCss
     {
-        // AutoFocus runs on every render while open so a re-opened dialog (or one
-        // whose outlet re-rendered) still steals focus from the page behind it.
-        if (Open && AutoFocus)
+        get
         {
-            try
-            {
-                await _overlay.FocusAsync();
-            }
-            catch (ObjectDisposedException)
-            {
-                // The dialog was torn down between render and focus.
-            }
+            var position = AlignTop
+                ? "top-[10vh] -translate-x-1/2"
+                : "top-1/2 -translate-x-1/2 -translate-y-1/2";
+
+            return ("fixed left-1/2 z-[75] w-[min(440px,calc(100vw-32px))] max-h-[min(640px,calc(100vh-64px))] "
+                    + "overflow-y-auto border-0 bg-transparent p-0 text-current backdrop:bg-foreground/45 "
+                    + position + " " + BackdropClass).MergeClass(Class);
         }
     }
 
-    private Task HandleBackdropClick() => CloseOnBackdrop && HasBackdropClose
-        ? OnClosed.InvokeAsync()
-        : Task.CompletedTask;
+    private DotNetObjectReference<WaxDialog> SelfRef => _selfRef ??= DotNetObjectReference.Create(this);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _jsInterop ??= new WaxDialogJs(Js);
+
+        try
+        {
+            if (Open && !_shown)
+            {
+                _hidePending = false;
+                await _jsInterop.InvokeAsync<object?>("show", _dialog, SelfRef,
+                    new { modal = Modal, closeOnBackdrop = CloseOnBackdrop });
+                _shown = true;
+            }
+            else if (!Open && _shown)
+            {
+                _hidePending = true;
+                await _jsInterop.InvokeAsync<object?>("hide", _dialog);
+                _shown = false;
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // The dialog was torn down between render and the interop call.
+        }
+    }
 
     private Task HandleCancelClick() => OnClosed.InvokeAsync();
 
     private Task HandleConfirmClick() => ConfirmDisabled ? Task.CompletedTask : OnConfirm.InvokeAsync();
 
-    private Task HandleKeyDown(KeyboardEventArgs args) =>
-        CloseOnEscape && args.Key == "Escape" && OnClosed.HasDelegate
-            ? OnClosed.InvokeAsync()
-            : Task.CompletedTask;
+    [JSInvokable]
+    public Task OnWaxDialogCancel() =>
+        CloseOnEscape ? OnClosed.InvokeAsync() : Task.CompletedTask;
+
+    [JSInvokable]
+    public Task OnWaxDialogBackdropClick() =>
+        CloseOnBackdrop && HasBackdropClose ? OnClosed.InvokeAsync() : Task.CompletedTask;
+
+    [JSInvokable]
+    public Task OnWaxDialogClosed()
+    {
+        _shown = false;
+
+        if (_hidePending)
+        {
+            // Close was requested from here (Open=false); OnClosed already ran.
+            _hidePending = false;
+            return Task.CompletedTask;
+        }
+
+        // Closed outside the render loop; sync the opener.
+        return OnClosed.InvokeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_shown && _jsInterop is not null)
+        {
+            _shown = false;
+            await _jsInterop.InvokeAsync<object?>("dispose", _dialog);
+        }
+
+        _selfRef?.Dispose();
+
+        if (_jsInterop is not null)
+        {
+            await _jsInterop.DisposeAsync();
+        }
+    }
 }

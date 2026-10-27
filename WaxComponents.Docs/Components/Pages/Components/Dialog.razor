@@ -8,7 +8,7 @@
 
 <div class="mb-8">
     <h1 class="text-3xl font-display font-bold text-foreground mb-2">Dialog</h1>
-    <p class="text-muted-foreground">Modal dialogs for confirmations, forms, and focused tasks.</p>
+    <p class="text-muted-foreground">Modal and non-modal dialogs built on the native &lt;dialog&gt; element — confirmations, forms, and focused tasks. Modal dialogs render in the top layer with the native backdrop and focus trap; Modal="false" floats a dialog while the page stays interactive.</p>
 </div>
 
 <div class="space-y-6">
@@ -26,15 +26,34 @@
         <h3 class="font-semibold text-foreground mb-1">Error State</h3>
         <WaxTab Variant="WaxTabVariant.Primary" Tabs="_errorTabs" TabListClass="mb-4" />
     </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Non-modal</h3>
+        <p class="mb-3 text-[13px] text-muted-foreground">With Modal="false" the dialog floats over the page without blocking it — no backdrop, the background stays clickable. Escape closes it here via CloseOnEscape.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_nonModalTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">From Code (Service)</h3>
+        <p class="mb-3 text-[13px] text-muted-foreground">IWaxDialogService opens dialogs from anywhere in the interactive tree and awaits typed results. Requires a WaxDialogOutlet in the layout.</p>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_serviceTabs" TabListClass="mb-4" />
+    </div>
 </div>
 
 @code {
     private bool _basicOpen;
     private bool _contentOpen;
     private bool _errorOpen;
+    private bool _nonModalOpen;
+    private int _behindClicks;
+    private string? _serviceResult;
     private List<WaxTabItem> _basicTabs = [];
     private List<WaxTabItem> _contentTabs = [];
     private List<WaxTabItem> _errorTabs = [];
+    private List<WaxTabItem> _nonModalTabs = [];
+    private List<WaxTabItem> _serviceTabs = [];
+
+    [Inject] private IWaxDialogService Dialogs { get; set; } = null!;
 
     private void OpenBasic() => _basicOpen = true;
     private void CloseBasic() => _basicOpen = false;
@@ -42,6 +61,34 @@
     private void CloseContent() => _contentOpen = false;
     private void OpenError() => _errorOpen = true;
     private void CloseError() => _errorOpen = false;
+    private void OpenNonModal() => _nonModalOpen = true;
+    private void CloseNonModal() => _nonModalOpen = false;
+
+    private async Task ConfirmDelete()
+    {
+        var confirmed = await Dialogs.ConfirmAsync(new WaxConfirmRequest
+        {
+            Title = "Delete channel",
+            Description = "The channel and its message history will be removed for everyone.",
+            ConfirmText = "Delete",
+            Danger = true,
+        });
+        _serviceResult = confirmed ? "ConfirmAsync → true" : "ConfirmAsync → false (dismissed)";
+    }
+
+    private async Task PromptRename()
+    {
+        var name = await Dialogs.PromptAsync(new WaxPromptRequest
+        {
+            Title = "Rename channel",
+            Label = "Channel name",
+            Placeholder = "general",
+            Initial = "general",
+            MaxLength = 32,
+            Validator = value => string.IsNullOrWhiteSpace(value) ? "Name cannot be empty." : null,
+        });
+        _serviceResult = name is null ? "PromptAsync → null (dismissed)" : $"PromptAsync → \"{name}\"";
+    }
 
     protected override void OnInitialized()
     {
@@ -109,6 +156,45 @@
                            OnConfirm="CloseError" />
             </div>, Icon: "monitor-dot"),
             new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_errorCode</code></pre>, Icon: "code")
+        ];
+
+        _nonModalTabs =
+        [
+            new("Preview", Content: @<div>
+                <div class="flex items-center gap-2">
+                    <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="OpenNonModal">Open non-modal dialog</WaxButton>
+                    <WaxButton Variant="WaxButtonVariant.Text" OnClick="() => _behindClicks++">Clicks behind: @_behindClicks</WaxButton>
+                </div>
+
+                <WaxDialog Open="_nonModalOpen"
+                           Modal="false"
+                           Title="Quick note"
+                           CloseOnEscape="true"
+                           OnClosed="CloseNonModal">
+                    <ChildContent>
+                        <p class="mb-3 mt-0 text-[13px] text-muted-foreground">The page behind stays interactive — try the counter button or scroll around.</p>
+                        <div class="flex justify-end">
+                            <WaxButton Variant="WaxButtonVariant.Filled" OnClick="CloseNonModal">Close</WaxButton>
+                        </div>
+                    </ChildContent>
+                </WaxDialog>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_nonModalCode</code></pre>, Icon: "code")
+        ];
+
+        _serviceTabs =
+        [
+            new("Preview", Content: @<div>
+                <div class="flex items-center gap-2">
+                    <WaxButton Variant="WaxButtonVariant.Outlined" OnClick="ConfirmDelete">Confirm</WaxButton>
+                    <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="PromptRename">Prompt</WaxButton>
+                </div>
+                @if (_serviceResult is not null)
+                {
+                    <p class="mb-0 mt-3 text-[13px] text-muted-foreground">@_serviceResult</p>
+                }
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_serviceCode</code></pre>, Icon: "code")
         ];
     }
 
@@ -191,6 +277,65 @@
 
             private void OpenDialog() => _open = true;
             private void CloseDialog() => _open = false;
+        }
+        """;
+
+    private static string _nonModalCode = """
+        @using WaxComponents.Button
+        @using WaxComponents.Dialog
+
+        <WaxButton OnClick="OpenDialog">Open non-modal dialog</WaxButton>
+
+        @* The page behind stays interactive: no backdrop, no blocking. *@
+        <WaxDialog Open="_open"
+                   Modal="false"
+                   Title="Quick note"
+                   CloseOnEscape="true"
+                   OnClosed="CloseDialog">
+            <ChildContent>
+                <p class="mb-3 mt-0 text-[13px] text-muted-foreground">Anything on the page keeps working.</p>
+            </ChildContent>
+        </WaxDialog>
+
+        @code {
+            private bool _open;
+
+            private void OpenDialog() => _open = true;
+            private void CloseDialog() => _open = false;
+        }
+        """;
+
+    private static string _serviceCode = """
+        @using WaxComponents.Dialog
+        @inject IWaxDialogService Dialogs
+
+        <WaxButton OnClick="ConfirmDelete">Confirm</WaxButton>
+        <WaxButton OnClick="PromptRename">Prompt</WaxButton>
+
+        @code {
+            private async Task ConfirmDelete()
+            {
+                var confirmed = await Dialogs.ConfirmAsync(new WaxConfirmRequest
+                {
+                    Title = "Delete channel",
+                    Description = "The channel and its message history will be removed for everyone.",
+                    ConfirmText = "Delete",
+                    Danger = true,
+                });
+                // confirmed: true when confirmed, false when dismissed
+            }
+
+            private async Task PromptRename()
+            {
+                var name = await Dialogs.PromptAsync(new WaxPromptRequest
+                {
+                    Title = "Rename channel",
+                    Label = "Channel name",
+                    Initial = "general",
+                    Validator = value => string.IsNullOrWhiteSpace(value) ? "Name cannot be empty." : null,
+                });
+                // name: the trimmed value, or null when dismissed
+            }
         }
         """;
 }

@@ -36,6 +36,13 @@ public sealed record WaxDialogOptions
     /// <summary>Renders the content without the WaxDialog shell and backdrop.</summary>
     public bool UseShell { get; init; } = true;
 
+    /// <summary>
+    /// Modal by default (showModal: top layer, native backdrop, focus trap, blocked
+    /// page). False shows a non-modal floating dialog (show) — the page stays
+    /// interactive and CloseOnBackdrop/BackdropClass are ignored.
+    /// </summary>
+    public bool Modal { get; init; } = true;
+
     /// <summary>Whether clicking the backdrop cancels the dialog (default true).</summary>
     public bool CloseOnBackdrop { get; init; } = true;
 

@@ -3,6 +3,7 @@
 @inject IThemeService Theme
 @using LucideBlazor
 @using WaxComponents.Badge
+@using WaxComponents.Dialog
 @using WaxComponents.Navigation
 @using WaxComponents.Services.Theme
 @using WaxComponents.Switch
@@ -44,6 +45,8 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+<WaxDialogOutlet />
 
 @code {
     private bool _darkMode;
