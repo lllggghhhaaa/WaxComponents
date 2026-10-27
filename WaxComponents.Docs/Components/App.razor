@@ -1,6 +1,8 @@
-﻿@using WaxComponents.Services.Theme
+﻿@using WaxComponents.Theme
+@using WaxComponents.Services.Theme
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="@ThemeClassAttr">
 
 <head>
     <meta charset="utf-8"/>
@@ -24,3 +26,12 @@
 </body>
 
 </html>
+
+@code {
+    // Blazor's enhanced SSR navigation patches the <html> class attribute from
+    // the server response, wiping the preloader-applied theme class off and
+    // flashing the wrong theme until interop re-applies it. SSR the current
+    // theme class from the cookie the theme module maintains instead, so the
+    // patch matches the client-applied value.
+    private string? ThemeClassAttr => ThemeCookie.ReadThemeClass(HttpContextAccessor.HttpContext);
+}

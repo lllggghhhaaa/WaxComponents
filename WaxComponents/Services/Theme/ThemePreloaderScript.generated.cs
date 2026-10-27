@@ -6,17 +6,7 @@ namespace WaxComponents.Services.Theme;
 internal static class ThemePreloaderScript
 {
     internal const string Script = """
-"use strict";
-(() => {
-  const STORAGE_KEY = "theme";
-  const THEME_PREFIX = "theme-";
-  const VALID = ["system", "light", "dark"];
-  const root = document.documentElement;
-  [...root.classList].filter((c) => c.startsWith(THEME_PREFIX)).forEach((c) => root.classList.remove(c));
-  const stored = localStorage.getItem(STORAGE_KEY)?.toLowerCase();
-  const theme = stored && VALID.includes(stored) ? stored : "system";
-  root.classList.add(theme === "dark" ? `${THEME_PREFIX}dark` : theme === "light" || !window.matchMedia("(prefers-color-scheme: dark)").matches ? `${THEME_PREFIX}light` : `${THEME_PREFIX}dark`);
-})();
+"use strict";(()=>{const r="theme",a="theme-",m="wax-theme",d=["system","light","dark"],s=document.documentElement;[...s.classList].filter(t=>t.startsWith(a)).forEach(t=>s.classList.remove(t));const e=localStorage.getItem(r)?.toLowerCase(),o=e&&d.includes(e)?e:"system",c=o==="dark"?"dark":o==="light"||!window.matchMedia("(prefers-color-scheme: dark)").matches?"light":"dark";s.classList.add(a+c);try{document.cookie=`${m}=${c}; path=/; max-age=31536000; samesite=lax`}catch{}})();
 
 """;
 }

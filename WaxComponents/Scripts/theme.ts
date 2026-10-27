@@ -6,12 +6,20 @@
  * `html.theme-dark`, see Theme/tokens.css) behaves identically in explicit-dark
  * and system modes.
  *
+ * The resolved scheme is also mirrored into a cookie that the root component
+ * (App.razor) SSRs onto `<html>`. Blazor's enhanced navigation patches the
+ * <html> class attribute from the SSR response; without a server-rendered
+ * class that patch wipes the applied class off and the page flashes with the
+ * wrong theme for a few frames until interop re-applies it.
+ *
  * NOTE: the constants below are duplicated in themePreloader.ts (the inline
- * <head> preloader — keep them in sync.
+ * <head> preloader — keep them in sync). THEME_COOKIE must also match
+ * ThemeCookie.Name in Theme/ThemeCookie.cs.
  */
 
 const STORAGE_KEY = "theme";
 const THEME_PREFIX = "theme-";
+const THEME_COOKIE = "wax-theme";
 
 /** Concrete scheme applied to the document: "light" or "dark". */
 type ResolvedTheme = "light" | "dark";
@@ -36,6 +44,15 @@ function applyClasses(resolved: ResolvedTheme): void {
     removeThemeClasses();
 
     root.classList.add(`${THEME_PREFIX}${resolved}`);
+
+    // Keep the SSR cookie in step with the applied class so enhanced navigation
+    // renders the same attribute it would patch (no-op) instead of wiping it.
+    try {
+        document.cookie = `${THEME_COOKIE}=${resolved}; path=/; max-age=31536000; samesite=lax`;
+    } catch {
+        // Storage-restricted browsers: the server renders a classless <html>;
+        // the preloader still corrects the class before first paint on loads.
+    }
 }
 
 export function getTheme(): string | null {

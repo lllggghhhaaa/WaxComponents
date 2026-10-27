@@ -1,0 +1,925 @@
+@using LucideBlazor
+@using Microsoft.JSInterop
+@using WaxComponents.IconButton
+@using WaxComponents.Slider
+@using WaxComponents.Utils
+@implements IAsyncDisposable
+@inject IJSRuntime Js
+
+@inherits WaxComponent
+
+<div class="@WrapperClass" style="@Style" @attributes="AdditionalAttributes">
+    @if (Name is { Length: > 0 })
+    {
+        <input type="hidden" name="@Name" value="@ColorValue" />
+    }
+
+    @if (Variant is WaxColorPickerVariant.Popover or WaxColorPickerVariant.Swatch)
+    {
+        @if (Variant == WaxColorPickerVariant.Popover)
+        {
+            <button type="button"
+                    class="@WaxColorPickerStyles.PopoverTrigger"
+                    disabled="@Disabled"
+                    aria-haspopup="dialog"
+                    aria-expanded="@IsOpen"
+                    aria-label="@Label"
+                    @onclick="ToggleOpenAsync"
+                    @onkeydown="OnTriggerKeyDownAsync"
+                    @ref="_triggerRef">
+                <span class="@TriggerSwatchClass" style="@($"background-color: {ColorValue}")"></span>
+                <span class="min-w-0 flex-1 truncate font-medium tracking-tight">@FormattedValue</span>
+                <LucideIcon Name="chevron-down" Size="16" ClassName="@TriggerChevronClass" />
+            </button>
+        }
+        else
+        {
+            <button type="button"
+                    class="@SwatchTriggerClass"
+                    disabled="@Disabled"
+                    aria-haspopup="dialog"
+                    aria-expanded="@IsOpen"
+                    aria-label="@($"{Label}: {ColorValue}")"
+                    @onclick="ToggleOpenAsync"
+                    @onkeydown="OnTriggerKeyDownAsync"
+                    @ref="_triggerRef">
+                <span class="@LargeSwatchClass" style="@($"background-color: {ColorValue}")"></span>
+            </button>
+        }
+
+        @if (IsOpen)
+        {
+            <div class="@WaxColorPickerStyles.ClickAway" aria-hidden="true" @onclick="CloseOpenAsync"></div>
+        }
+    }
+
+    @if (Variant == WaxColorPickerVariant.Inline || IsOpen)
+    {
+        <fieldset class="@PanelClass" disabled="@Disabled" @onkeydown="OnPanelKeyDown">
+            @if (_validPresets.Count > 0)
+            {
+                <ul aria-label="Color presets" class="mb-3 flex list-none flex-wrap gap-1.5 p-0">
+                    @foreach (var presetEntry in _validPresets)
+                    {
+                        <li @key="presetEntry.Raw">
+                            <button type="button"
+                                    class="@WaxColorPickerStyles.PresetButton @ShapeClass"
+                                    aria-label="@($"Select {WaxColorMath.FormatHex(presetEntry.Parsed.Rgb, presetEntry.Parsed.AlphaPercent ?? 100)}")"
+                                    @onclick="() => SelectPresetAsync(presetEntry.Raw)">
+                                <span class="@PresetSwatchClass(presetEntry.Parsed)"
+                                      style="@($"background-color: {WaxColorMath.FormatHex(presetEntry.Parsed.Rgb, presetEntry.Parsed.AlphaPercent ?? 100)}")"></span>
+                            </button>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <div @ref="_svFieldRef"
+                 role="application"
+                 aria-label="Saturation and brightness"
+                 tabindex="@(Disabled ? -1 : 0)"
+                 class="@SvFieldClass"
+                 style="@($"background-color: {HueHex}")"
+                 @onpointerdown="OnSvPointerDownAsync"
+                 @onpointermove="OnSvPointerMoveAsync"
+                 @onpointerup="OnSvPointerUpAsync"
+                 @onpointercancel="OnSvPointerUpAsync"
+                 @onkeydown="OnSvKeyDownAsync">
+                <div class="absolute inset-0" style="background: linear-gradient(to right, #fff, transparent);"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(to top, #000, transparent);"></div>
+                <div class="@WaxColorPickerStyles.SvThumb"
+                     aria-hidden="true"
+                     style="@($"left: {_pickerS}%; top: {100 - _pickerV}%; background-color: {ColorValue};")"></div>
+            </div>
+
+            <WaxSlider Class="mt-3"
+                       Min="0" Max="360" Step="1" ShowValue="false" Disabled="Disabled"
+                       Value="_pickerH" ValueChanged="OnHueInputAsync" OnCommitted="CommitHueAsync"
+                       TrackStyle="@HueTrackStyle" ThumbStyle="@SliderThumbOverride" />
+
+            @if (ShowAlpha)
+            {
+                <WaxSlider Class="mt-2.5"
+                           Min="0" Max="100" Step="1" ShowValue="false" Disabled="Disabled"
+                           Value="_alpha" ValueChanged="OnAlphaInputAsync" OnCommitted="CommitAlphaAsync"
+                           TrackStyle="@AlphaTrackStyle" ThumbStyle="@SliderThumbOverride" />
+            }
+
+            <div class="relative z-20 mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                <div class="relative z-30">
+                    <button type="button"
+                            class="@WaxColorPickerStyles.FormatTrigger"
+                            disabled="@Disabled"
+                            aria-haspopup="listbox"
+                            aria-expanded="@_formatMenuOpen"
+                            aria-label="Color format"
+                            @onclick="ToggleFormatMenuAsync"
+                            @onkeydown="OnFormatMenuKeyDownAsync"
+                            @ref="_formatTriggerRef">
+                        <span>@Format.ToLabel()</span>
+                        <LucideIcon Name="chevron-down" Size="12" ClassName="@FormatChevronClass" />
+                    </button>
+
+                    @if (_formatMenuOpen)
+                    {
+                        <div class="@WaxColorPickerStyles.ClickAway" aria-hidden="true" @onclick="CloseFormatMenu"></div>
+                        <div role="listbox" aria-label="Color format" class="@WaxColorPickerStyles.FormatMenu">
+                            @foreach (var option in FormatOptions)
+                            {
+                                <button type="button"
+                                        @key="option"
+                                        role="option"
+                                        aria-selected="@(Format == option)"
+                                        class="@FormatOptionClass(option)"
+                                        @onclick="() => SelectFormat(option)">
+                                    @option.ToLabel()
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="flex items-center gap-1">
+                    @if (ShowCopy)
+                    {
+                        <WaxIconButton Size="WaxIconButtonSize.XSmall"
+                                       Disabled="Disabled"
+                                       Title="@(_copied ? "Copied" : "Copy color value")"
+                                       OnClick="CopyCurrentColorAsync">
+                            <LucideIcon Name="@(_copied ? "check" : "copy")" Size="14" />
+                        </WaxIconButton>
+                    }
+                @if (ShowEyedropper)
+                {
+                    <WaxIconButton Size="WaxIconButtonSize.XSmall"
+                                   Disabled="EyedropperDisabled"
+                                   Title="@EyedropperTitle"
+                                   OnClick="PickWithEyedropperAsync">
+                        <LucideIcon Name="pipette" Size="14" />
+                    </WaxIconButton>
+                }
+                </div>
+            </div>
+
+            <div class="relative z-10 mt-2 flex items-start gap-2 text-foreground">
+                @if (Format == WaxColorPickerFormat.Hex)
+                {
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="@ReadoutSwatchClass" style="@($"background-color: {ColorValue}")"></span>
+                            <div class="flex min-w-0 flex-1 items-center gap-0.5">
+                                <span class="text-base font-light text-muted-foreground">#</span>
+                                <input type="text"
+                                       spellcheck="false"
+                                       class="@HexInputClass"
+                                       disabled="@Disabled"
+                                       aria-label="Hex color"
+                                       value="@HexDisplayValue"
+                                       @ref="_hexInputRef"
+                                       @onfocus="OnHexFocus"
+                                       @oninput="OnHexInputAsync"
+                                       @onblur="OnHexBlurAsync"
+                                       @onkeydown="OnHexKeyDownAsync" />
+                            </div>
+                        </div>
+                        @if (_hexInvalid)
+                        {
+                            <p class="mt-1 text-xs text-destructive">Enter a valid hex color.</p>
+                        }
+                    </div>
+                }
+                else if (Format == WaxColorPickerFormat.Rgb)
+                {
+                    <WaxColorChannelInput Label="Red" Min="0" Max="255" Disabled="Disabled"
+                                          Value="_rgb.R" ValueChanged="OnRedChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Green" Min="0" Max="255" Disabled="Disabled"
+                                          Value="_rgb.G" ValueChanged="OnGreenChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Blue" Min="0" Max="255" Disabled="Disabled"
+                                          Value="_rgb.B" ValueChanged="OnBlueChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                }
+                else if (Format == WaxColorPickerFormat.Hsl)
+                {
+                    <WaxColorChannelInput Label="Hue" Min="0" Max="360" Disabled="Disabled"
+                                          Value="CurrentHsl.H" ValueChanged="OnHslHueChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Saturation" Min="0" Max="100" Disabled="Disabled"
+                                          Value="CurrentHsl.S" ValueChanged="OnHslSaturationChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Lightness" Min="0" Max="100" Disabled="Disabled"
+                                          Value="CurrentHsl.L" ValueChanged="OnHslLightnessChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                }
+                else if (Format == WaxColorPickerFormat.Oklch)
+                {
+                    <WaxColorChannelInput Label="Lightness" Min="0" Max="1" Disabled="Disabled"
+                                          Value="Math.Round(CurrentOklch.L, 2)" ValueChanged="OnOklchLightnessChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Chroma" Min="0" Max="OklchMaxChroma" Disabled="Disabled"
+                                          Value="Math.Round(CurrentOklch.C, 3)" ValueChanged="OnOklchChromaChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                    <WaxColorChannelInput Label="Hue" Min="0" Max="360" Disabled="Disabled"
+                                          Value="Math.Round(CurrentOklch.H)" ValueChanged="OnOklchHueChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                }
+
+                @if (ShowAlpha)
+                {
+                    <WaxColorChannelInput Label="Alpha" Suffix="%" Min="0" Max="100" Disabled="Disabled"
+                                          Value="_alpha" ValueChanged="OnAlphaChannelAsync"
+                                          OnEditStart="() => _editing = true" OnEditEnd="() => _editing = false" />
+                }
+            </div>
+        </fieldset>
+    }
+</div>
+
+@code {
+    private WaxColorMath.Rgb _rgb;
+    private double _pickerH;
+    private int _pickerS;
+    private int _pickerV;
+    private int _alpha = 100;
+    private WaxColorPickerFormat _format = WaxColorPickerFormat.Hex;
+    private bool _open;
+    private bool _formatMenuOpen;
+    private bool _copied;
+    private int _copyGeneration;
+    private bool _hexFocused;
+    private string _hexInput = string.Empty;
+    private bool _hexInvalid;
+    private bool _editing;
+    private bool _draggingSv;
+    private string? _lastParamValue;
+    private string _lastNotified = string.Empty;
+    private string _lastSynced = string.Empty;
+    private string _lastCommitted = string.Empty;
+    private double _svLeft;
+    private double _svTop;
+    private double _svWidth = 1;
+    private double _svHeight = 1;
+    private WaxColorPickerJs? _jsInterop;
+    private ElementReference _svFieldRef;
+    private ElementReference _triggerRef;
+    private ElementReference _formatTriggerRef;
+    private ElementReference _hexInputRef;
+    private bool _panelWasRendered;
+    private bool? _eyedropperSupported;
+    private readonly List<(string Raw, WaxColorMath.ParsedHexColor Parsed)> _validPresets = [];
+
+    private static readonly WaxColorPickerFormat[] FormatOptions =
+    [
+        WaxColorPickerFormat.Hex,
+        WaxColorPickerFormat.Rgb,
+        WaxColorPickerFormat.Hsl,
+        WaxColorPickerFormat.Oklch,
+    ];
+
+    private const int CopiedIndicatorMilliseconds = 1500;
+
+    private const string HueTrackStyle =
+        "width: 100%; background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);";
+
+    private const string SliderThumbOverride = "background-color: #ffffff; border-color: rgba(0, 0, 0, 0.1);";
+
+    private enum EmitMode
+    {
+        None,
+        Change,
+        Commit,
+    }
+
+    private readonly record struct SvRect(double Left, double Top, double Width, double Height);
+
+    private readonly record struct EyedropperResult(string? Color, bool Supported);
+
+    /// <summary>Selected color as <c>#RRGGBB</c>, or <c>#RRGGBBAA</c> when alpha is shown and below 100%.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Fires as the color settles: live while typing a full hex, on pointer release for drags.</summary>
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    /// <summary>Fires when the color is committed (pointer up, blur, Enter, preset pick).</summary>
+    [Parameter] public EventCallback<string> OnValueCommitted { get; set; }
+
+    /// <summary>Initial color (3/4/6/8-digit hex, with or without <c>#</c>) when <see cref="Value"/> is unbound.</summary>
+    [Parameter] public string DefaultValue { get; set; } = "#3B82F6";
+
+    /// <summary>Starting alpha percentage (0–100) when the initial color has no alpha channel.</summary>
+    [Parameter] public int DefaultAlpha { get; set; } = 100;
+
+    /// <summary>Initial readout format.</summary>
+    [Parameter] public WaxColorPickerFormat DefaultFormat { get; set; } = WaxColorPickerFormat.Hex;
+
+    /// <summary>Uncontrolled initial open state for the popover/swatch variants.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    /// <summary>Controlled open state for the popover/swatch variants (pair with <see cref="OpenChanged"/>).</summary>
+    [Parameter] public bool Open { get; set; }
+
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Quick-select hex swatches shown above the saturation field; unparsable entries are skipped.</summary>
+    [Parameter] public IEnumerable<string>? Presets { get; set; }
+
+    /// <summary>When false, hides alpha controls and keeps the output opaque.</summary>
+    [Parameter] public bool ShowAlpha { get; set; } = true;
+
+    /// <summary>Shows a copy-to-clipboard control in the footer row.</summary>
+    [Parameter] public bool ShowCopy { get; set; }
+
+    /// <summary>Shows the screen color picker (EyeDropper) control.</summary>
+    [Parameter] public bool ShowEyedropper { get; set; } = true;
+
+    /// <summary>Corner style for swatch triggers and preset chips.</summary>
+    [Parameter] public WaxColorPickerSwatchShape SwatchShape { get; set; } = WaxColorPickerSwatchShape.Default;
+
+    /// <summary>Inline panel, field popover trigger, or swatch popover trigger.</summary>
+    [Parameter] public WaxColorPickerVariant Variant { get; set; } = WaxColorPickerVariant.Inline;
+
+    /// <summary>Hidden input name for native form submission.</summary>
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>Accessible label for the picker group/trigger.</summary>
+    [Parameter] public string Label { get; set; } = "Color picker";
+
+    /// <summary>Fires when the EyeDropper API is unavailable in the current browser.</summary>
+    [Parameter] public EventCallback OnEyedropperUnsupported { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _jsInterop = new WaxColorPickerJs(Js);
+
+        var source = Value ?? DefaultValue;
+        var parsed = WaxColorMath.ParseHexColor(source) ?? new WaxColorMath.ParsedHexColor(WaxColorMath.DefaultRgb, null);
+        _rgb = parsed.Rgb;
+        SyncPickerFromRgb(_rgb);
+        _alpha = ShowAlpha ? parsed.AlphaPercent ?? WaxColorMath.ClampPercent(DefaultAlpha) : 100;
+        _format = DefaultFormat;
+        _open = DefaultOpen;
+        _lastParamValue = Value;
+
+        var initial = WaxColorMath.NormalizeColorValue(source, ShowAlpha ? WaxColorMath.ClampPercent(DefaultAlpha) : 100)
+                      ?? WaxColorMath.FormatHex(_rgb, EffectiveAlpha);
+        _lastSynced = _lastNotified = _lastCommitted = initial;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!ShowAlpha && _alpha != 100) _alpha = 100;
+
+        _validPresets.Clear();
+        if (Presets is not null)
+            foreach (var preset in Presets)
+                if (WaxColorMath.ParseHexColor(preset) is { } parsedPreset)
+                    _validPresets.Add((preset, parsedPreset));
+
+        // Re-sync from an externally changed Value, unless the change came from us or the user is
+        // mid-edit/mid-drag (the parent echoing our own emission is filtered by _lastSynced).
+        if (Value is null || Value == _lastParamValue) return;
+
+        _lastParamValue = Value;
+
+        if (_editing || _draggingSv) return;
+
+        var normalized = WaxColorMath.NormalizeColorValue(Value, ShowAlpha ? WaxColorMath.ClampPercent(DefaultAlpha) : 100);
+        if (normalized is null || normalized == _lastSynced) return;
+
+        var parsed = WaxColorMath.ParseHexColor(normalized)!.Value;
+        _rgb = parsed.Rgb;
+        _alpha = ShowAlpha ? parsed.AlphaPercent ?? WaxColorMath.ClampPercent(DefaultAlpha) : 100;
+        SyncPickerFromRgb(_rgb);
+        _lastSynced = normalized;
+        _lastNotified = normalized;
+        _lastCommitted = normalized;
+    }
+
+    private bool IsOpen => OpenChanged.HasDelegate ? Open : _open;
+
+    private WaxColorPickerFormat Format => _format;
+
+    private int EffectiveAlpha => ShowAlpha ? _alpha : 100;
+
+    private string ColorValue => WaxColorMath.FormatHex(_rgb, EffectiveAlpha);
+
+    private WaxColorMath.Hsl CurrentHsl => WaxColorMath.RgbToHsl(_rgb);
+
+    private WaxColorMath.Oklch CurrentOklch => WaxColorMath.RgbToOklch(_rgb);
+
+    private double OklchMaxChroma => WaxColorMath.GetMaxOklchChroma(CurrentOklch.L, CurrentOklch.H);
+
+    private string HueHex => WaxColorMath.FormatHex(WaxColorMath.HsvToRgb(_pickerH, 100, 100), 100);
+
+    private string FormattedValue => Format switch
+    {
+        WaxColorPickerFormat.Hex => ColorValue,
+        WaxColorPickerFormat.Rgb => WaxColorMath.FormatRgb(_rgb, EffectiveAlpha),
+        WaxColorPickerFormat.Hsl => WaxColorMath.FormatHsl(_rgb, EffectiveAlpha),
+        WaxColorPickerFormat.Oklch => WaxColorMath.FormatOklch(_rgb, EffectiveAlpha),
+        _ => throw new ArgumentOutOfRangeException(nameof(Format)),
+    };
+
+    private string HexDisplayValue => _hexFocused ? _hexInput : WaxColorMath.GetDisplayHex(_rgb, EffectiveAlpha, ShowAlpha);
+
+    private string AlphaTrackStyle =>
+        $"width: 100%; background-image: linear-gradient(to right, transparent, {ColorValue}), repeating-conic-gradient(var(--color-border) 0% 25%, transparent 0% 50%); background-size: auto, 10px 10px;";
+
+    // Note: switch expressions are assigned to a local before chaining .MergeClass — the razor
+    // parser mis-tracks brace depth when a method call follows a switch expression's closing brace.
+    private string WrapperClass
+    {
+        get
+        {
+            var variantClass = Variant switch
+            {
+                WaxColorPickerVariant.Inline => "inline-block min-w-0",
+                WaxColorPickerVariant.Popover => "relative inline-flex w-[300px] max-w-full",
+                WaxColorPickerVariant.Swatch => "relative inline-flex",
+                _ => throw new ArgumentOutOfRangeException(nameof(Variant)),
+            };
+
+            return variantClass.MergeClass(Class);
+        }
+    }
+
+    private string PanelClass
+    {
+        get
+        {
+            var variantClass = Variant switch
+            {
+                WaxColorPickerVariant.Inline => WaxColorPickerStyles.Panel.MergeClass("w-[300px] max-w-full"),
+                WaxColorPickerVariant.Popover => WaxColorPickerStyles.Panel.MergeClass("absolute left-0 right-0 top-full z-[95] mt-2 w-full"),
+                WaxColorPickerVariant.Swatch => WaxColorPickerStyles.Panel.MergeClass("absolute left-1/2 top-full z-[95] mt-2 w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2"),
+                _ => throw new ArgumentOutOfRangeException(nameof(Variant)),
+            };
+
+            return variantClass.MergeClass(Disabled ? "pointer-events-none opacity-60" : string.Empty);
+        }
+    }
+
+    private string SvFieldClass => WaxColorPickerStyles.SvField.MergeClass(
+        Disabled ? "pointer-events-none opacity-60" : string.Empty);
+
+    private string ShapeClass => SwatchShape == WaxColorPickerSwatchShape.Circle ? "rounded-full" : "rounded-lg";
+
+    private string CheckerClass => EffectiveAlpha < 100 ? WaxColorPickerStyles.AlphaChecker : string.Empty;
+
+    private string TriggerSwatchClass => WaxColorPickerStyles.Swatch.MergeClass("h-5 w-5", ShapeClass, CheckerClass);
+
+    private string LargeSwatchClass => WaxColorPickerStyles.Swatch.MergeClass("h-8 w-8 shadow-sm", ShapeClass, CheckerClass);
+
+    private string ReadoutSwatchClass => WaxColorPickerStyles.Swatch.MergeClass("h-5 w-5", ShapeClass, CheckerClass);
+
+    private string SwatchTriggerClass => WaxColorPickerStyles.SwatchTrigger.MergeClass(ShapeClass);
+
+    private string TriggerChevronClass => "shrink-0 text-muted-foreground transition-transform duration-200"
+        .MergeClass(IsOpen ? "rotate-180" : string.Empty);
+
+    private string FormatChevronClass => "transition-transform duration-200"
+        .MergeClass(_formatMenuOpen ? "rotate-180" : string.Empty);
+
+    private string HexInputClass => WaxColorPickerStyles.HexInput.MergeClass(_hexInvalid ? "text-destructive" : string.Empty);
+
+    private string FormatOptionClass(WaxColorPickerFormat option) => WaxColorPickerStyles.FormatOption.MergeClass(
+        Format == option ? "bg-primary/10 font-medium text-foreground" : "text-muted-foreground");
+
+    private string PresetSwatchClass(WaxColorMath.ParsedHexColor parsed) => WaxColorPickerStyles.Swatch.MergeClass(
+        "block h-6 w-6 shadow-sm",
+        ShapeClass,
+        (parsed.AlphaPercent ?? 100) < 100 ? WaxColorPickerStyles.AlphaChecker : string.Empty);
+
+    private void SyncPickerFromRgb(WaxColorMath.Rgb rgb)
+    {
+        var hsv = WaxColorMath.RgbToHsv(rgb);
+        _pickerH = hsv.S == 0 ? _pickerH : hsv.H;
+        _pickerS = (int)Math.Clamp(Math.Round(hsv.S), 0, 100);
+        _pickerV = (int)Math.Clamp(Math.Round(hsv.V), 0, 100);
+    }
+
+    private async Task EmitAsync(EmitMode mode)
+    {
+        if (mode == EmitMode.None) return;
+
+        var value = ColorValue;
+        if (value != _lastNotified)
+        {
+            _lastNotified = value;
+            _lastSynced = value;
+            await ValueChanged.InvokeAsync(value);
+        }
+
+        if (mode == EmitMode.Commit && value != _lastCommitted)
+        {
+            _lastCommitted = value;
+            await OnValueCommitted.InvokeAsync(value);
+        }
+    }
+
+    private async Task ApplyRgbAsync(WaxColorMath.Rgb rgb, EmitMode mode, bool syncPicker = true)
+    {
+        _rgb = rgb;
+        if (syncPicker) SyncPickerFromRgb(rgb);
+        
+        await EmitAsync(mode);
+    }
+
+    private async Task ApplyHsvAsync(double hue, double saturation, double value, EmitMode mode)
+    {
+        _pickerH = WaxColorMath.NormalizeHue(hue);
+        _pickerS = (int)Math.Clamp(Math.Round(saturation), 0, 100);
+        _pickerV = (int)Math.Clamp(Math.Round(value), 0, 100);
+        _rgb = WaxColorMath.HsvToRgb(_pickerH, _pickerS, _pickerV);
+        await EmitAsync(mode);
+    }
+
+    private async Task ApplyAlphaAsync(double alpha, EmitMode mode)
+    {
+        if (!ShowAlpha) return;
+            
+        _alpha = WaxColorMath.ClampPercent(alpha);
+        await EmitAsync(mode);
+    }
+
+    /// <summary>Applies a hex string; returns false when it cannot be parsed.</summary>
+    private async Task<bool> ApplyHexAsync(string? rawValue, EmitMode mode)
+    {
+        var parsed = WaxColorMath.ParseHexColor(rawValue);
+        if (parsed is null) return false;
+
+        _rgb = parsed.Value.Rgb;
+        SyncPickerFromRgb(_rgb);
+        _alpha = ShowAlpha ? parsed.Value.AlphaPercent ?? _alpha : 100;
+        await EmitAsync(mode);
+        return true;
+    }
+
+    private Task SelectPresetAsync(string rawValue) => ApplyHexAsync(rawValue, EmitMode.Commit);
+
+    private Task SetFromHslAsync(double hue, double saturation, double lightness) =>
+        ApplyRgbAsync(WaxColorMath.HslToRgb(hue, saturation, lightness), EmitMode.Commit);
+
+    private Task SetFromOklchAsync(double lightness, double chroma, double hue) =>
+        ApplyRgbAsync(WaxColorMath.OklchToRgb(lightness, chroma, hue), EmitMode.Commit);
+
+    // Saturation/value field -----------------------------------------------------------------
+
+    private async Task OnSvPointerDownAsync(PointerEventArgs e)
+    {
+        if (Disabled || _jsInterop is null) return;
+        
+        var rect = await _jsInterop.InvokeAsync<SvRect>("beginPointerDrag", _svFieldRef, e.PointerId);
+        if (rect.Width <= 0 || rect.Height <= 0) return;
+
+        _svLeft = rect.Left;
+        _svTop = rect.Top;
+        _svWidth = rect.Width;
+        _svHeight = rect.Height;
+        _draggingSv = true;
+        UpdateSv(e.ClientX, e.ClientY);
+    }
+
+    private async Task OnSvPointerMoveAsync(PointerEventArgs e)
+    {
+        if (!_draggingSv || Disabled) return;
+        
+        UpdateSv(e.ClientX, e.ClientY);
+    }
+
+    private async Task OnSvPointerUpAsync(PointerEventArgs e)
+    {
+        if (!_draggingSv) return;
+        
+        _draggingSv = false;
+        await EmitAsync(EmitMode.Commit);
+    }
+
+    private void UpdateSv(double clientX, double clientY)
+    {
+        var x = Math.Clamp((clientX - _svLeft) / _svWidth, 0, 1);
+        var y = Math.Clamp((clientY - _svTop) / _svHeight, 0, 1);
+        _ = ApplyHsvAsync(_pickerH, Math.Round(x * 100), Math.Round((1 - y) * 100), EmitMode.None);
+    }
+
+    private async Task OnSvKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (Disabled) return;
+        
+        var step = e.ShiftKey ? 5 : 1;
+        switch (e.Key)
+        {
+            case "ArrowLeft":
+                await ApplyHsvAsync(_pickerH, _pickerS - step, _pickerV, EmitMode.Commit);
+                break;
+
+            case "ArrowRight":
+                await ApplyHsvAsync(_pickerH, _pickerS + step, _pickerV, EmitMode.Commit);
+                break;
+
+            case "ArrowUp":
+                await ApplyHsvAsync(_pickerH, _pickerS, _pickerV + step, EmitMode.Commit);
+                break;
+
+            case "ArrowDown":
+                await ApplyHsvAsync(_pickerH, _pickerS, _pickerV - step, EmitMode.Commit);
+                break;
+        }
+    }
+
+    // Hue/alpha sliders (WaxSlider) ----------------------------------------------------------
+
+    private Task OnHueInputAsync(double hue)
+    {
+        _pickerH = WaxColorMath.NormalizeHue(hue);
+        _rgb = WaxColorMath.HsvToRgb(_pickerH, _pickerS, _pickerV);
+        return Task.CompletedTask;
+    }
+
+    private Task CommitHueAsync(double hue)
+    {
+        _pickerH = WaxColorMath.NormalizeHue(hue);
+        _rgb = WaxColorMath.HsvToRgb(_pickerH, _pickerS, _pickerV);
+        return EmitAsync(EmitMode.Commit);
+    }
+
+    private Task OnAlphaInputAsync(double alpha)
+    {
+        _alpha = WaxColorMath.ClampPercent(alpha);
+        return Task.CompletedTask;
+    }
+
+    private Task CommitAlphaAsync(double alpha)
+    {
+        _alpha = WaxColorMath.ClampPercent(alpha);
+        return EmitAsync(EmitMode.Commit);
+    }
+
+    // Readout channels -----------------------------------------------------------------------
+
+    private Task OnAlphaChannelAsync(double value) => ApplyAlphaAsync(value, EmitMode.Commit);
+
+    private Task OnRedChannelAsync(double value) =>
+        ApplyRgbAsync(_rgb with { R = (int)Math.Clamp(Math.Round(value), 0, 255) }, EmitMode.Commit);
+
+    private Task OnGreenChannelAsync(double value) =>
+        ApplyRgbAsync(_rgb with { G = (int)Math.Clamp(Math.Round(value), 0, 255) }, EmitMode.Commit);
+
+    private Task OnBlueChannelAsync(double value) =>
+        ApplyRgbAsync(_rgb with { B = (int)Math.Clamp(Math.Round(value), 0, 255) }, EmitMode.Commit);
+
+    private Task OnHslHueChannelAsync(double value) => SetFromHslAsync(value, CurrentHsl.S, CurrentHsl.L);
+
+    private Task OnHslSaturationChannelAsync(double value) => SetFromHslAsync(CurrentHsl.H, value, CurrentHsl.L);
+
+    private Task OnHslLightnessChannelAsync(double value) => SetFromHslAsync(CurrentHsl.H, CurrentHsl.S, value);
+
+    private Task OnOklchLightnessChannelAsync(double value) => SetFromOklchAsync(value, CurrentOklch.C, CurrentOklch.H);
+
+    private Task OnOklchChromaChannelAsync(double value) => SetFromOklchAsync(CurrentOklch.L, value, CurrentOklch.H);
+
+    private Task OnOklchHueChannelAsync(double value) => SetFromOklchAsync(CurrentOklch.L, CurrentOklch.C, value);
+
+    // Hex input ------------------------------------------------------------------------------
+
+    private void OnHexFocus()
+    {
+        _editing = true;
+        _hexFocused = true;
+        _hexInput = WaxColorMath.GetDisplayHex(_rgb, EffectiveAlpha, ShowAlpha);
+        _hexInvalid = false;
+    }
+
+    private async Task OnHexInputAsync(ChangeEventArgs e)
+    {
+        var maxLength = ShowAlpha ? 8 : 6;
+        var raw = e.Value?.ToString() ?? string.Empty;
+        var sanitized = new string(raw.Where(Uri.IsHexDigit).ToArray()).ToUpperInvariant();
+        if (sanitized.Length > maxLength)
+        {
+            sanitized = sanitized[..maxLength];
+        }
+
+        _hexInput = sanitized;
+        _hexInvalid = false;
+
+        if (sanitized.Length == 6 || (ShowAlpha && sanitized.Length == 8))
+        {
+            await ApplyHexAsync(sanitized, EmitMode.Change);
+        }
+    }
+
+    private async Task OnHexBlurAsync()
+    {
+        _hexFocused = false;
+        _editing = false;
+
+        var committed = await ApplyHexAsync(_hexInput, EmitMode.Commit);
+        _hexInvalid = !committed && _hexInput.Trim().Length > 0;
+    }
+
+    private async Task OnHexKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && _jsInterop is not null)
+        {
+            await _jsInterop.InvokeAsync<object?>("blurElement", _hexInputRef);
+        }
+    }
+
+    // Format menu ----------------------------------------------------------------------------
+
+    private void ToggleFormatMenuAsync() => _formatMenuOpen = !_formatMenuOpen;
+
+    private void CloseFormatMenu() => _formatMenuOpen = false;
+
+    private void SelectFormat(WaxColorPickerFormat option)
+    {
+        _format = option;
+        _formatMenuOpen = false;
+        // The clicked option leaves the DOM; keep focus inside the panel so Escape/keyboard keep working.
+        _formatTriggerRef.FocusAsync();
+    }
+
+    private async Task OnFormatMenuKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (Disabled) return;
+
+        if (!_formatMenuOpen)
+        {
+            if (e.Key == "ArrowDown")
+            {
+                _formatMenuOpen = true;
+            }
+
+            return;
+        }
+
+        var currentIndex = Array.IndexOf(FormatOptions, Format);
+        _format = e.Key switch
+        {
+            "ArrowDown" => FormatOptions[(currentIndex + 1) % FormatOptions.Length],
+            "ArrowUp" => FormatOptions[(currentIndex - 1 + FormatOptions.Length) % FormatOptions.Length],
+            _ => _format
+        };
+    }
+
+    // Copy / eyedropper ----------------------------------------------------------------------
+
+    private async Task CopyCurrentColorAsync()
+    {
+        if (_jsInterop is null)
+        {
+            return;
+        }
+
+        var copied = await _jsInterop.InvokeAsync<bool>("copyText", FormattedValue);
+        if (!copied)
+        {
+            return;
+        }
+
+        _copied = true;
+        var generation = ++_copyGeneration;
+        StateHasChanged();
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(CopiedIndicatorMilliseconds);
+            if (generation != _copyGeneration)
+            {
+                return;
+            }
+
+            try
+            {
+                _copied = false;
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        });
+    }
+
+    private async Task PickWithEyedropperAsync()
+    {
+        if (_jsInterop is null)
+        {
+            return;
+        }
+
+        var result = await _jsInterop.InvokeAsync<EyedropperResult>("pickColorWithEyedropper");
+        if (!result.Supported)
+        {
+            await OnEyedropperUnsupported.InvokeAsync();
+            return;
+        }
+
+        if (result.Color is null)
+        {
+            return;
+        }
+
+        await ApplyHexAsync(result.Color, EmitMode.Commit);
+    }
+
+    // Open state / keyboard ------------------------------------------------------------------
+
+    private async Task ToggleOpenAsync()
+    {
+        if (Disabled)
+        {
+            return;
+        }
+
+        await SetOpenAsync(!IsOpen);
+    }
+
+    private async Task CloseOpenAsync() => await SetOpenAsync(false);
+
+    private async Task SetOpenAsync(bool value)
+    {
+        if (!OpenChanged.HasDelegate)
+        {
+            _open = value;
+        }
+
+        await OpenChanged.InvokeAsync(value);
+
+        if (!value)
+        {
+            await _triggerRef.FocusAsync();
+        }
+    }
+
+    private void OnTriggerKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape" && IsOpen)
+        {
+            _ = SetOpenAsync(false);
+        }
+    }
+
+    private void OnPanelKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key != "Escape")
+        {
+            return;
+        }
+
+        if (_formatMenuOpen)
+        {
+            _formatMenuOpen = false;
+        }
+        else if (Variant is WaxColorPickerVariant.Popover or WaxColorPickerVariant.Swatch && IsOpen)
+        {
+            _ = SetOpenAsync(false);
+        }
+    }
+
+    private bool EyedropperDisabled => Disabled || _eyedropperSupported == false;
+
+    private string EyedropperTitle => Disabled
+        ? "Pick color from screen"
+        : _eyedropperSupported == false
+            ? "Color picking from screen is not supported in this browser"
+            : "Pick color from screen";
+
+    /// <summary>
+    /// Installs the native arrow-key scroll guard on the saturation field and the format trigger
+    /// whenever the panel (re)mounts, and detects EyeDropper support once so the pipette can
+    /// disable itself on browsers without the API — Blazor handlers cannot preventDefault
+    /// themselves and unsupported pickers would otherwise fail silently.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var panelRendered = Variant == WaxColorPickerVariant.Inline || IsOpen;
+        if (panelRendered && (firstRender || !_panelWasRendered) && _jsInterop is not null)
+        {
+            await _jsInterop.InvokeAsync<object?>("preventArrowKeyScroll", _svFieldRef);
+            await _jsInterop.InvokeAsync<object?>("preventArrowKeyScroll", _formatTriggerRef);
+
+            if (ShowEyedropper && _eyedropperSupported is null)
+            {
+                _eyedropperSupported = await _jsInterop.InvokeAsync<bool>("isEyedropperSupported");
+                if (!_eyedropperSupported.Value)
+                {
+                    StateHasChanged();
+                }
+            }
+        }
+
+        _panelWasRendered = panelRendered;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _copyGeneration++;
+        if (_jsInterop is not null)
+        {
+            await _jsInterop.DisposeAsync();
+        }
+    }
+}

@@ -22,22 +22,23 @@
     <div class="relative h-5 flex items-center">
         <div class="absolute w-full h-2 rounded-full bg-muted overflow-hidden">
             <div class="h-full rounded-full transition-all duration-100"
-                 style="@TrackFillStyle">
+                 style="@ResolvedTrackStyle">
             </div>
         </div>
 
         <input id="@_inputId"
                type="range"
-               min="@Min"
-               max="@Max"
-               step="@Step"
-               value="@Value"
+               min="@Min.ToString(CultureInfo.InvariantCulture)"
+               max="@Max.ToString(CultureInfo.InvariantCulture)"
+               step="@Step.ToString(CultureInfo.InvariantCulture)"
+               value="@Value.ToString(CultureInfo.InvariantCulture)"
                disabled="@Disabled"
                @oninput="OnInput"
+               @onchange="OnNativeChange"
                class="absolute w-full opacity-0 h-5 cursor-pointer disabled:cursor-not-allowed" />
 
         <div class="absolute w-5 h-5 rounded-full shadow-md border-2 border-background transition-all duration-100 pointer-events-none"
-             style="@ThumbStyle"
+             style="@ResolvedThumbStyle"
              aria-hidden="true">
         </div>
     </div>
@@ -65,13 +66,34 @@
     [Parameter] public string Format { get; set; } = "0.##";
 
     [Parameter] public bool Disabled { get; set; }
-    
+
+    /// <summary>
+    /// Replaces the fill track's inline style entirely. Use for full-track gradients (e.g. the
+    /// color picker's hue/alpha rails) where the fill-percentage background does not apply.
+    /// </summary>
+    [Parameter] public string? TrackStyle { get; set; }
+
+    /// <summary>
+    /// Appended to the thumb's inline style; later declarations win, so it can override the
+    /// thumb color without touching the position.
+    /// </summary>
+    [Parameter] public string? ThumbStyle { get; set; }
+
+    /// <summary>Fires when the value settles (pointer release or keyboard tick, native `change`).</summary>
+    [Parameter] public EventCallback<double> OnCommitted { get; set; }
+
     private string CssClass => "w-full"
         .MergeClass(Class);
 
-    private string TrackFillStyle => $"width: {FillPercentage}%; background-color: var(--{Color});{(Disabled ? " opacity: 0.5;" : string.Empty)}";
+    private string ResolvedTrackStyle => TrackStyle is { Length: > 0 }
+        ? TrackStyle
+        : DefaultTrackStyle;
 
-    private string ThumbStyle => $"left: calc({FillPercentage}% - 10px); background-color: var(--{Color});{(Disabled ? " opacity: 0.5;" : string.Empty)}";
+    private string DefaultTrackStyle => $"width: {FillPercentage}%; background-color: var(--{Color});{(Disabled ? " opacity: 0.5;" : string.Empty)}";
+
+    private string ResolvedThumbStyle => DefaultThumbStyle + (ThumbStyle is { Length: > 0 } ? $" {ThumbStyle}" : string.Empty);
+
+    private string DefaultThumbStyle => $"left: calc({FillPercentage}% - 10px); background-color: var(--{Color});{(Disabled ? " opacity: 0.5;" : string.Empty)}";
 
     private string FillPercentage
     {
@@ -89,6 +111,14 @@
         {
             Value = newValue;
             await ValueChanged.InvokeAsync(newValue);
+        }
+    }
+
+    private async Task OnNativeChange(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var newValue))
+        {
+            await OnCommitted.InvokeAsync(newValue);
         }
     }
 }

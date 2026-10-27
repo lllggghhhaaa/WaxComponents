@@ -7,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// IHttpContextAccessor is injected in App.razor to SSR the <html> theme class
+// from the wax-theme cookie (see ThemeCookie; without it, Blazor's enhanced
+// navigation replays a classless <html> and the theme flashes on every change).
 builder.Services.AddWaxComponents();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

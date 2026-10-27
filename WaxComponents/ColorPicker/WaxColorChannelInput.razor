@@ -1,0 +1,120 @@
+@using System.Globalization
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime Js
+
+<div class="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+    <div class="flex w-full min-w-0 items-baseline justify-center gap-0.5">
+        <input type="text"
+               inputmode="decimal"
+               class="@InputClass"
+               value="@DisplayValue"
+               disabled="@Disabled"
+               aria-label="@Label"
+               @ref="_inputRef"
+               @onfocus="OnFocus"
+               @oninput="OnInput"
+               @onblur="OnBlurAsync"
+               @onkeydown="OnKeyDownAsync" />
+
+        @if (!string.IsNullOrEmpty(Suffix))
+        {
+            <span class="text-sm text-muted-foreground">@Suffix</span>
+        }
+    </div>
+    <span class="@WaxColorPickerStyles.ChannelLabel">@Label</span>
+</div>
+
+@code {
+    private ElementReference _inputRef;
+    private WaxColorPickerJs? _jsInterop;
+    private bool _focused;
+    private string _local = string.Empty;
+
+    [Parameter] public double Value { get; set; }
+
+    [Parameter] public double Min { get; set; }
+
+    [Parameter] public double Max { get; set; }
+
+    [Parameter] public string? Suffix { get; set; }
+
+    /// <summary>Tiny caption rendered under the input (e.g. "RED", "ALPHA").</summary>
+    [Parameter, EditorRequired] public string Label { get; set; } = string.Empty;
+
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Fires on blur/Enter with the parsed value clamped to [Min, Max].</summary>
+    [Parameter] public EventCallback<double> ValueChanged { get; set; }
+
+    /// <summary>Fires when the user starts editing (focus) — used to pause external value sync.</summary>
+    [Parameter] public EventCallback OnEditStart { get; set; }
+
+    /// <summary>Fires when editing ends, before the committed value is emitted.</summary>
+    [Parameter] public EventCallback OnEditEnd { get; set; }
+
+    private string InputClass =>
+        "w-full min-w-0 bg-transparent text-center font-light text-base tabular-nums text-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50";
+
+    private string DisplayValue => _focused ? _local : FormatValue(Value);
+
+    private static string FormatValue(double value) =>
+        value.ToString("0.###", CultureInfo.InvariantCulture);
+
+    protected override void OnInitialized() => _jsInterop = new WaxColorPickerJs(Js);
+
+    private void OnFocus()
+    {
+        _local = FormatValue(Value);
+        _focused = true;
+        _ = OnEditStart.InvokeAsync();
+    }
+
+    private void OnInput(ChangeEventArgs e) => _local = e.Value?.ToString() ?? string.Empty;
+
+    private async Task OnBlurAsync()
+    {
+        if (!_focused)
+        {
+            return;
+        }
+
+        _focused = false;
+        await OnEditEnd.InvokeAsync();
+
+        if (double.TryParse(_local, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
+        {
+            await ValueChanged.InvokeAsync(Math.Clamp(parsed, Min, Max));
+        }
+    }
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "Escape":
+                _local = FormatValue(Value);
+                await BlurAsync();
+                break;
+            case "Enter":
+                await BlurAsync();
+                break;
+        }
+    }
+
+    private async Task BlurAsync()
+    {
+        if (_jsInterop is not null)
+        {
+            await _jsInterop.InvokeAsync<object?>("blurElement", _inputRef);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsInterop is not null)
+        {
+            await _jsInterop.DisposeAsync();
+        }
+    }
+}

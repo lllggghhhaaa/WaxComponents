@@ -36,6 +36,9 @@
     --input: transparent;
     --input-background: #F5E8D8;
     --switch-background: #C9B5A0;
+    /* Tonal container (WaxButton Tonal variant): soft pale primary wash for the light theme. */
+    --tonal: #F5D5C8;
+    --tonal-hover: #EEC4B3;
     /* Spoiler effect: subtle rose gradient veil tinting the blurred content (utilities in Spoiler/WaxSpoilerStyles.cs). */
     --spoiler-veil-from: rgba(250, 228, 233, 0.1);
     --spoiler-veil-to: rgba(248, 208, 222, 0.32);
@@ -80,6 +83,10 @@
     --input: rgba(245, 232, 216, 0.08);
     --input-background: #3A2518;
     --switch-background: #5A3E2A;
+    /* Tonal container: muted warm blend of the dark primary (#E06B40) over the dark
+       cards (#2A1A0E) so the Tonal variant darkens into the theme instead of staying pale. */
+    --tonal: #582E1B;
+    --tonal-hover: #6A3620;
     --spoiler-veil-from: rgba(70, 38, 50, 0.08);
     --spoiler-veil-to: rgba(84, 44, 56, 0.28);
     --spoiler-hint: #E9A8C8;
@@ -125,6 +132,8 @@
     --color-input: var(--input);
     --color-input-background: var(--input-background);
     --color-switch-background: var(--switch-background);
+    --color-tonal: var(--tonal);
+    --color-tonal-hover: var(--tonal-hover);
     --color-ring: var(--ring);
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);

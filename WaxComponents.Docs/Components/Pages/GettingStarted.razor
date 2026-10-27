@@ -48,11 +48,21 @@
 
     <div class="p-6 rounded-3xl bg-card border border-border">
         <h2 class="font-semibold text-foreground mb-1">Include Theme Support</h2>
-        <p class="text-sm text-muted-foreground mb-4">Add <code class="bg-muted px-1 rounded">FontMap.razor</code> and <code class="bg-muted px-1 rounded">ThemePreloader.razor</code> to your root layout.</p>
-        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>&lt;HeadOutlet /&gt;
-&lt;FontMap /&gt;
-&lt;ThemePreloader /&gt;
-&lt;Routes /&gt;</code></pre>
+        <p class="text-sm text-muted-foreground mb-4">Add <code class="bg-muted px-1 rounded">FontMap.razor</code> and <code class="bg-muted px-1 rounded">ThemePreloader.razor</code> to your root layout, and render the theme class on <code class="bg-muted px-1 rounded">&lt;html&gt;</code> from the <code class="bg-muted px-1 rounded">wax-theme</code> cookie (via <code class="bg-muted px-1 rounded">ThemeCookie</code>). Without the SSR class, Blazor's enhanced navigation replays a classless <code class="bg-muted px-1 rounded">&lt;html&gt;</code> and the theme flashes on every page change.</p>
+        <pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@@* App.razor *@@
+@@inject IHttpContextAccessor HttpContextAccessor
+
+&lt;html lang="en" class="@@ThemeClassAttr"&gt;
+    &lt;HeadOutlet /&gt;
+    &lt;FontMap /&gt;
+    &lt;ThemePreloader /&gt;
+    &lt;Routes /&gt;
+
+@@code {
+    private string? ThemeClassAttr =&gt;
+        ThemeCookie.ReadThemeClass(HttpContextAccessor.HttpContext);
+}</code></pre>
+        <p class="text-sm text-muted-foreground mt-3">Register the accessor in <code class="bg-muted px-1 rounded">Program.cs</code>: <code class="bg-muted px-1 rounded">builder.Services.AddHttpContextAccessor();</code></p>
     </div>
 
     <div class="p-6 rounded-3xl bg-card border border-border">

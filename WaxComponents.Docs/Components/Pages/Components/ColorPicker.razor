@@ -1,0 +1,180 @@
+@page "/component/color-picker"
+@rendermode InteractiveServer
+@using WaxComponents.ColorPicker
+@using WaxComponents.Tabs
+@using WaxComponents.Theme
+
+<PageTitle>Color Picker - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Color Picker</h1>
+    <p class="text-muted-foreground">HSV color picking with hue and alpha sliders, HEX/RGB/HSL/OKLCH readouts, presets, copy, and optional eyedropper support. When the browser lacks the EyeDropper API, the picker control disables itself automatically.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Variants</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_variantsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Color Formats</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_formatsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Presets</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_presetsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Without Alpha</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_noAlphaTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Options</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_optionsTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Disabled</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_disabledTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Bound Value</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_boundTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private string _boundColor = "#3B82F6";
+
+    private static readonly string[] PresetColors =
+    [
+        "#C4522A",
+        "#E8A020",
+        "#6B9B64",
+        "#3A8FA8",
+        "#7B5EA7",
+        "#B93A3A",
+        "#2D1B0E",
+    ];
+
+    private List<WaxTabItem> _variantsTabs = [];
+    private List<WaxTabItem> _formatsTabs = [];
+    private List<WaxTabItem> _presetsTabs = [];
+    private List<WaxTabItem> _noAlphaTabs = [];
+    private List<WaxTabItem> _optionsTabs = [];
+    private List<WaxTabItem> _disabledTabs = [];
+    private List<WaxTabItem> _boundTabs = [];
+
+    private const string _variantsCode = "@using WaxComponents.ColorPicker\n\n<div class=\"flex flex-wrap items-start gap-8\">\n    <WaxColorPicker Variant=\"WaxColorPickerVariant.Inline\" />\n    <WaxColorPicker Variant=\"WaxColorPickerVariant.Popover\" DefaultValue=\"#6B9B64\" />\n    <WaxColorPicker Variant=\"WaxColorPickerVariant.Swatch\" DefaultValue=\"#E8A020\" />\n</div>";
+
+    private const string _formatsCode = "@using WaxComponents.ColorPicker\n\n<div class=\"flex flex-wrap items-start gap-8\">\n    <WaxColorPicker DefaultFormat=\"WaxColorPickerFormat.Hex\" />\n    <WaxColorPicker DefaultFormat=\"WaxColorPickerFormat.Rgb\" DefaultValue=\"#C4522A\" />\n    <WaxColorPicker DefaultFormat=\"WaxColorPickerFormat.Hsl\" DefaultValue=\"#E8A020\" />\n    <WaxColorPicker DefaultFormat=\"WaxColorPickerFormat.Oklch\" DefaultValue=\"#3A8FA8\" />\n</div>";
+
+    private const string _presetsCode = "@using WaxComponents.ColorPicker\n\n<WaxColorPicker Presets=\"PresetColors\" />\n\n@code {\n    private static readonly string[] PresetColors =\n    [\n        \"#C4522A\", \"#E8A020\", \"#6B9B64\",\n        \"#3A8FA8\", \"#7B5EA7\", \"#B93A3A\",\n    ];\n}";
+
+    private const string _noAlphaCode = "@using WaxComponents.ColorPicker\n\n<!-- Opaque output: alpha slider and channel hidden, values stay 6-digit -->\n<div class=\"flex flex-wrap items-start gap-8\">\n    <WaxColorPicker ShowAlpha=\"false\" />\n    <WaxColorPicker ShowAlpha=\"false\" Variant=\"WaxColorPickerVariant.Popover\" DefaultValue=\"#C4522A\" />\n    <WaxColorPicker ShowAlpha=\"false\" Variant=\"WaxColorPickerVariant.Swatch\" DefaultValue=\"#3A8FA8\" />\n</div>";
+
+    private const string _optionsCode = "@using WaxComponents.ColorPicker\n\n<div class=\"flex flex-wrap items-start gap-8\">\n    <!-- Copy value, no eyedropper -->\n    <WaxColorPicker ShowCopy=\"true\" ShowEyedropper=\"false\" DefaultValue=\"#6B9B64\" />\n\n    <!-- Circle swatch trigger -->\n    <WaxColorPicker Variant=\"WaxColorPickerVariant.Swatch\" SwatchShape=\"WaxColorPickerSwatchShape.Circle\" DefaultValue=\"#E8A020\" />\n</div>";
+
+    private const string _disabledCode = "@using WaxComponents.ColorPicker\n\n<div class=\"flex flex-wrap items-start gap-8\">\n    <WaxColorPicker Disabled=\"true\" />\n    <WaxColorPicker Variant=\"WaxColorPickerVariant.Popover\" Disabled=\"true\" />\n</div>";
+
+    private const string _boundCode = "@using WaxComponents.ColorPicker\n\n<div>\n    <WaxColorPicker @bind-Value=\"_color\" ShowCopy=\"true\" />\n    <p class=\"mt-4 font-mono text-sm text-muted-foreground\">@_color</p>\n</div>\n\n@code {\n    private string _color = \"#3B82F6\";\n}";
+
+    protected override void OnInitialized()
+    {
+        _variantsTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Inline</p>
+                    <WaxColorPicker Variant="WaxColorPickerVariant.Inline" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Popover</p>
+                    <WaxColorPicker Variant="WaxColorPickerVariant.Popover" DefaultValue="#6B9B64" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Swatch</p>
+                    <WaxColorPicker Variant="WaxColorPickerVariant.Swatch" DefaultValue="#E8A020" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_variantsCode</code></pre>, Icon: "code")
+        ];
+
+        _formatsTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <WaxColorPicker DefaultFormat="WaxColorPickerFormat.Hex" />
+                <WaxColorPicker DefaultFormat="WaxColorPickerFormat.Rgb" DefaultValue="#C4522A" />
+                <WaxColorPicker DefaultFormat="WaxColorPickerFormat.Hsl" DefaultValue="#E8A020" />
+                <WaxColorPicker DefaultFormat="WaxColorPickerFormat.Oklch" DefaultValue="#3A8FA8" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_formatsCode</code></pre>, Icon: "code")
+        ];
+
+        _presetsTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <WaxColorPicker Presets="PresetColors" />
+                <WaxColorPicker Variant="WaxColorPickerVariant.Popover" Presets="PresetColors" DefaultValue="#7B5EA7" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_presetsCode</code></pre>, Icon: "code")
+        ];
+
+        _noAlphaTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Inline</p>
+                    <WaxColorPicker ShowAlpha="false" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Popover</p>
+                    <WaxColorPicker ShowAlpha="false" Variant="WaxColorPickerVariant.Popover" DefaultValue="#C4522A" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Swatch</p>
+                    <WaxColorPicker ShowAlpha="false" Variant="WaxColorPickerVariant.Swatch" DefaultValue="#3A8FA8" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_noAlphaCode</code></pre>, Icon: "code")
+        ];
+
+        _optionsTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Copy, no eyedropper</p>
+                    <WaxColorPicker ShowCopy="true" ShowEyedropper="false" DefaultValue="#6B9B64" />
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs uppercase tracking-wide text-muted-foreground">Circle swatch</p>
+                    <WaxColorPicker Variant="WaxColorPickerVariant.Swatch" SwatchShape="WaxColorPickerSwatchShape.Circle" DefaultValue="#E8A020" />
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_optionsCode</code></pre>, Icon: "code")
+        ];
+
+        _disabledTabs =
+        [
+            new("Preview", Content: @<div class="flex flex-wrap items-start gap-8">
+                <WaxColorPicker Disabled="true" />
+                <WaxColorPicker Variant="WaxColorPickerVariant.Popover" Disabled="true" />
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_disabledCode</code></pre>, Icon: "code")
+        ];
+
+        _boundTabs =
+        [
+            new("Preview", Content: @<div>
+                <WaxColorPicker @bind-Value="_boundColor" ShowCopy="true" />
+                <p class="mt-4 font-mono text-sm text-muted-foreground">@_boundColor</p>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_boundCode</code></pre>, Icon: "code")
+        ];
+    }
+}

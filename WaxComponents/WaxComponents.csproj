@@ -12,7 +12,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>blazor</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageVersion>0.9.7</PackageVersion>
+        <PackageVersion>0.9.8</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +27,7 @@
         <Content Remove="wwwroot\app.css" />
         <Content Remove="wwwroot\tokens.css" />
         <Content Remove="wwwroot\js\theme.js" />
+        <Content Remove="wwwroot\js\colorPicker.js" />
     </ItemGroup>
 
     <!-- Shared npm pipeline bootstrap (Tailwind CSS + TypeScript/esbuild). -->
@@ -48,15 +49,17 @@
     </Target>
 
     <!-- TypeScript pipeline. Sources in Scripts/, compiled by esbuild: theme.js (ES module
-         used by ThemeService) and ThemePreloaderScript.generated.cs (inline <head> script
-         const rendered by ThemePreloader.razor, kept inline to avoid a theme flash). -->
+         used by ThemeService), colorPicker.js (ES module used by WaxColorPickerJs) and
+         ThemePreloaderScript.generated.cs (inline <head> script const rendered by
+         ThemePreloader.razor, kept inline to avoid a theme flash). -->
     <Target Name="BuildScripts" BeforeTargets="BeforeBuild" DependsOnTargets="NpmInstall"
             Inputs="Scripts\**\*.ts;Scripts\*.mjs;tsconfig.json"
-            Outputs="wwwroot\js\theme.js;Services\Theme\ThemePreloaderScript.generated.cs">
+            Outputs="wwwroot\js\theme.js;wwwroot\js\colorPicker.js;Services\Theme\ThemePreloaderScript.generated.cs">
         <Exec Command="npm run build:js" Condition="'$(Configuration)' != 'Release'" />
         <Exec Command="npm run build:js:min" Condition="'$(Configuration)' == 'Release'" />
         <ItemGroup>
             <Content Include="wwwroot\js\theme.js" CopyToPublishDirectory="PreserveNewest" />
+            <Content Include="wwwroot\js\colorPicker.js" CopyToPublishDirectory="PreserveNewest" />
             <!-- Remove+Include so an evaluation-time glob of the generated file is not compiled twice. -->
             <Compile Remove="Services\Theme\ThemePreloaderScript.generated.cs" />
             <Compile Include="Services\Theme\ThemePreloaderScript.generated.cs" />
@@ -65,6 +68,12 @@
 
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
+    </ItemGroup>
+
+    <!-- HttpContext is needed by ThemeCookie (server-rendered <html class> for
+         enhanced-navigation theme correctness) and to give docs/apps access. -->
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
