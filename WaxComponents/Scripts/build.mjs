@@ -7,6 +7,8 @@
  *   ES module imported by WaxColorPickerJs (./_content/WaxComponents/js/colorPicker.js).
  * - Scripts/dialog.ts -> wwwroot/js/dialog.js
  *   ES module imported by WaxDialogJs (./_content/WaxComponents/js/dialog.js).
+ * - Scripts/popover.ts -> wwwroot/js/popover.js
+ *   ES module imported by WaxPopoverJs (./_content/WaxComponents/js/popover.js).
  * - Scripts/themePreloader.ts -> Services/Theme/ThemePreloaderScript.generated.cs
  *   IIFE compiled into a C# raw-string const that ThemePreloader.razor inlines in
  *   <head>. It cannot ship as a static file: an extra request before first paint
@@ -19,7 +21,7 @@ import { writeFile } from "node:fs/promises";
 
 const minify = process.argv[2] === "release";
 
-const [theme, colorPicker, preloader, dialog] = await Promise.all([
+const [theme, colorPicker, preloader, dialog, popover] = await Promise.all([
     build({
         entryPoints: ["Scripts/theme.ts"],
         format: "esm",
@@ -48,11 +50,19 @@ const [theme, colorPicker, preloader, dialog] = await Promise.all([
         minify,
         write: false,
     }),
+    build({
+        entryPoints: ["Scripts/popover.ts"],
+        format: "esm",
+        target: ["es2020"],
+        minify,
+        write: false,
+    }),
 ]);
 
 await writeFile("wwwroot/js/theme.js", theme.outputFiles[0].text);
 await writeFile("wwwroot/js/colorPicker.js", colorPicker.outputFiles[0].text);
 await writeFile("wwwroot/js/dialog.js", dialog.outputFiles[0].text);
+await writeFile("wwwroot/js/popover.js", popover.outputFiles[0].text);
 
 // "</script" inside the inlined script would close the <script> tag early.
 const js = preloader.outputFiles[0].text.replace(/<\/script/gi, "<\\/script");

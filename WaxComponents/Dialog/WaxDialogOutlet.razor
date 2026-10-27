@@ -24,8 +24,8 @@
                    ConfirmText="@current.Options.ConfirmText"
                    ConfirmVariant="@current.Options.ConfirmVariant"
                    ConfirmDisabled="@current.Options.ConfirmDisabled"
-                   OnClosed="@(() => current.Cancel())"
-                   OnConfirm="@(() => current.ConfirmAsync())"
+                   OnClosed="@(current.Cancel)"
+                   OnConfirm="@(current.ConfirmAsync)"
                    FooterContent="@current.Options.FooterContent">
             @current.Body
         </WaxDialog>

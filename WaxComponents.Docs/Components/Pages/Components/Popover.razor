@@ -1,0 +1,262 @@
+@page "/component/popover"
+@rendermode InteractiveServer
+@using WaxComponents.Popover
+@using WaxComponents.Button
+@using WaxComponents.Tabs
+
+<PageTitle>Popover - Wax Components</PageTitle>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-bold text-foreground mb-2">Popover</h1>
+    <p class="text-muted-foreground">Floating panels anchored to a trigger: twelve placements that flip to stay in view, click/hover/focus/manual triggers, and an optional arrow.</p>
+</div>
+
+<div class="space-y-6">
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Basic</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_basicTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Placement</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_placementTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Trigger modes</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_triggerTabs" TabListClass="mb-4" />
+    </div>
+
+    <div class="p-6 rounded-3xl bg-card border border-border">
+        <h3 class="font-semibold text-foreground mb-1">Controlled & arrow</h3>
+        <WaxTab Variant="WaxTabVariant.Primary" Tabs="_controlledTabs" TabListClass="mb-4" />
+    </div>
+</div>
+
+@code {
+    private bool _controlledOpen;
+    private string? _lastEvent;
+
+    private List<WaxTabItem> _basicTabs = [];
+    private List<WaxTabItem> _placementTabs = [];
+    private List<WaxTabItem> _triggerTabs = [];
+    private List<WaxTabItem> _controlledTabs = [];
+
+    protected override void OnInitialized()
+    {
+        _basicTabs =
+        [
+            new("Preview", Content: @<div class="flex min-h-28 items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 p-6">
+                <WaxPopover>
+                    <TriggerContent>
+                        <WaxButton>Open popover</WaxButton>
+                    </TriggerContent>
+                    <ChildContent>
+                        <div class="w-72 p-4">
+                            <h4 class="text-sm font-semibold text-foreground">Dimensions</h4>
+                            <p class="mt-1 text-sm text-muted-foreground">
+                                Any content works here: hints, details, forms, filters. The panel carries
+                                no default padding — size it with <span class="font-mono text-xs">Class</span>.
+                            </p>
+                        </div>
+                    </ChildContent>
+                </WaxPopover>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_basicCode</code></pre>, Icon: "code")
+        ];
+
+        _placementTabs =
+        [
+            new("Preview", Content: @<div class="flex min-h-28 flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-muted/30 p-6">
+                <WaxPopover Placement="WaxPopoverPlacement.BottomStart">
+                    <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Bottom start</WaxButton></TriggerContent>
+                    <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Left edges aligned, below the trigger.</div></ChildContent>
+                </WaxPopover>
+                <WaxPopover Placement="WaxPopoverPlacement.Top">
+                    <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Top</WaxButton></TriggerContent>
+                    <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Centered above the trigger.</div></ChildContent>
+                </WaxPopover>
+                <WaxPopover Placement="WaxPopoverPlacement.LeftEnd">
+                    <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Left end</WaxButton></TriggerContent>
+                    <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Beside the trigger; bottom edges aligned.</div></ChildContent>
+                </WaxPopover>
+                <WaxPopover Placement="WaxPopoverPlacement.Right">
+                    <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Right</WaxButton></TriggerContent>
+                    <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Centered beside the trigger.</div></ChildContent>
+                </WaxPopover>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_placementCode</code></pre>, Icon: "code")
+        ];
+
+        _triggerTabs =
+        [
+            new("Preview", Content: @<div class="flex min-h-28 flex-wrap items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-muted/30 p-6">
+                <WaxPopover Trigger="WaxPopoverTrigger.Hover" Offset="10">
+                    <TriggerContent>
+                        <button type="button"
+                                class="cursor-pointer rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground">
+                            Hover me
+                        </button>
+                    </TriggerContent>
+                    <ChildContent>
+                        <div class="flex w-60 items-center gap-3 p-3">
+                            <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">MP</span>
+                            <span class="min-w-0">
+                                <span class="block truncate text-sm font-medium text-foreground">Maria Paula</span>
+                                <span class="block truncate text-xs text-muted-foreground">design-systems</span>
+                            </span>
+                        </div>
+                    </ChildContent>
+                </WaxPopover>
+
+                <WaxPopover Trigger="WaxPopoverTrigger.Focus" Placement="WaxPopoverPlacement.BottomEnd">
+                    <TriggerContent>
+                        <button type="button"
+                                class="cursor-pointer rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm text-foreground">
+                            Focus me (or Tab to it)
+                        </button>
+                    </TriggerContent>
+                    <ChildContent>
+                        <div class="w-60 p-3 text-sm text-muted-foreground">
+                            Opens while the trigger holds focus and closes when focus moves away — keyboard friendly.
+                        </div>
+                    </ChildContent>
+                </WaxPopover>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_triggerCode</code></pre>, Icon: "code")
+        ];
+
+        _controlledTabs =
+        [
+            new("Preview", Content: @<div class="min-h-28 rounded-2xl border border-dashed border-border bg-muted/30 p-6">
+                <div class="flex flex-wrap items-center gap-3">
+                    <WaxPopover @bind-Open="_controlledOpen"
+                                Trigger="WaxPopoverTrigger.Manual"
+                                ShowArrow
+                                Opened="OnControlledOpened"
+                                Closed="OnControlledClosed">
+                        <TriggerContent>
+                            <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="ToggleControlled">Toggle popover</WaxButton>
+                        </TriggerContent>
+                        <ChildContent>
+                            <div class="w-64 p-3 text-sm text-muted-foreground">
+                                Controlled through <span class="font-mono text-xs">@@bind-Open</span> with the
+                                Manual trigger — and the arrow follows the applied placement.
+                            </div>
+                        </ChildContent>
+                    </WaxPopover>
+
+                    <span class="text-sm text-muted-foreground">
+                        Last event: <span class="font-medium text-foreground">@(_lastEvent ?? "none")</span>
+                    </span>
+                </div>
+            </div>, Icon: "monitor-dot"),
+            new("Code", Content: @<pre class="bg-muted rounded-xl p-4 overflow-x-auto text-sm"><code>@_controlledCode</code></pre>, Icon: "code")
+        ];
+    }
+
+    private void ToggleControlled() => _controlledOpen = !_controlledOpen;
+
+    private void OnControlledOpened() => _lastEvent = $"Opened at {DateTime.Now:HH:mm:ss}";
+
+    private void OnControlledClosed() => _lastEvent = $"Closed at {DateTime.Now:HH:mm:ss}";
+
+    private static string _basicCode = """
+        @using WaxComponents.Popover
+        @using WaxComponents.Button
+
+        <WaxPopover>
+            <TriggerContent>
+                <WaxButton>Open popover</WaxButton>
+            </TriggerContent>
+            <ChildContent>
+                <div class="w-72 p-4">
+                    <h4 class="text-sm font-semibold text-foreground">Dimensions</h4>
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        Any content works here: hints, details, forms, filters.
+                    </p>
+                </div>
+            </ChildContent>
+        </WaxPopover>
+        """;
+
+    private static string _placementCode = """
+        @using WaxComponents.Popover
+        @using WaxComponents.Button
+
+        @* Twelve placements: Top/Bottom/Left/Right x Start/center/End.
+           The panel flips to the opposite side when the viewport is tight. *@
+        <WaxPopover Placement="WaxPopoverPlacement.BottomStart">
+            <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Bottom start</WaxButton></TriggerContent>
+            <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Left edges aligned, below the trigger.</div></ChildContent>
+        </WaxPopover>
+
+        <WaxPopover Placement="WaxPopoverPlacement.Top">
+            <TriggerContent><WaxButton Variant="WaxButtonVariant.Outlined">Top</WaxButton></TriggerContent>
+            <ChildContent><div class="w-44 p-3 text-sm text-muted-foreground">Centered above the trigger.</div></ChildContent>
+        </WaxPopover>
+        """;
+
+    private static string _triggerCode = """
+        @using WaxComponents.Popover
+        @using WaxComponents.Button
+
+        @* Hover: opens on mouseenter, stays while crossing into the panel,
+           closes after a short grace delay. Keyboard focus also opens it. *@
+        <WaxPopover Trigger="WaxPopoverTrigger.Hover" Offset="10">
+            <TriggerContent>
+                <button type="button" class="rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm">
+                    Hover me
+                </button>
+            </TriggerContent>
+            <ChildContent>
+                <div class="flex w-60 items-center gap-3 p-3">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">MP</span>
+                    <span class="min-w-0">
+                        <span class="block truncate text-sm font-medium text-foreground">Maria Paula</span>
+                        <span class="block truncate text-xs text-muted-foreground">design-systems</span>
+                    </span>
+                </div>
+            </ChildContent>
+        </WaxPopover>
+
+        @* Focus: open while the trigger holds focus, close when it moves away. *@
+        <WaxPopover Trigger="WaxPopoverTrigger.Focus" Placement="WaxPopoverPlacement.BottomEnd">
+            <TriggerContent>
+                <button type="button" class="rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm">
+                    Focus me (or Tab to it)
+                </button>
+            </TriggerContent>
+            <ChildContent>
+                <div class="w-60 p-3 text-sm text-muted-foreground">Keyboard friendly help text.</div>
+            </ChildContent>
+        </WaxPopover>
+        """;
+
+    private static string _controlledCode = """
+        @using WaxComponents.Popover
+        @using WaxComponents.Button
+
+        <WaxPopover @@bind-Open="_controlledOpen"
+                    Trigger="WaxPopoverTrigger.Manual"
+                    ShowArrow
+                    Opened="OnControlledOpened"
+                    Closed="OnControlledClosed">
+            <TriggerContent>
+                <WaxButton Variant="WaxButtonVariant.Tonal" OnClick="ToggleControlled">Toggle popover</WaxButton>
+            </TriggerContent>
+            <ChildContent>
+                <div class="w-64 p-3 text-sm text-muted-foreground">Controlled through @@bind-Open.</div>
+            </ChildContent>
+        </WaxPopover>
+
+        @code {
+            private bool _controlledOpen;
+            private string? _lastEvent;
+
+            private void ToggleControlled() => _controlledOpen = !_controlledOpen;
+            private void OnControlledOpened() => _lastEvent = "Opened";
+            private void OnControlledClosed() => _lastEvent = "Closed";
+        }
+        """;
+}

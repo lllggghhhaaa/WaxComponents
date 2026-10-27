@@ -29,6 +29,7 @@
         <Content Remove="wwwroot\js\theme.js" />
         <Content Remove="wwwroot\js\colorPicker.js" />
         <Content Remove="wwwroot\js\dialog.js" />
+        <Content Remove="wwwroot\js\popover.js" />
     </ItemGroup>
 
     <!-- Shared npm pipeline bootstrap (Tailwind CSS + TypeScript/esbuild). -->
@@ -51,18 +52,19 @@
 
     <!-- TypeScript pipeline. Sources in Scripts/, compiled by esbuild: theme.js (ES module
          used by ThemeService), colorPicker.js (ES module used by WaxColorPickerJs),
-         dialog.js (ES module used by WaxDialogJs) and ThemePreloaderScript.generated.cs
-         (inline <head> script const rendered by ThemePreloader.razor, kept inline to
-         avoid a theme flash). -->
+         dialog.js (ES module used by WaxDialogJs), popover.js (ES module used by
+         WaxPopoverJs) and ThemePreloaderScript.generated.cs (inline <head> script const
+         rendered by ThemePreloader.razor, kept inline to avoid a theme flash). -->
     <Target Name="BuildScripts" BeforeTargets="BeforeBuild" DependsOnTargets="NpmInstall"
             Inputs="Scripts\**\*.ts;Scripts\*.mjs;tsconfig.json"
-            Outputs="wwwroot\js\theme.js;wwwroot\js\colorPicker.js;wwwroot\js\dialog.js;Services\Theme\ThemePreloaderScript.generated.cs">
+            Outputs="wwwroot\js\theme.js;wwwroot\js\colorPicker.js;wwwroot\js\dialog.js;wwwroot\js\popover.js;Services\Theme\ThemePreloaderScript.generated.cs">
         <Exec Command="npm run build:js" Condition="'$(Configuration)' != 'Release'" />
         <Exec Command="npm run build:js:min" Condition="'$(Configuration)' == 'Release'" />
         <ItemGroup>
             <Content Include="wwwroot\js\theme.js" CopyToPublishDirectory="PreserveNewest" />
             <Content Include="wwwroot\js\colorPicker.js" CopyToPublishDirectory="PreserveNewest" />
             <Content Include="wwwroot\js\dialog.js" CopyToPublishDirectory="PreserveNewest" />
+            <Content Include="wwwroot\js\popover.js" CopyToPublishDirectory="PreserveNewest" />
             <!-- Remove+Include so an evaluation-time glob of the generated file is not compiled twice. -->
             <Compile Remove="Services\Theme\ThemePreloaderScript.generated.cs" />
             <Compile Include="Services\Theme\ThemePreloaderScript.generated.cs" />

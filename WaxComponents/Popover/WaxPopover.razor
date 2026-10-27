@@ -1,0 +1,218 @@
+@using Microsoft.JSInterop
+@using WaxComponents.Utils
+
+@inherits WaxComponent
+@inject IJSRuntime Js
+
+@* ---- Flexible anchored popover: floating panel positioned by Scripts/popover.ts ---- *@
+<span class="inline-flex max-w-full" style="@Style" @attributes="AdditionalAttributes">
+    <span class="inline-flex min-w-0" @ref="_triggerRef">
+        @TriggerContent
+    </span>
+
+    <div @ref="_panelRef" class="@PanelClass">
+        @ChildContent
+        @if (ShowArrow)
+        {
+            <div @ref="_arrowRef" class="@ArrowClass"></div>
+        }
+    </div>
+</span>
+
+@code {
+    /// <summary>Preferred side/alignment of the panel; flips when the viewport is tight.</summary>
+    [Parameter] public WaxPopoverPlacement Placement { get; set; } = WaxPopoverPlacement.BottomStart;
+
+    /// <summary>Interaction mode of the trigger content.</summary>
+    [Parameter] public WaxPopoverTrigger Trigger { get; set; } = WaxPopoverTrigger.Click;
+
+    /// <summary>Two-way bindable open state; also driven by Show/Hide/Toggle.</summary>
+    [Parameter] public bool Open { get; set; }
+
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter] public RenderFragment? TriggerContent { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Gap between trigger and panel, in px.</summary>
+    [Parameter] public int Offset { get; set; } = 8;
+
+    /// <summary>Renders a small arrow on the panel edge facing the trigger.</summary>
+    [Parameter] public bool ShowArrow { get; set; }
+
+    /// <summary>Close when a pointer press lands outside trigger and panel.</summary>
+    [Parameter] public bool CloseOnOutsideClick { get; set; } = true;
+
+    [Parameter] public bool CloseOnEscape { get; set; } = true;
+
+    /// <summary>Blocks opening; closing stays allowed.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public EventCallback Opened { get; set; }
+
+    [Parameter] public EventCallback Closed { get; set; }
+
+    private ElementReference _triggerRef;
+    private ElementReference _panelRef;
+    private ElementReference _arrowRef;
+    private DotNetObjectReference<WaxPopover>? _dotnetRef;
+    private WaxPopoverJs _js = default!;
+
+    private bool _open;
+    private bool _lastSetOpen;
+    private bool _positioned;
+    private string? _appliedPlacement;
+
+    protected override void OnInitialized()
+    {
+        _js = new WaxPopoverJs(Js);
+        _open = Open;
+        _lastSetOpen = Open;
+        _dotnetRef = DotNetObjectReference.Create(this);
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Adopt externally driven Open changes; ignore echoes of our own OpenChanged pushes.
+        if (Open == _open || Open == _lastSetOpen) return;
+
+        _open = Open;
+        _lastSetOpen = Open;
+        _positioned = false;
+        _appliedPlacement = null;
+        var opened = _open;
+        _ = InvokeAsync(async () => await (opened ? Opened : Closed).InvokeAsync());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var applied = await _js.InvokeAsync<string?>("sync",
+            _triggerRef,
+            _panelRef,
+            ShowArrow ? _arrowRef : null,
+            _dotnetRef,
+            new WaxPopoverSyncState(_open, Trigger.ToString().ToLowerInvariant(), PlacementKey, Offset, ShowArrow));
+
+        if (!_open)
+        {
+            _appliedPlacement = null;
+            return;
+        }
+
+        var placementChanged = applied is not null && applied != _appliedPlacement;
+        _appliedPlacement = applied;
+        if (!_positioned || placementChanged)
+        {
+            // First open render keeps the panel invisible until JS has positioned it,
+            // so this second render is also what reveals it (and plays the animation).
+            _positioned = true;
+            StateHasChanged();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_panelRef.Context is not null)
+        {
+            await _js.InvokeAsync<object?>("detach", _panelRef);
+        }
+
+        _dotnetRef?.Dispose();
+        await _js.DisposeAsync();
+    }
+
+    /// <summary>Opens the popover (no-op when Disabled).</summary>
+    public Task ShowAsync() => SetOpenAsync(true);
+
+    public Task HideAsync() => SetOpenAsync(false);
+
+    public Task ToggleAsync() => SetOpenAsync(!_open);
+
+    private async Task SetOpenAsync(bool open)
+    {
+        if (_open == open || (open && Disabled)) return;
+
+        _open = open;
+        _lastSetOpen = open;
+        _positioned = false;
+        _appliedPlacement = null;
+        await OpenChanged.InvokeAsync(open);
+        StateHasChanged();
+        if (open)
+        {
+            await Opened.InvokeAsync();
+        }
+        else
+        {
+            await Closed.InvokeAsync();
+        }
+    }
+
+    [JSInvokable] public Task OnWaxPopoverTriggerActivate() => SetOpenAsync(!_open);
+
+    [JSInvokable] public Task OnWaxPopoverTriggerEnter() => SetOpenAsync(true);
+
+    [JSInvokable] public Task OnWaxPopoverTriggerLeave() => SetOpenAsync(false);
+
+    [JSInvokable] public Task OnWaxPopoverTriggerFocus() => SetOpenAsync(true);
+
+    [JSInvokable] public Task OnWaxPopoverTriggerBlur() => SetOpenAsync(false);
+
+    [JSInvokable] public Task OnWaxPopoverOutsidePointer() =>
+        CloseOnOutsideClick ? SetOpenAsync(false) : Task.CompletedTask;
+
+    [JSInvokable] public Task OnWaxPopoverEscape() =>
+        CloseOnEscape ? SetOpenAsync(false) : Task.CompletedTask;
+
+    /// <summary>Scroll/resize flipped the panel to another side; re-render the arrow to match.</summary>
+    [JSInvokable] public void OnWaxPopoverAppliedPlacement(string placement)
+    {
+        if (_appliedPlacement == placement) return;
+
+        _appliedPlacement = placement;
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private string PlacementKey => Placement switch
+    {
+        WaxPopoverPlacement.TopStart => "top-start",
+        WaxPopoverPlacement.Top => "top",
+        WaxPopoverPlacement.TopEnd => "top-end",
+        WaxPopoverPlacement.BottomStart => "bottom-start",
+        WaxPopoverPlacement.Bottom => "bottom",
+        WaxPopoverPlacement.BottomEnd => "bottom-end",
+        WaxPopoverPlacement.LeftStart => "left-start",
+        WaxPopoverPlacement.Left => "left",
+        WaxPopoverPlacement.LeftEnd => "left-end",
+        WaxPopoverPlacement.RightStart => "right-start",
+        WaxPopoverPlacement.Right => "right",
+        WaxPopoverPlacement.RightEnd => "right-end",
+        _ => "bottom-start",
+    };
+
+    private sealed record WaxPopoverSyncState(bool Open, string Trigger, string Placement, int Offset, bool Arrow);
+
+    private string PanelClass =>
+        "fixed z-[96] max-w-[calc(100vw-1rem)] rounded-3xl border border-border bg-popover text-popover-foreground shadow-2xl shadow-black/15"
+            .MergeClass(
+                !_open ? "hidden" : !_positioned ? "invisible" : "animate-in fade-in-0 zoom-in-95 duration-150",
+                Class);
+
+    private string ArrowClass
+    {
+        get
+        {
+            // The two diamond edges facing away from the panel carry the border color,
+            // so the arrow blends with the panel's own 1px border.
+            var borders = _appliedPlacement switch
+            {
+                "top-start" or "top" or "top-end" => "border-b border-r",
+                "left-start" or "left" or "left-end" => "border-t border-r",
+                "right-start" or "right" or "right-end" => "border-l border-b",
+                _ => "border-t border-l",
+            };
+            return $"absolute size-2 rotate-45 bg-popover {borders}";
+        }
+    }
+}
